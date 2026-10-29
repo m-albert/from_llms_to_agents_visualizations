@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<title>From next-token prediction to agentic AI</title>
+<desc>Four stages of a chat system (untrained, pre-trained, assistant, tool-using agent) and the three steps between them (pre-training, post-training, tools + agent loop).</desc>
+<g id="background">
+<rect x="0" y="0" width="1600" height="900" rx="0" fill="#FAFAF7"/>
+</g>
+<g id="title">
+<text x="60" y="64" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="36" fill="#1E2A44" font-weight="700">From next-token prediction to agentic AI</text>
+<text x="60" y="97" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" fill="#5B6475">One question, four systems. Each step builds on the one before.</text>
+</g>
+<g id="row-labels">
+<text x="60" y="176" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#3557C9" font-weight="700" letter-spacing="1.5">ENABLING STEPS</text>
+<text x="60" y="202" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">What changes</text>
+<text x="60" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" font-weight="700" letter-spacing="1.5">CAPABILITIES</text>
+<text x="60" y="318" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">What it can do</text>
+<path d="M75 334V362M68 355L75 362L82 355" fill="none" stroke="#8C94A3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="legend">
+<rect x="1380" y="162" width="28" height="18" rx="4" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1.5"/>
+<text x="1420" y="176" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Capability</text>
+<rect x="1380" y="196" width="28" height="18" rx="4" fill="#EEF2FB" stroke="#BFCBEF" stroke-width="1.5"/>
+<text x="1420" y="210" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Enabling step</text>
+<rect x="1380" y="230" width="28" height="18" rx="4" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="1420" y="244" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Tool use</text>
+<rect x="1380" y="264" width="28" height="18" rx="4" fill="#FBEAD2" stroke="#C46A12" stroke-width="1.5"/>
+<text x="1420" y="278" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Caution</text>
+</g>
+<g id="pretraining">
+<rect x="260" y="122" width="320" height="228" rx="16" fill="#EEF2FB" stroke="#BFCBEF" stroke-width="1.5"/>
+<text x="420" y="158" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#3557C9" font-weight="700" text-anchor="middle">Pre-training</text>
+<text x="420" y="186" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Predict the next word across</text>
+<text x="420" y="210" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">massive amounts of text</text>
+<g transform="translate(312,250)">
+<rect x="-17" y="5" width="34" height="10" rx="2" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="-13" y="-6" width="30" height="10" rx="2" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="-16" y="-17" width="31" height="10" rx="2" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-10 5V15M10 -6V4M-9 -17V-7" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="312" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Books</text>
+<g transform="translate(384,250)">
+<circle r="17" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse rx="7.5" ry="17" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-17 0H17M-14.5 -8.5H14.5M-14.5 8.5H14.5" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="384" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Web</text>
+<g transform="translate(456,250)">
+<rect x="-19" y="-15" width="38" height="30" rx="4" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 -6L-12 0L-6 6M6 -6L12 0L6 6M2.5 -8L-2.5 8" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="456" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Code</text>
+<g transform="translate(528,250)">
+<path d="M-13 -18H5L13 -10V18H-13Z" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 -18V-10H13" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-8 -10H0M-8 -4H8" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 13V8M0 13V3M6 13V6" fill="none" stroke="#3557C9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="528" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Papers</text>
+<path d="M312 304C312 328 420 324 420 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M384 304C384 328 420 324 420 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M456 304C456 328 420 324 420 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M528 304C528 328 420 324 420 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="posttraining">
+<rect x="640" y="122" width="320" height="228" rx="16" fill="#EEF2FB" stroke="#BFCBEF" stroke-width="1.5"/>
+<text x="800" y="158" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#3557C9" font-weight="700" text-anchor="middle">Post-training</text>
+<text x="800" y="186" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Learn to follow instructions</text>
+<text x="800" y="210" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">and respond as an assistant</text>
+<g transform="translate(730,250)">
+<rect x="-21" y="-18" width="28" height="21" rx="5" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="-7" y="-2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3557C9" text-anchor="middle">Q</text>
+<rect x="-6" y="-1" width="28" height="21" rx="5" fill="#3557C9"/>
+<text x="8" y="15" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+</g>
+<text x="730" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Examples</text>
+<g transform="translate(870,250)">
+<circle cx="-5" cy="-9" r="7.5" fill="#fff" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-19 16C-19 2 9 2 9 16" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="12" cy="8" r="9.5" fill="#3557C9"/>
+<path d="M7.5 8.5L10.5 11.5L16 5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="870" y="292" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Human feedback</text>
+<text x="800" y="258" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="24" fill="#8C94A3" text-anchor="middle">+</text>
+<path d="M730 304C730 328 800 324 800 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M870 304C870 328 800 324 800 350" fill="none" stroke="#BFCBEF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="tools">
+<rect x="1020" y="122" width="320" height="228" rx="16" fill="#EEF2FB" stroke="#BFCBEF" stroke-width="1.5"/>
+<text x="1180" y="158" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#3557C9" font-weight="700" text-anchor="middle">Tools + agent loop</text>
+<text x="1180" y="186" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">A harness runs tools for the</text>
+<text x="1180" y="210" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">model and returns the results</text>
+<g transform="translate(1072,240) scale(0.8)">
+<circle cx="-4" cy="-4" r="10" fill="#fff" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.5 3.5L14 14" fill="none" stroke="#0E8A87" stroke-width="3.75" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1072" y="276" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Search</text>
+<g transform="translate(1144,240) scale(0.8)">
+<path d="M-17 -12H-5L-1 -7H17V14H-17Z" fill="#fff" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-17 -2H17" fill="none" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1144" y="276" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Files</text>
+<g transform="translate(1216,240) scale(0.8)">
+<rect x="-19" y="-15" width="38" height="30" rx="4" fill="#fff" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 -6L-12 0L-6 6M6 -6L12 0L6 6M2.5 -8L-2.5 8" fill="none" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1216" y="276" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Code</text>
+<g transform="translate(1288,240) scale(0.8)">
+<path d="M-13 -18H5L13 -10V18H-13Z" fill="#fff" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 -18V-10H13" fill="none" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-8 -10H0M-8 -4H8" fill="none" stroke="#0E8A87" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 13V8M0 13V3M6 13V6" fill="none" stroke="#0E8A87" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1288" y="276" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Papers</text>
+<g id="agent-loop">
+<text x="1041.83" y="308" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87" font-weight="700">Decide</text>
+<path d="M1109.8 302H1129.8M1124.8 297L1129.8 302L1124.8 307" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1138.8" y="308" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87" font-weight="700">Use tool</text>
+<path d="M1218.48 302H1238.48M1233.48 297L1238.48 302L1233.48 307" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1247.48" y="308" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87" font-weight="700">Observe</text>
+<path d="M1282.83 316C1282.83 338 1262.83 338 1180 338C1091.31 338 1071.31 338 1071.31 316" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1066.31 322L1071.31 316L1076.31 322" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1136" y="328" width="88" height="20" rx="0" fill="#EEF2FB"/>
+<text x="1180" y="344" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87" text-anchor="middle" font-style="italic">continue</text>
+</g>
+</g>
+<g id="stage-1">
+<circle cx="75" cy="396" r="15" fill="#3557C9"/>
+<text x="75" y="402" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">1</text>
+<text x="100" y="403" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Untrained model</text>
+<text x="60" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Random output: nothing learned yet</text>
+<rect x="60" y="452" width="340" height="348" rx="16" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1.5"/>
+<path d="M60 486H400" fill="none" stroke="#D7DBE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="80" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="94" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="108" cy="469" r="4.5" fill="#D7DBE3"/>
+<g>
+<rect x="104" y="498" width="282" height="64" rx="14" fill="#E3EAFA"/>
+<text x="120" y="524" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
+<text x="120" y="548" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">about microplastics &amp; health?</text>
+</g>
+<g transform="translate(84,592)">
+<circle r="13" fill="#3557C9"/>
+<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+</g>
+<g id="stage-1-response">
+<rect x="106" y="576" width="280" height="112" rx="14" fill="#F1F2F5"/>
+<rect x="118" y="588" width="51.28" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="143.64" y="607" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">orbit</text>
+<rect x="175.28" y="588" width="55.24" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="202.9" y="607" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">lamp</text>
+<rect x="236.52" y="588" width="41.38" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="257.21" y="607" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">the</text>
+<rect x="283.9" y="588" width="65.5" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="316.65" y="607" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">seven</text>
+<rect x="118" y="620" width="59.92" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="147.96" y="639" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">glass</text>
+<rect x="183.92" y="620" width="96.1" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="231.97" y="639" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">whenever</text>
+<rect x="286.02" y="620" width="75.4" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="323.72" y="639" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">banana</text>
+<rect x="118" y="652" width="31.48" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="133.74" y="671" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">of</text>
+<rect x="155.48" y="652" width="56.86" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="183.91" y="671" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">north</text>
+<rect x="218.34" y="652" width="41.38" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="239.03" y="671" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">the</text>
+<rect x="265.72" y="652" width="69.82" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="300.63" y="671" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">quietly</text>
+<rect x="341.54" y="652" width="25.9" height="26" rx="6" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1"/>
+<text x="354.49" y="671" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">…</text>
+</g>
+<text x="106" y="722" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">Random next words</text>
+</g>
+<g id="stage-2">
+<circle cx="455" cy="396" r="15" fill="#3557C9"/>
+<text x="455" y="402" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">2</text>
+<text x="480" y="403" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Pre-trained base model</text>
+<text x="440" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Completes text, not yet an assistant</text>
+<rect x="440" y="452" width="340" height="348" rx="16" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1.5"/>
+<path d="M440 486H780" fill="none" stroke="#D7DBE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="460" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="474" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="488" cy="469" r="4.5" fill="#D7DBE3"/>
+<g>
+<rect x="484" y="498" width="282" height="64" rx="14" fill="#E3EAFA"/>
+<text x="500" y="524" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
+<text x="500" y="548" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">about microplastics &amp; health?</text>
+</g>
+<g transform="translate(464,592)">
+<circle r="13" fill="#3557C9"/>
+<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+</g>
+<g id="stage-2-response">
+<rect x="486" y="576" width="280" height="94" rx="14" fill="#F1F2F5"/>
+<text x="500" y="602" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">…and in seafood? What do</text>
+<text x="500" y="626" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">recent papers say about PFAS?</text>
+<text x="500" y="650" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" opacity="0.45">What do recent papers say ab…</text>
+</g>
+<text x="486" y="722" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">Continues the text, doesn't answer</text>
+</g>
+<g id="stage-3">
+<circle cx="835" cy="396" r="15" fill="#3557C9"/>
+<text x="835" y="402" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">3</text>
+<text x="860" y="403" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">AI assistant</text>
+<text x="820" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Helpful answers, but may hallucinate</text>
+<rect x="820" y="452" width="340" height="348" rx="16" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1.5"/>
+<path d="M820 486H1160" fill="none" stroke="#D7DBE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="840" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="854" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="868" cy="469" r="4.5" fill="#D7DBE3"/>
+<g>
+<rect x="864" y="498" width="282" height="64" rx="14" fill="#E3EAFA"/>
+<text x="880" y="524" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
+<text x="880" y="548" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">about microplastics &amp; health?</text>
+</g>
+<g transform="translate(844,592)">
+<circle r="13" fill="#3557C9"/>
+<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+</g>
+<g id="stage-3-response">
+<rect x="866" y="576" width="280" height="116" rx="14" fill="#F1F2F5"/>
+<text x="880" y="602" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">Studies suggest microplastics</text>
+<text x="880" y="626" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">may be linked to inflammation.</text>
+<g id="unsupported-claim">
+<rect x="876" y="632" width="211.76" height="25" rx="4" fill="#FBEAD2"/>
+<rect x="876" y="656" width="193.58" height="25" rx="4" fill="#FBEAD2"/>
+<text x="880" y="650" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">A landmark study proved</text>
+<text x="880" y="674" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">direct harm in humans.</text>
+<path d="M880 679H1065.58" fill="none" stroke="#C46A12" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 4"/>
+</g>
+</g>
+<g id="hallucination-warning">
+<g transform="translate(877,716)">
+<path d="M0 -10L11 9H-11Z" fill="#C46A12" stroke="#C46A12" stroke-width="2" stroke-linejoin="round"/>
+<path d="M0 -3V3" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="6.3" r="1.3" fill="#fff"/>
+</g>
+<text x="896" y="722" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">Plausible, but unsupported</text>
+</g>
+</g>
+<g id="stage-4">
+<circle cx="1215" cy="396" r="15" fill="#3557C9"/>
+<text x="1215" y="402" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">4</text>
+<text x="1240" y="403" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Tool-using agent</text>
+<text x="1200" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Can retrieve and act; needs oversight</text>
+<g id="tool-harness">
+<rect x="1190" y="444" width="360" height="376" rx="22" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1.5" stroke-dasharray="6 5" fill-opacity="0.55"/>
+<rect x="1301.87" y="808" width="136.266" height="26" rx="13" fill="#FFFFFF" stroke="#0E8A87" stroke-width="1.5"/>
+<text x="1370" y="827" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87" font-weight="700" text-anchor="middle">Tool harness</text>
+</g>
+<rect x="1200" y="452" width="340" height="348" rx="16" fill="#FFFFFF" stroke="#D7DBE3" stroke-width="1.5"/>
+<path d="M1200 486H1540" fill="none" stroke="#D7DBE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1220" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="1234" cy="469" r="4.5" fill="#D7DBE3"/>
+<circle cx="1248" cy="469" r="4.5" fill="#D7DBE3"/>
+<g>
+<g transform="translate(1436,469) scale(0.5)">
+<circle cx="-4" cy="-4" r="10" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.5 3.5L14 14" fill="none" stroke="#0E8A87" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(1462,469) scale(0.5)">
+<path d="M-17 -12H-5L-1 -7H17V14H-17Z" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-17 -2H17" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(1488,469) scale(0.5)">
+<rect x="-19" y="-15" width="38" height="30" rx="4" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 -6L-12 0L-6 6M6 -6L12 0L6 6M2.5 -8L-2.5 8" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(1514,469) scale(0.5)">
+<path d="M-13 -18H5L13 -10V18H-13Z" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 -18V-10H13" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-8 -10H0M-8 -4H8" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 13V8M0 13V3M6 13V6" fill="none" stroke="#0E8A87" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g>
+<rect x="1244" y="498" width="282" height="64" rx="14" fill="#E3EAFA"/>
+<text x="1260" y="524" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
+<text x="1260" y="548" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">about microplastics &amp; health?</text>
+</g>
+<g transform="translate(1224,592)">
+<circle r="13" fill="#3557C9"/>
+<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+</g>
+<g id="stage-4-tool-trace">
+<rect x="1246" y="581" width="164.08" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
+<g transform="translate(1262,594) scale(0.45)">
+<circle cx="-4" cy="-4" r="10" fill="#fff" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.5 3.5L14 14" fill="none" stroke="#0E8A87" stroke-width="6.66667" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1280" y="600" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Search papers</text>
+<rect x="1246" y="611" width="140.14" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
+<g transform="translate(1262,624) scale(0.45)">
+<path d="M-11 -15H4L11 -8V15H-11Z" fill="#fff" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4 -15V-8H11M-6 -2H6M-6 4H6M-6 10H2" fill="none" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1280" y="630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Read PDFs</text>
+<rect x="1246" y="641" width="207.28" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
+<g transform="translate(1262,654) scale(0.45)">
+<path d="M-13 -18H5L13 -10V18H-13Z" fill="#fff" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 -18V-10H13" fill="none" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-8 -10H0M-8 -4H8" fill="none" stroke="#0E8A87" stroke-width="4.44444" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-6 13V8M0 13V3M6 13V6" fill="none" stroke="#0E8A87" stroke-width="6.22222" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="1280" y="660" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Summarize findings</text>
+<path d="M1469.28 654C1495.28 654 1495.28 594 1469.28 594" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1475.28 589L1469.28 594L1475.28 599" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="stage-4-response">
+<rect x="1246" y="676" width="280" height="70" rx="14" fill="#F1F2F5"/>
+<text x="1260" y="702" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">Retrieved papers suggest the</text>
+<text x="1260" y="726" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">evidence is still emerging.</text>
+<rect x="1246" y="756" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1285.67" y="775" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper A</text>
+<rect x="1333.34" y="756" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1373.01" y="775" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper B</text>
+<rect x="1420.68" y="756" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1460.35" y="775" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper C</text>
+</g>
+</g>
+<g id="connectors">
+<path d="M420 350V611" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M800 350V611" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1180 350V611" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(420,626)">
+<circle r="15" fill="#3557C9"/>
+<path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(800,626)">
+<circle r="15" fill="#3557C9"/>
+<path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(1180,626)">
+<circle r="15" fill="#3557C9"/>
+<path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g id="next-token-baseline">
+<path d="M60 856H1536M1528 850L1536 856L1528 862" fill="none" stroke="#BFCBEF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="394.161" y="842" width="811.678" height="28" rx="0" fill="#FAFAF7"/>
+<text x="800" y="862" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle"><tspan font-weight="700" fill="#3557C9">Next-token prediction</tspan> runs underneath every stage: later steps build on it, they don't replace it</text>
+</g>
+<g id="footnote">
+<text x="800" y="892" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#8C94A3" text-anchor="middle">Simplified teaching model, not a strict historical or architectural sequence. Words stand in for tokens (real tokens can also be word fragments or punctuation). Example outputs are schematic.</text>
+</g>
+</svg>
