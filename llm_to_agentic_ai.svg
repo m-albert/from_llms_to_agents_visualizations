@@ -389,7 +389,7 @@
 <text x="500" y="630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">…and in seafood? What do</text>
 <text x="500" y="654" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">recent papers say about PFAS</text>
 </g>
-<text x="486" y="760" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">No stop word: cut off after 10</text>
+<text x="486" y="760" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">Doesn't know when to stop</text>
 </g>
 <g id="stage-3">
 <circle cx="835" cy="290" r="15" fill="#3557C9"/>
