@@ -18,7 +18,7 @@ labelled on the left margin:
 | Row | Shows |
 |---|---|
 | **STEPS** (top) | The three steps, drawn as tinted cards that sit *between* the columns. A line runs down from each card to an arrow between two neighbouring models. |
-| **MODEL** (middle) | The model inside a computer screen, with what the computer is set to do with it. |
+| **MODEL** (middle) | The model inside a computer screen, with what the computer is set to do with it (two short lines on the screen, e.g. *Generate / 10 words*). |
 | **CHAT** (bottom) | The same chat window and the same question at every stage, with that stage's answer. A small person icon marks the human user's message, and a blue sparkle icon marks the model's reply. |
 
 A band along the bottom reads: *"Next-token prediction runs underneath every stage: later steps
@@ -41,10 +41,10 @@ The question is the same everywhere: *"What do recent papers say about microplas
 
 | # | Stage | Message | Model (middle row) | Chat answer (bottom row) |
 |---|---|---|---|---|
-| 1 | Untrained model | Random output: nothing learned yet | Grey network, random weights. Computer: *Generate 10 words* | Ten random word chips ("orbit lamp the seven…") |
+| 1 | Untrained model | Random output: nothing learned yet | Grey network, random weights. Computer: *Generate 10 words* | Ten random words as plain text, in the same bubble style as stage 2 ("orbit lamp the seven glass of whenever banana north quietly") |
 | 2 | Pre-trained base model | Completes text, not yet an assistant | Blue network, learned language patterns. Computer: *Generate 10 words* | Continues the question instead of answering it (10 words), with the note "Doesn't know when to stop" |
 | 3 | AI assistant | Helpful answers, but may hallucinate | Same network. Computer: *Generate until* **STOP** | A helpful-looking answer that ends in **STOP**. One claim is highlighted amber with the warning "Plausible, but unsupported" |
-| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network and computer, plus Files, Web, Code and Papers tools, each attached to a **TOOL** special word | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, and placeholder sources Paper A/B/C |
+| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network and computer, plus tools for concrete actions (*Search web*, *Read files*, *Execute code*, …), each attached to a **TOOL** special word | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, and placeholder sources Paper A/B/C |
 
 ## Ideas the figure is built to get across
 
@@ -76,6 +76,7 @@ The question is the same everywhere: *"What do recent papers say about microplas
   fonts. Parts are grouped with named ids (`pretraining`, `posttraining`, `tools`, `agent-loop`,
   `middle-row-model`, `model-1` … `model-4`, `stage-1` … `stage-4`, `unsupported-claim`,
   `hallucination-warning`, `connectors`, `next-token-baseline`). Everything except the background
-  sits in a `figure` group, shifted up by 31 units so the content is vertically centred.
+  sits in a `figure` group, shifted up by 46 units so the content is vertically centred. The steps row
+  has extra space below it to separate it from the stage headers.
 
 ---
