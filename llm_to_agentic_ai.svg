@@ -4,11 +4,11 @@
 <g id="background">
 <rect x="0" y="0" width="1600" height="900" rx="0" fill="#FFFFFF"/>
 </g>
-<g id="figure" transform="translate(0,-46)">
+<g id="figure" transform="translate(0,-50)">
 <g id="row-labels">
 <text x="40" y="178.0" transform="rotate(-90 40 178.0)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#3557C9" text-anchor="middle">STEPS</text>
 <text x="40" y="433" transform="rotate(-90 40 433)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">MODEL</text>
-<text x="40" y="697.0" transform="rotate(-90 40 697.0)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">CHAT</text>
+<text x="40" y="692.0" transform="rotate(-90 40 692.0)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">CHAT</text>
 </g>
 <g id="pretraining">
 <rect x="250" y="96" width="340" height="164" rx="16" fill="#EEF2FB" stroke="#BFCBEF" stroke-width="1.5"/>
@@ -328,11 +328,12 @@
 </g>
 </g>
 <g id="stage-1">
+<text x="60" y="291" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17" fill="#8C94A3"><tspan font-weight="700" fill="#3557C9">≈ 2017</tspan> · Transformer architecture</text>
 <circle cx="75" cy="320" r="15" fill="#3557C9"/>
 <text x="75" y="326" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">1</text>
 <text x="100" y="327" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Untrained model</text>
 <text x="60" y="353" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Random output: nothing learned yet</text>
-<rect x="60" y="538" width="340" height="318" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
+<rect x="60" y="538" width="340" height="308" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
 <g>
 <rect x="90" y="554" width="268" height="64" rx="14" fill="#E3EAFA"/>
 <text x="104" y="580" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
@@ -358,14 +359,15 @@
 <text x="120" y="660" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">orbit lamp the seven glass of</text>
 <text x="120" y="684" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">whenever banana north quietly</text>
 </g>
-<text x="106" y="790" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">10 random words</text>
+<text x="110" y="734" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">10 random words</text>
 </g>
 <g id="stage-2">
+<text x="440" y="291" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17" fill="#8C94A3"><tspan font-weight="700" fill="#3557C9">≈ 2018–2020</tspan> · GPT-1 to GPT-3</text>
 <circle cx="455" cy="320" r="15" fill="#3557C9"/>
 <text x="455" y="326" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">2</text>
 <text x="480" y="327" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Pre-trained base model</text>
 <text x="440" y="353" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Completes text, not yet an assistant</text>
-<rect x="440" y="538" width="340" height="318" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
+<rect x="440" y="538" width="340" height="308" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
 <g>
 <rect x="470" y="554" width="268" height="64" rx="14" fill="#E3EAFA"/>
 <text x="484" y="580" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
@@ -391,14 +393,15 @@
 <text x="500" y="660" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">…and in seafood? What do</text>
 <text x="500" y="684" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">recent papers say about PFAS</text>
 </g>
-<text x="486" y="790" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">Doesn't know when to stop</text>
+<text x="490" y="734" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#8C94A3" font-style="italic">Continues from input prompt</text>
 </g>
 <g id="stage-3">
+<text x="820" y="291" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17" fill="#8C94A3"><tspan font-weight="700" fill="#3557C9">≈ 2022</tspan> · ChatGPT</text>
 <circle cx="835" cy="320" r="15" fill="#3557C9"/>
 <text x="835" y="326" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">3</text>
 <text x="860" y="327" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">AI assistant</text>
 <text x="820" y="353" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Helpful answers, but may hallucinate</text>
-<rect x="820" y="538" width="340" height="318" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
+<rect x="820" y="538" width="340" height="308" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
 <g>
 <rect x="850" y="554" width="268" height="64" rx="14" fill="#E3EAFA"/>
 <text x="864" y="580" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
@@ -436,20 +439,22 @@
 </g>
 </g>
 <g id="hallucination-warning">
-<g transform="translate(877,784)">
+<g transform="translate(863.509,870)">
 <path d="M0 -10L11 9H-11Z" fill="#C46A12" stroke="#C46A12" stroke-width="2" stroke-linejoin="round"/>
 <path d="M0 -3V3" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="0" cy="6.3" r="1.3" fill="#fff"/>
 </g>
-<text x="896" y="790" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">Plausible, but unsupported</text>
+<text x="882.509" y="876" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">Plausible, but from memory</text>
+<text x="882.509" y="898" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">and potentially hallucinated</text>
 </g>
 </g>
 <g id="stage-4">
+<text x="1200" y="291" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="17" fill="#8C94A3"><tspan font-weight="700" fill="#3557C9">≈ 2023–today</tspan> · tool use &amp; agents</text>
 <circle cx="1215" cy="320" r="15" fill="#3557C9"/>
 <text x="1215" y="326" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#fff" font-weight="700" text-anchor="middle">4</text>
 <text x="1240" y="327" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" fill="#1E2A44" font-weight="700">Tool-using agent</text>
 <text x="1200" y="353" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475">Can retrieve and act; needs oversight</text>
-<rect x="1200" y="538" width="340" height="318" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
+<rect x="1200" y="538" width="340" height="308" rx="16" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="1.5"/>
 <g>
 <rect x="1230" y="554" width="268" height="64" rx="14" fill="#E3EAFA"/>
 <text x="1244" y="580" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">What do recent papers say</text>
@@ -477,33 +482,42 @@
 <text x="1279.51" y="652.68" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
 <text x="1317.03" y="654" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Search papers</text>
-<rect x="1246" y="665" width="175.168" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
+<rect x="1246" y="663" width="175.168" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
 <g>
-<rect x="1250" y="669" width="59.028" height="18" rx="5" fill="#1E2A44"/>
-<text x="1279.51" y="682.68" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1250" y="667" width="59.028" height="18" rx="5" fill="#1E2A44"/>
+<text x="1279.51" y="680.68" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<text x="1317.03" y="684" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Read PDFs</text>
-<rect x="1246" y="695" width="242.308" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
+<text x="1317.03" y="682" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Read PDFs</text>
+<rect x="1246" y="691" width="242.308" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>
 <g>
-<rect x="1250" y="699" width="59.028" height="18" rx="5" fill="#1E2A44"/>
-<text x="1279.51" y="712.68" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1250" y="695" width="59.028" height="18" rx="5" fill="#1E2A44"/>
+<text x="1279.51" y="708.68" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<text x="1317.03" y="714" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Summarize findings</text>
+<text x="1317.03" y="710" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#0E8A87">Summarize findings</text>
 </g>
 <g id="stage-4-response">
-<rect x="1246" y="734" width="280" height="70" rx="14" fill="#F1F2F5"/>
-<text x="1260" y="760" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">Retrieved papers: evidence</text>
-<text x="1260" y="784" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">is still emerging.</text>
+<rect x="1246" y="726" width="280" height="70" rx="14" fill="#F1F2F5"/>
+<text x="1260" y="752" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">Retrieved papers: evidence</text>
+<text x="1260" y="776" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44">is still emerging.</text>
 <g>
-<rect x="1402.66" y="768" width="65.34" height="22" rx="5" fill="#1E2A44"/>
-<text x="1435.33" y="784.4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
+<rect x="1402.66" y="760" width="65.34" height="22" rx="5" fill="#1E2A44"/>
+<text x="1435.33" y="776.4" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
 </g>
-<rect x="1246" y="814" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
-<text x="1285.67" y="833" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper A</text>
-<rect x="1333.34" y="814" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
-<text x="1373.01" y="833" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper B</text>
-<rect x="1420.68" y="814" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
-<text x="1460.35" y="833" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper C</text>
+<rect x="1246" y="804" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1285.67" y="823" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper A</text>
+<rect x="1333.34" y="804" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1373.01" y="823" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper B</text>
+<rect x="1420.68" y="804" width="79.34" height="26" rx="6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="1"/>
+<text x="1460.35" y="823" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#1E2A44" text-anchor="middle">Paper C</text>
+</g>
+<g id="stage-4-warning">
+<g transform="translate(1250.79,870)">
+<path d="M0 -10L11 9H-11Z" fill="#C46A12" stroke="#C46A12" stroke-width="2" stroke-linejoin="round"/>
+<path d="M0 -3V3" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="6.3" r="1.3" fill="#fff"/>
+</g>
+<text x="1269.79" y="876" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">Less likely to hallucinate,</text>
+<text x="1269.79" y="898" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#C46A12" font-weight="700">but still possible</text>
 </g>
 </g>
 <g id="connectors">
@@ -522,11 +536,6 @@
 <circle r="15" fill="#3557C9"/>
 <path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-</g>
-<g id="next-token-baseline">
-<path d="M60 886H1536M1528 880L1536 886L1528 892" fill="none" stroke="#BFCBEF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="394.161" y="872" width="811.678" height="28" rx="0" fill="#FFFFFF"/>
-<text x="800" y="892" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle"><tspan font-weight="700" fill="#3557C9">Next-token prediction</tspan> runs underneath every stage: later steps build on it, they don't replace it</text>
 </g>
 </g>
 </svg>
