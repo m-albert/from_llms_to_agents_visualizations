@@ -7,7 +7,7 @@
 <g id="figure" transform="translate(0,-46)">
 <g id="row-labels">
 <text x="40" y="178.0" transform="rotate(-90 40 178.0)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#3557C9" text-anchor="middle">STEPS</text>
-<text x="40" y="426" transform="rotate(-90 40 426)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">MODEL</text>
+<text x="40" y="433" transform="rotate(-90 40 433)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">MODEL</text>
 <text x="40" y="697.0" transform="rotate(-90 40 697.0)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#8C94A3" text-anchor="middle">CHAT</text>
 </g>
 <g id="pretraining">
@@ -90,9 +90,14 @@
 </g>
 <g id="middle-row-model">
 <g id="model-1">
-<rect x="160" y="369" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
-<path d="M220.0 475.0L216.0 487.0H244.0L240.0 475.0M202.0 487.0H258.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(230,400) scale(0.5)">
+<rect x="160" y="371" width="140" height="116" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<path d="M161.0 391.0V381.0A9 9 0 0 1 170.0 372.0H290.0A9 9 0 0 1 299.0 381.0V391.0Z" fill="#F1F2F5"/>
+<path d="M160.0 391.0H300.0" fill="none" stroke="#1E2A44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="172.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="182.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="192.0" cy="381.0" r="3" fill="#8C94A3"/>
+<path d="M274.0 377.0L270.0 381.0L274.0 385.0M286.0 377.0L290.0 381.0L286.0 385.0M281.5 376.0L278.5 386.0" fill="none" stroke="#8C94A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(230,415) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#8C94A3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.49"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#8C94A3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.37"/>
@@ -129,14 +134,19 @@
 <circle cx="34" cy="0" r="6.5" fill="#FFFFFF" stroke="#8C94A3" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#FFFFFF" stroke="#8C94A3" stroke-width="2"/>
 </g>
-<text x="230" y="440" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
-<text x="230" y="462" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
-<text x="230" y="511" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Random weights</text>
+<text x="230" y="455" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
+<text x="230" y="476" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
+<text x="230" y="515" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Random weights</text>
 </g>
 <g id="model-2">
-<rect x="540" y="369" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
-<path d="M600.0 475.0L596.0 487.0H624.0L620.0 475.0M582.0 487.0H638.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(610,400) scale(0.5)">
+<rect x="540" y="371" width="140" height="116" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<path d="M541.0 391.0V381.0A9 9 0 0 1 550.0 372.0H670.0A9 9 0 0 1 679.0 381.0V391.0Z" fill="#F1F2F5"/>
+<path d="M540.0 391.0H680.0" fill="none" stroke="#1E2A44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="552.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="562.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="572.0" cy="381.0" r="3" fill="#8C94A3"/>
+<path d="M654.0 377.0L650.0 381.0L654.0 385.0M666.0 377.0L670.0 381.0L666.0 385.0M661.5 376.0L658.5 386.0" fill="none" stroke="#8C94A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(610,415) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -173,14 +183,19 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="610" y="440" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
-<text x="610" y="462" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
-<text x="610" y="511" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Learned language patterns</text>
+<text x="610" y="455" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
+<text x="610" y="476" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
+<text x="610" y="515" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Learned language patterns</text>
 </g>
 <g id="model-3">
-<rect x="920" y="369" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
-<path d="M980.0 475.0L976.0 487.0H1004.0L1000.0 475.0M962.0 487.0H1018.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(990,400) scale(0.5)">
+<rect x="920" y="371" width="140" height="116" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<path d="M921.0 391.0V381.0A9 9 0 0 1 930.0 372.0H1050.0A9 9 0 0 1 1059.0 381.0V391.0Z" fill="#F1F2F5"/>
+<path d="M920.0 391.0H1060.0" fill="none" stroke="#1E2A44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="932.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="942.0" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="952.0" cy="381.0" r="3" fill="#8C94A3"/>
+<path d="M1034.0 377.0L1030.0 381.0L1034.0 385.0M1046.0 377.0L1050.0 381.0L1046.0 385.0M1041.5 376.0L1038.5 386.0" fill="none" stroke="#8C94A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(990,415) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -217,17 +232,22 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="990" y="440" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
+<text x="990" y="455" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
 <g>
-<rect x="958.908" y="447" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="990" y="462.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
+<rect x="958.908" y="461" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="990" y="476.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
 </g>
-<text x="990" y="511" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Assistant behavior</text>
+<text x="990" y="515" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Assistant behavior</text>
 </g>
 <g id="model-4">
-<rect x="1200" y="369" width="340" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
-<path d="M1360.0 475.0L1356.0 487.0H1384.0L1380.0 475.0M1342.0 487.0H1398.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1263,400) scale(0.5)">
+<rect x="1200" y="371" width="340" height="116" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<path d="M1201 391.0V381.0A9 9 0 0 1 1210 372.0H1530A9 9 0 0 1 1539 381.0V391.0Z" fill="#F1F2F5"/>
+<path d="M1200 391.0H1540" fill="none" stroke="#1E2A44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1212" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="1222" cy="381.0" r="3" fill="#8C94A3"/>
+<circle cx="1232" cy="381.0" r="3" fill="#8C94A3"/>
+<path d="M1514 377.0L1510 381.0L1514 385.0M1526 377.0L1530 381.0L1526 385.0M1521.5 376.0L1518.5 386.0" fill="none" stroke="#8C94A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(1263,415) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -264,47 +284,47 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="1263" y="440" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
+<text x="1263" y="455" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
 <g>
-<rect x="1231.91" y="447" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1263" y="462.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
+<rect x="1231.91" y="461" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1263" y="476.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
 </g>
 <g id="tools-with-special-words">
-<path d="M1326 382V462" fill="none" stroke="#D3D8E1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 4"/>
+<path d="M1326 399V479" fill="none" stroke="#D3D8E1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 4"/>
 <g>
-<rect x="1338" y="379" width="55.872" height="18" rx="5" fill="#1E2A44"/>
-<text x="1365.94" y="392.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1338" y="396" width="55.872" height="18" rx="5" fill="#1E2A44"/>
+<text x="1365.94" y="409.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1393.872 388H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1409.87,388) scale(0.5)">
+<path d="M1393.872 405H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(1409.87,405) scale(0.5)">
 <circle r="17" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <ellipse rx="7.5" ry="17" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M-17 0H17M-14.5 -8.5H14.5M-14.5 8.5H14.5" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="1421.87" y="393" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Search web</text>
+<text x="1421.87" y="410" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Search web</text>
 <g>
-<rect x="1338" y="405" width="55.872" height="18" rx="5" fill="#1E2A44"/>
-<text x="1365.94" y="418.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1338" y="421" width="55.872" height="18" rx="5" fill="#1E2A44"/>
+<text x="1365.94" y="434.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1393.872 414H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1409.87,414) scale(0.5)">
+<path d="M1393.872 430H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(1409.87,430) scale(0.5)">
 <path d="M-17 -12H-5L-1 -7H17V14H-17Z" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M-17 -2H17" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="1421.87" y="419" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Read files</text>
+<text x="1421.87" y="435" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Read files</text>
 <g>
-<rect x="1338" y="431" width="55.872" height="18" rx="5" fill="#1E2A44"/>
-<text x="1365.94" y="444.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1338" y="446" width="55.872" height="18" rx="5" fill="#1E2A44"/>
+<text x="1365.94" y="459.32" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1393.872 440H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1409.87,440) scale(0.5)">
+<path d="M1393.872 455H1398.872" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(1409.87,455) scale(0.5)">
 <rect x="-19" y="-15" width="38" height="30" rx="4" fill="#fff" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M-6 -6L-12 0L-6 6M6 -6L12 0L6 6M2.5 -8L-2.5 8" fill="none" stroke="#0E8A87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="1421.87" y="445" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Execute code</text>
-<text x="1421.87" y="467" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87" font-weight="700">…</text>
+<text x="1421.87" y="460" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" fill="#0E8A87">Execute code</text>
+<text x="1421.87" y="481" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87" font-weight="700">…</text>
 </g>
-<text x="1370" y="511" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Tools, called by a special word</text>
+<text x="1370" y="515" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Tools, called by a special word</text>
 </g>
 </g>
 <g id="stage-1">
@@ -463,18 +483,18 @@
 </g>
 </g>
 <g id="connectors">
-<path d="M420 260V407" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M800 260V407" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M1180 260V407" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(420,422)">
+<path d="M420 260V414" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M800 260V414" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1180 260V414" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(420,429)">
 <circle r="15" fill="#3557C9"/>
 <path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<g transform="translate(800,422)">
+<g transform="translate(800,429)">
 <circle r="15" fill="#3557C9"/>
 <path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<g transform="translate(1180,422)">
+<g transform="translate(1180,429)">
 <circle r="15" fill="#3557C9"/>
 <path d="M-3 -6L3 0L-3 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
