@@ -90,9 +90,9 @@
 </g>
 <g id="middle-row-model">
 <g id="model-1">
-<rect x="135" y="339" width="190" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<rect x="160" y="339" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
 <path d="M220.0 445.0L216.0 457.0H244.0L240.0 445.0M202.0 457.0H258.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(230,373) scale(0.5)">
+<g transform="translate(230,370) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#D3D8E1" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#8C94A3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.49"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#8C94A3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.37"/>
@@ -129,13 +129,14 @@
 <circle cx="34" cy="0" r="6.5" fill="#FFFFFF" stroke="#8C94A3" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#FFFFFF" stroke="#8C94A3" stroke-width="2"/>
 </g>
-<text x="230" y="424" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate 10 words</text>
+<text x="230" y="410" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
+<text x="230" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
 <text x="230" y="481" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Random weights</text>
 </g>
 <g id="model-2">
-<rect x="515" y="339" width="190" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<rect x="540" y="339" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
 <path d="M600.0 445.0L596.0 457.0H624.0L620.0 445.0M582.0 457.0H638.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(610,373) scale(0.5)">
+<g transform="translate(610,370) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -172,13 +173,14 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="610" y="424" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate 10 words</text>
+<text x="610" y="410" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate</text>
+<text x="610" y="432" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">10 words</text>
 <text x="610" y="481" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">Learned language patterns</text>
 </g>
 <g id="model-3">
-<rect x="895" y="339" width="190" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<rect x="920" y="339" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
 <path d="M980.0 445.0L976.0 457.0H1004.0L1000.0 445.0M962.0 457.0H1018.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(990,373) scale(0.5)">
+<g transform="translate(990,370) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -215,17 +217,17 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="905.908" y="424" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475">Generate until</text>
+<text x="990" y="410" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
 <g>
-<rect x="1011.91" y="409" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1043" y="424.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
+<rect x="958.908" y="417" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="990" y="432.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
 </g>
 <text x="990" y="481" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Assistant behavior</text>
 </g>
 <g id="model-4">
-<rect x="1200" y="339" width="190" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
-<path d="M1285.0 445.0L1281.0 457.0H1309.0L1305.0 445.0M1267.0 457.0H1323.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1295,373) scale(0.5)">
+<rect x="1200" y="339" width="140" height="106" rx="10" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/>
+<path d="M1260.0 445.0L1256.0 457.0H1284.0L1280.0 445.0M1242.0 457.0H1298.0" fill="none" stroke="#1E2A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(1270,370) scale(0.5)">
 <rect x="-60" y="-42" width="120" height="84" rx="14" fill="#FFFFFF" stroke="#BFCBEF" stroke-width="2"/>
 <path d="M-34 -18L0 -27" fill="none" stroke="#3557C9" stroke-width="1.79813" stroke-linecap="round" stroke-linejoin="round" opacity="0.67"/>
 <path d="M-34 -18L0 -9" fill="none" stroke="#3557C9" stroke-width="1.05077" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>
@@ -262,59 +264,53 @@
 <circle cx="34" cy="0" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 <circle cx="34" cy="18" r="6.5" fill="#3557C9" stroke="#3557C9" stroke-width="2"/>
 </g>
-<text x="1210.91" y="424" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475">Generate until</text>
+<text x="1270" y="410" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#5B6475" text-anchor="middle">Generate until</text>
 <g>
-<rect x="1316.91" y="409" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1348" y="424.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
+<rect x="1238.91" y="417" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1270" y="432.04" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">STOP</text>
 </g>
 <g id="tools-with-special-words">
-<path d="M1390 351.5H1398" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1340 351.5H1348" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
-<rect x="1398" y="341.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1429.09" y="356.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1348" y="341.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1379.09" y="356.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1460.184 351.5H1466.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1478.18,351.5) scale(0.55)">
-<path d="M-17 -12H-5L-1 -7H17V14H-17Z" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M-17 -2H17" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="1492.18" y="357.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Files</text>
-<path d="M1390 378.5H1398" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g>
-<rect x="1398" y="368.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1429.09" y="383.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
-</g>
-<path d="M1460.184 378.5H1466.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1478.18,378.5) scale(0.55)">
+<path d="M1410.184 351.5H1416.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1442.18" y="357.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Search web</text>
+<g transform="translate(1428.18,351.5) scale(0.55)">
 <circle r="17" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
 <ellipse rx="7.5" ry="17" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M-17 0H17M-14.5 -8.5H14.5M-14.5 8.5H14.5" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="1492.18" y="384.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Web</text>
-<path d="M1390 405.5H1398" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1340 378.5H1348" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
-<rect x="1398" y="395.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1429.09" y="410.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1348" y="368.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1379.09" y="383.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1460.184 405.5H1466.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1478.18,405.5) scale(0.55)">
+<path d="M1410.184 378.5H1416.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1442.18" y="384.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Read files</text>
+<g transform="translate(1428.18,378.5) scale(0.55)">
+<path d="M-17 -12H-5L-1 -7H17V14H-17Z" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M-17 -2H17" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="M1340 405.5H1348" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<g>
+<rect x="1348" y="395.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1379.09" y="410.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+</g>
+<path d="M1410.184 405.5H1416.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1442.18" y="411.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Execute code</text>
+<g transform="translate(1428.18,405.5) scale(0.55)">
 <rect x="-19" y="-15" width="38" height="30" rx="4" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M-6 -6L-12 0L-6 6M6 -6L12 0L6 6M2.5 -8L-2.5 8" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="1492.18" y="411.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Code</text>
-<path d="M1390 432.5H1398" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1340 432.5H1348" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
-<rect x="1398" y="422.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
-<text x="1429.09" y="437.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
+<rect x="1348" y="422.5" width="62.184" height="20" rx="5" fill="#1E2A44"/>
+<text x="1379.09" y="437.54" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#fff" font-weight="700" text-anchor="middle" letter-spacing="1">TOOL</text>
 </g>
-<path d="M1460.184 432.5H1466.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<g transform="translate(1478.18,432.5) scale(0.55)">
-<path d="M-13 -18H5L13 -10V18H-13Z" fill="#fff" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5 -18V-10H13" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M-8 -10H0M-8 -4H8" fill="none" stroke="#0E8A87" stroke-width="3.63636" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M-6 13V8M0 13V3M6 13V6" fill="none" stroke="#0E8A87" stroke-width="5.09091" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="1492.18" y="438.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">Papers</text>
+<path d="M1410.184 432.5H1416.184" fill="none" stroke="#0E8A87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1442.18" y="438.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="16" fill="#0E8A87">…</text>
 </g>
 <text x="1370" y="481" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" fill="#5B6475" text-anchor="middle">+ Tools, called by a special word</text>
 </g>
