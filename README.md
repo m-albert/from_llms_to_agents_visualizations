@@ -18,7 +18,7 @@ labelled on the left margin:
 | Row | Shows |
 |---|---|
 | **STEPS** (top) | The three steps, drawn as tinted cards that sit *between* the columns. A line runs down from each card to an arrow between two neighbouring models. |
-| **MODEL** (middle) | The model inside a software environment, drawn as an app window (title bar with window dots and a `</>` mark). The window shows what the software is set to do with the model, in two short lines, e.g. *Generate / 10 words*. |
+| **MODEL** (middle) | The model inside a software environment, drawn as an app window (title bar with window dots and a `</>` mark). The window shows what the software is set to do with the model, in two short lines, e.g. *Generate / 10 words*. In stages 3 and 4 the window is wider and also holds a **system prompt** panel (dashed, tinted, labelled SYSTEM PROMPT): the hidden text the software puts in front of every conversation. |
 | **CHAT** (bottom) | The same chat window and the same question at every stage, with that stage's answer. A small person icon marks the human user's message, and a small blue robot (chatbot) icon marks the model's reply. |
 
 The figure has no title, footnote or bottom band, so the slide can supply
@@ -55,8 +55,8 @@ The years are approximate. The figure is a conceptual sequence, not a strict his
 |---|---|---|---|---|
 | 1 | Untrained model | Random output: nothing learned yet | Grey network, random weights. Software: *Generate 10 words* | Ten random words as plain text, in the same bubble style as stage 2 ("orbit lamp the seven glass of whenever banana north quietly") |
 | 2 | Pre-trained base model | Completes text, not yet an assistant | Blue network, learned language patterns. Software: *Generate 10 words* | Continues the question instead of answering it (10 words), with the note "Continues from input prompt" |
-| 3 | AI assistant | Helpful answers, but may hallucinate | Same network. Software: *Generate until* **STOP** | A helpful-looking answer that ends in **STOP**. One claim is highlighted amber with the warning "Plausible, but from memory and potentially hallucinated" |
-| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network, in a wider window: the tools sit *inside* the same software, to the right of the model behind a dashed divider. They name concrete actions (*Search web*, *Read files*, *Execute code*, …), each attached to a **TOOL** special word | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, placeholder sources Paper A/B/C, and the amber warning "Less likely to hallucinate, but still possible" |
+| 3 | AI assistant | Helpful answers, but may hallucinate | Same network, in a wider window. Software: *Generate until* **STOP**, plus a system prompt: *“What follows is a conversation between a human and a helpful, knowledgeable and kind assistant…”* | A helpful-looking answer that ends in **STOP**. One claim is highlighted amber with the warning "Plausible, but from memory and potentially hallucinated" |
+| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network and window. The system prompt now opens with the same text (shortened to *“What follows is a conver…”*) and continues with the tool descriptions: concrete actions (*Search web*, *Read files*, *Execute code*, …), each attached to a **TOOL** special word. Tool information is part of the system prompt, not a separate component | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, placeholder sources Paper A/B/C, and the amber warning "Less likely to hallucinate, but still possible" |
 
 ## Ideas the figure is built to get across
 
@@ -71,6 +71,10 @@ The years are approximate. The figure is a conceptual sequence, not a strict his
   pre-training. What post-training adds is an end-of-turn token (e.g. `<|im_end|>`) that marks the
   end of the assistant's reply, so the model knows where *an answer* ends. That's why the stage 2 note
   describes what the base model does, rather than claiming it has no stop word.
+- **The software adds a hidden system prompt.** From stage 3 on, the model doesn't see the user's question
+  alone: the software puts a system prompt in front of it that casts the model as an assistant. In stage 4
+  the same system prompt also describes the available tools, which is how the model knows they exist.
+  (The stage 3 wording is in the style of early assistant prompts; real system prompts are much longer.)
 - **Tools are called through special words.** The agent emits TOOL. The software runs the tool and
   returns the result, and the loop continues.
 - **Fallibility is shown honestly.** Post-training doesn't remove hallucinations, and tools or
@@ -86,13 +90,13 @@ The years are approximate. The figure is a conceptual sequence, not a strict his
   connectors, trained network).
 - Teal for tool use, amber for possible hallucinations, and dark chips for special words
   (STOP, TOOL).
-- System sans-serif fonts. Body text is 18 units or larger, except the text inside the software windows and the chip
-  labels.
+- System sans-serif fonts. Body text is 18 units or larger, except the text inside the software windows (including the
+  system prompt panels, 12–15) and the chip labels.
 - Plain, editable SVG: real `<text>` elements, no images, `foreignObject`, filters or external
   fonts. Parts are grouped with named ids (`pretraining`, `posttraining`, `tools`, `agent-loop`,
-  `middle-row-model`, `model-1` … `model-4`, `stage-1` … `stage-4`, `unsupported-claim`,
+  `middle-row-model`, `model-1` … `model-4`, `system-prompt-3`, `system-prompt-4`, `stage-1` … `stage-4`, `unsupported-claim`,
   `hallucination-warning`, `connectors`). Everything except the background
-  sits in a `figure` group, shifted up by 50 units so the content is vertically centred. The steps row
+  sits in a `figure` group, shifted up by 66 units so the content is vertically centred. The steps row
   has extra space below it to separate it from the stage headers.
 
 ---
