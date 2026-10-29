@@ -343,9 +343,15 @@
 <path d="M-7.5 8.5C-7.5 2.5 7.5 2.5 7.5 8.5Z" fill="#fff"/>
 </g>
 </g>
-<g transform="translate(84,650)">
-<circle r="13" fill="#3557C9"/>
-<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+<g transform="translate(84,652)">
+<path d="M0 -9.5V-13" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="-14" r="2.4" fill="#3557C9"/>
+<rect x="-13" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="10" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="-10" y="-10" width="20" height="19" rx="5" fill="#3557C9"/>
+<circle cx="-4" cy="-2" r="2.4" fill="#fff"/>
+<circle cx="4" cy="-2" r="2.4" fill="#fff"/>
+<path d="M-3.5 4H3.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g id="stage-1-response">
 <rect x="106" y="634" width="280" height="70" rx="14" fill="#F1F2F5"/>
@@ -370,9 +376,15 @@
 <path d="M-7.5 8.5C-7.5 2.5 7.5 2.5 7.5 8.5Z" fill="#fff"/>
 </g>
 </g>
-<g transform="translate(464,650)">
-<circle r="13" fill="#3557C9"/>
-<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+<g transform="translate(464,652)">
+<path d="M0 -9.5V-13" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="-14" r="2.4" fill="#3557C9"/>
+<rect x="-13" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="10" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="-10" y="-10" width="20" height="19" rx="5" fill="#3557C9"/>
+<circle cx="-4" cy="-2" r="2.4" fill="#fff"/>
+<circle cx="4" cy="-2" r="2.4" fill="#fff"/>
+<path d="M-3.5 4H3.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g id="stage-2-response">
 <rect x="486" y="634" width="280" height="70" rx="14" fill="#F1F2F5"/>
@@ -397,9 +409,15 @@
 <path d="M-7.5 8.5C-7.5 2.5 7.5 2.5 7.5 8.5Z" fill="#fff"/>
 </g>
 </g>
-<g transform="translate(844,650)">
-<circle r="13" fill="#3557C9"/>
-<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+<g transform="translate(844,652)">
+<path d="M0 -9.5V-13" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="-14" r="2.4" fill="#3557C9"/>
+<rect x="-13" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="10" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="-10" y="-10" width="20" height="19" rx="5" fill="#3557C9"/>
+<circle cx="-4" cy="-2" r="2.4" fill="#fff"/>
+<circle cx="4" cy="-2" r="2.4" fill="#fff"/>
+<path d="M-3.5 4H3.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g id="stage-3-response">
 <rect x="866" y="634" width="280" height="116" rx="14" fill="#F1F2F5"/>
@@ -442,9 +460,15 @@
 <path d="M-7.5 8.5C-7.5 2.5 7.5 2.5 7.5 8.5Z" fill="#fff"/>
 </g>
 </g>
-<g transform="translate(1224,650)">
-<circle r="13" fill="#3557C9"/>
-<path d="M0 -7.5C0.8 -2.2 2.2 -0.8 7.5 0C2.2 0.8 0.8 2.2 0 7.5C-0.8 2.2 -2.2 0.8 -7.5 0C-2.2 -0.8 -0.8 -2.2 0 -7.5Z" fill="#fff"/>
+<g transform="translate(1224,652)">
+<path d="M0 -9.5V-13" fill="none" stroke="#3557C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="0" cy="-14" r="2.4" fill="#3557C9"/>
+<rect x="-13" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="10" y="-4" width="3" height="8" rx="1.5" fill="#3557C9"/>
+<rect x="-10" y="-10" width="20" height="19" rx="5" fill="#3557C9"/>
+<circle cx="-4" cy="-2" r="2.4" fill="#fff"/>
+<circle cx="4" cy="-2" r="2.4" fill="#fff"/>
+<path d="M-3.5 4H3.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g id="stage-4-tool-trace">
 <rect x="1246" y="635" width="199.108" height="26" rx="13" fill="#E4F3F2" stroke="#0E8A87" stroke-width="1"/>

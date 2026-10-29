@@ -19,7 +19,7 @@ labelled on the left margin:
 |---|---|
 | **STEPS** (top) | The three steps, drawn as tinted cards that sit *between* the columns. A line runs down from each card to an arrow between two neighbouring models. |
 | **MODEL** (middle) | The model inside a software environment, drawn as an app window (title bar with window dots and a `</>` mark). The window shows what the software is set to do with the model, in two short lines, e.g. *Generate / 10 words*. |
-| **CHAT** (bottom) | The same chat window and the same question at every stage, with that stage's answer. A small person icon marks the human user's message, and a blue sparkle icon marks the model's reply. |
+| **CHAT** (bottom) | The same chat window and the same question at every stage, with that stage's answer. A small person icon marks the human user's message, and a small blue robot (chatbot) icon marks the model's reply. |
 
 A band along the bottom reads: *"Next-token prediction runs underneath every stage: later steps
 build on it, they don't replace it."* The figure has no title or footnote, so the slide can supply
