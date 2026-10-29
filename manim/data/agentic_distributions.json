@@ -1,0 +1,1673 @@
+{
+ "stage2": [
+  {
+   "word": "What",
+   "p": 0.10026,
+   "others": [
+    [
+     "Micro",
+     0.11592
+    ],
+    [
+     "The",
+     0.04
+    ],
+    [
+     "How",
+     0.03124
+    ],
+    [
+     "Are",
+     0.0236
+    ],
+    [
+     "A",
+     0.02231
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "do",
+   "p": 0.38616,
+   "others": [
+    [
+     "are",
+     0.14686
+    ],
+    [
+     "is",
+     0.09117
+    ],
+    [
+     "does",
+     0.05391
+    ],
+    [
+     "about",
+     0.04213
+    ],
+    [
+     "can",
+     0.04121
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "recent",
+   "p": 0.48049,
+   "others": [
+    [
+     "they",
+     0.195
+    ],
+    [
+     "the",
+     0.0496
+    ],
+    [
+     "these",
+     0.02491
+    ],
+    [
+     "micro",
+     0.01799
+    ],
+    [
+     "researchers",
+     0.01517
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "papers",
+   "p": 0.91755,
+   "others": [
+    [
+     "studies",
+     0.03614
+    ],
+    [
+     "articles",
+     0.00334
+    ],
+    [
+     "research",
+     0.00282
+    ],
+    [
+     "publications",
+     0.00226
+    ],
+    [
+     "reviews",
+     0.00202
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "say",
+   "p": 0.96231,
+   "others": [
+    [
+     "suggest",
+     0.0083
+    ],
+    [
+     "state",
+     0.00239
+    ],
+    [
+     "about",
+     0.0018
+    ],
+    [
+     "report",
+     0.00167
+    ],
+    [
+     "have",
+     0.00166
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "about",
+   "p": 0.98719,
+   "others": [
+    [
+     "on",
+     0.00058
+    ],
+    [
+     "in",
+     0.00056
+    ],
+    [
+     "that",
+     0.00047
+    ],
+    [
+     "to",
+     0.00018
+    ],
+    [
+     "regarding",
+     0.00016
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "microplastics",
+   "p": 0.84816,
+   "others": [
+    [
+     "the",
+     0.04011
+    ],
+    [
+     "plastic",
+     0.00346
+    ],
+    [
+     "marine",
+     0.00289
+    ],
+    [
+     "mic",
+     0.0027
+    ],
+    [
+     "health",
+     0.00228
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "and",
+   "p": 0.96154,
+   "others": [
+    [
+     "in",
+     0.00592
+    ],
+    [
+     "as",
+     0.00028
+    ],
+    [
+     "health",
+     0.00023
+    ],
+    [
+     "pollution",
+     0.00023
+    ],
+    [
+     "on",
+     0.00022
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "health?",
+   "p": 0.93324,
+   "others": [
+    [
+     "the",
+     0.0103
+    ],
+    [
+     "public",
+     0.00647
+    ],
+    [
+     "how",
+     0.00498
+    ],
+    [
+     "human",
+     0.00468
+    ],
+    [
+     "climate",
+     0.00259
+    ]
+   ],
+   "special": {}
+  },
+  {
+   "word": "What",
+   "p": 0.48101,
+   "others": [
+    [
+     "Micro",
+     0.03507
+    ],
+    [
+     "How",
+     0.02668
+    ],
+    [
+     "The",
+     0.01918
+    ],
+    [
+     "I",
+     0.01413
+    ],
+    [
+     "Recently",
+     0.01317
+    ]
+   ],
+   "special": {}
+  }
+ ],
+ "stage3": [
+  {
+   "word": "Recent",
+   "p": 0.94412,
+   "others": [
+    [
+     "Recently",
+     0.00857
+    ],
+    [
+     "Several",
+     0.00825
+    ],
+    [
+     "New",
+     0.00582
+    ],
+    [
+     "Researchers",
+     0.00542
+    ],
+    [
+     "The",
+     0.00363
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "papers",
+   "p": 0.82429,
+   "others": [
+    [
+     "studies",
+     0.13622
+    ],
+    [
+     "research",
+     0.02528
+    ],
+    [
+     "scientific",
+     0.00998
+    ],
+    [
+     "literature",
+     0.00079
+    ],
+    [
+     "paper",
+     0.0005
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "suggest",
+   "p": 0.68407,
+   "others": [
+    [
+     "have",
+     0.15404
+    ],
+    [
+     "indicate",
+     0.05802
+    ],
+    [
+     "discuss",
+     0.02062
+    ],
+    [
+     "highlight",
+     0.01018
+    ],
+    [
+     "on",
+     0.00674
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "that",
+   "p": 0.6048,
+   "others": [
+    [
+     "micro",
+     0.13971
+    ],
+    [
+     "a",
+     0.03146
+    ],
+    [
+     "some",
+     0.01586
+    ],
+    [
+     "increased",
+     0.01507
+    ],
+    [
+     "exposure",
+     0.01472
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "microplastics",
+   "p": 0.50144,
+   "others": [
+    [
+     "exposure",
+     0.22489
+    ],
+    [
+     "ingestion",
+     0.02421
+    ],
+    [
+     "small",
+     0.01416
+    ],
+    [
+     "the",
+     0.014
+    ],
+    [
+     "ing",
+     0.01301
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "may",
+   "p": 0.36692,
+   "others": [
+    [
+     "can",
+     0.24553
+    ],
+    [
+     "in",
+     0.08059
+    ],
+    [
+     "are",
+     0.06204
+    ],
+    [
+     "pose",
+     0.053
+    ],
+    [
+     "might",
+     0.02099
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "be",
+   "p": 0.28989,
+   "others": [
+    [
+     "pose",
+     0.24531
+    ],
+    [
+     "have",
+     0.09972
+    ],
+    [
+     "contribute",
+     0.0626
+    ],
+    [
+     "increase",
+     0.05306
+    ],
+    [
+     "affect",
+     0.05265
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "harmful",
+   "p": 0.17417,
+   "others": [
+    [
+     "linked",
+     0.14899
+    ],
+    [
+     "a",
+     0.11453
+    ],
+    [
+     "present",
+     0.05985
+    ],
+    [
+     "accumulating",
+     0.05891
+    ],
+    [
+     "contributing",
+     0.0546
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "to",
+   "p": 0.94493,
+   "others": [
+    [
+     "and",
+     0.0052
+    ],
+    [
+     "or",
+     0.00391
+    ],
+    [
+     "in",
+     0.00355
+    ],
+    [
+     "for",
+     0.00309
+    ],
+    [
+     "due",
+     0.00277
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "human",
+   "p": 0.53576,
+   "others": [
+    [
+     "marine",
+     0.11631
+    ],
+    [
+     "health",
+     0.09448
+    ],
+    [
+     "aquatic",
+     0.07284
+    ],
+    [
+     "the",
+     0.06158
+    ],
+    [
+     "humans",
+     0.03418
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "health,",
+   "p": 0.98594,
+   "others": [
+    [
+     "and",
+     0.01029
+    ],
+    [
+     "cells",
+     0.00079
+    ],
+    [
+     "tissue",
+     0.00029
+    ],
+    [
+     "liver",
+     0.00022
+    ],
+    [
+     "populations",
+     0.00021
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "particularly",
+   "p": 0.22882,
+   "others": [
+    [
+     "with",
+     0.18382
+    ],
+    [
+     "especially",
+     0.11666
+    ],
+    [
+     "affecting",
+     0.08594
+    ],
+    [
+     "potentially",
+     0.04163
+    ],
+    [
+     "possibly",
+     0.03282
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "in",
+   "p": 0.21766,
+   "others": [
+    [
+     "to",
+     0.18413
+    ],
+    [
+     "affecting",
+     0.13702
+    ],
+    [
+     "for",
+     0.09103
+    ],
+    [
+     "through",
+     0.07844
+    ],
+    [
+     "those",
+     0.05774
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "the",
+   "p": 0.28085,
+   "others": [
+    [
+     "aquatic",
+     0.11715
+    ],
+    [
+     "areas",
+     0.10322
+    ],
+    [
+     "marine",
+     0.06519
+    ],
+    [
+     "children",
+     0.03363
+    ],
+    [
+     "small",
+     0.02548
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "gastrointestinal",
+   "p": 0.20978,
+   "others": [
+    [
+     "context",
+     0.09066
+    ],
+    [
+     "digestive",
+     0.08059
+    ],
+    [
+     "form",
+     0.07046
+    ],
+    [
+     "gut",
+     0.0668
+    ],
+    [
+     "eyes",
+     0.03941
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "tract.",
+   "p": 0.7215,
+   "others": [
+    [
+     "system",
+     0.24306
+    ],
+    [
+     "and",
+     0.02499
+    ],
+    [
+     "tr",
+     0.00516
+    ],
+    [
+     "systems",
+     0.00197
+    ],
+    [
+     "track",
+     0.00028
+    ]
+   ],
+   "special": {
+    "STOP": 0.0
+   }
+  },
+  {
+   "word": "STOP",
+   "p": 0.99598,
+   "others": [
+    [
+     "They",
+     0.00114
+    ],
+    [
+     "These",
+     0.00055
+    ],
+    [
+     "This",
+     0.00037
+    ],
+    [
+     "The",
+     0.00021
+    ],
+    [
+     "However",
+     0.00012
+    ]
+   ],
+   "special": {
+    "STOP": 0.995982
+   }
+  }
+ ],
+ "stage4_call": [
+  {
+   "word": "TOOL",
+   "p": 0.93736,
+   "others": [
+    [
+     "To",
+     0.03278
+    ],
+    [
+     "I",
+     0.0049
+    ],
+    [
+     "A",
+     0.00279
+    ],
+    [
+     "Sure",
+     0.00226
+    ],
+    [
+     "The",
+     0.00178
+    ]
+   ],
+   "special": {
+    "STOP": 0.000814,
+    "TOOL": 0.937361
+   }
+  },
+  {
+   "word": "Search",
+   "p": 0.99685,
+   "others": [
+    [
+     "Read",
+     0.00257
+    ],
+    [
+     "Code",
+     0.00051
+    ],
+    [
+     "Research",
+     2e-05
+    ],
+    [
+     "Find",
+     2e-05
+    ],
+    [
+     "Query",
+     0.0
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "“recent",
+   "p": 0.85222,
+   "others": [
+    [
+     "micro",
+     0.13242
+    ],
+    [
+     "latest",
+     0.00099
+    ],
+    [
+     "research",
+     0.00045
+    ],
+    [
+     "Recently",
+     0.00016
+    ],
+    [
+     "last",
+     0.0001
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "papers",
+   "p": 0.98586,
+   "others": [
+    [
+     "micro",
+     0.00987
+    ],
+    [
+     "studies",
+     0.00073
+    ],
+    [
+     "articles",
+     0.00035
+    ],
+    [
+     "paper",
+     0.00022
+    ],
+    [
+     "scientific",
+     0.0002
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "about",
+   "p": 0.6698,
+   "others": [
+    [
+     "micro",
+     0.08417
+    ],
+    [
+     "on",
+     0.04841
+    ],
+    [
+     "say",
+     0.02055
+    ],
+    [
+     "saying",
+     0.01571
+    ],
+    [
+     "regarding",
+     0.00398
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "microplastics",
+   "p": 0.99893,
+   "others": [
+    [
+     "health",
+     0.00024
+    ],
+    [
+     "Micro",
+     0.00019
+    ],
+    [
+     "the",
+     7e-05
+    ],
+    [
+     "mic",
+     4e-05
+    ],
+    [
+     "recent",
+     2e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "and",
+   "p": 0.98352,
+   "others": [
+    [
+     "health",
+     0.00737
+    ],
+    [
+     "micro",
+     0.00053
+    ],
+    [
+     "on",
+     0.00019
+    ],
+    [
+     "with",
+     6e-05
+    ],
+    [
+     "in",
+     2e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "health”",
+   "p": 0.99959,
+   "others": [
+    [
+     "their",
+     0.00018
+    ],
+    [
+     "micro",
+     0.00012
+    ],
+    [
+     "how",
+     2e-05
+    ],
+    [
+     "healthcare",
+     2e-05
+    ],
+    [
+     "its",
+     1e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  }
+ ],
+ "stage4_answer": [
+  {
+   "word": "Recent",
+   "p": 0.57728,
+   "others": [
+    [
+     "There",
+     0.09028
+    ],
+    [
+     "Three",
+     0.0826
+    ],
+    [
+     "The",
+     0.07259
+    ],
+    [
+     "Several",
+     0.02649
+    ],
+    [
+     "Based",
+     0.02384
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "papers",
+   "p": 0.91036,
+   "others": [
+    [
+     "scientific",
+     0.04533
+    ],
+    [
+     "studies",
+     0.03029
+    ],
+    [
+     "research",
+     0.01226
+    ],
+    [
+     "scholarly",
+     0.00027
+    ],
+    [
+     "publications",
+     0.00024
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "suggest",
+   "p": 0.65075,
+   "others": [
+    [
+     "indicate",
+     0.13373
+    ],
+    [
+     "have",
+     0.12796
+    ],
+    [
+     "found",
+     0.01787
+    ],
+    [
+     "discuss",
+     0.00828
+    ],
+    [
+     "on",
+     0.00802
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "that",
+   "p": 0.85238,
+   "others": [
+    [
+     "micro",
+     0.13164
+    ],
+    [
+     "the",
+     0.00447
+    ],
+    [
+     "a",
+     0.00098
+    ],
+    [
+     "there",
+     0.00095
+    ],
+    [
+     "some",
+     0.00071
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "microplastics",
+   "p": 0.96973,
+   "others": [
+    [
+     "there",
+     0.013
+    ],
+    [
+     "human",
+     0.00327
+    ],
+    [
+     "recent",
+     0.00175
+    ],
+    [
+     "some",
+     0.00126
+    ],
+    [
+     "small",
+     0.00114
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "are",
+   "p": 0.56761,
+   "others": [
+    [
+     "may",
+     0.23018
+    ],
+    [
+     "can",
+     0.13648
+    ],
+    [
+     "found",
+     0.01904
+    ],
+    [
+     "might",
+     0.00918
+    ],
+    [
+     "have",
+     0.00589
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "present",
+   "p": 0.60375,
+   "others": [
+    [
+     "found",
+     0.3505
+    ],
+    [
+     "detected",
+     0.01684
+    ],
+    [
+     "commonly",
+     0.0055
+    ],
+    [
+     "prevalent",
+     0.00296
+    ],
+    [
+     "indeed",
+     0.00288
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "in",
+   "p": 0.99911,
+   "others": [
+    [
+     "at",
+     0.00032
+    ],
+    [
+     "within",
+     0.00029
+    ],
+    [
+     "both",
+     0.00011
+    ],
+    [
+     "throughout",
+     5e-05
+    ],
+    [
+     "and",
+     2e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "human",
+   "p": 0.98636,
+   "others": [
+    [
+     "the",
+     0.0067
+    ],
+    [
+     "humans",
+     0.00298
+    ],
+    [
+     "both",
+     0.00153
+    ],
+    [
+     "blood",
+     0.00145
+    ],
+    [
+     "various",
+     0.00038
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "blood",
+   "p": 0.98895,
+   "others": [
+    [
+     "tissues",
+     0.00375
+    ],
+    [
+     "tissue",
+     0.00192
+    ],
+    [
+     "bloodstream",
+     0.00133
+    ],
+    [
+     "body",
+     0.0007
+    ],
+    [
+     "samples",
+     0.00063
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "and",
+   "p": 0.99668,
+   "others": [
+    [
+     "samples",
+     0.00049
+    ],
+    [
+     "cells",
+     0.0002
+    ],
+    [
+     "tissue",
+     0.0001
+    ],
+    [
+     "tissues",
+     5e-05
+    ],
+    [
+     "as",
+     3e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "tissue,",
+   "p": 0.95572,
+   "others": [
+    [
+     "tissues",
+     0.03742
+    ],
+    [
+     "body",
+     0.0017
+    ],
+    [
+     "can",
+     0.00117
+    ],
+    [
+     "other",
+     0.00087
+    ],
+    [
+     "bodily",
+     0.00041
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "with",
+   "p": 0.37112,
+   "others": [
+    [
+     "and",
+     0.31801
+    ],
+    [
+     "but",
+     0.14515
+    ],
+    [
+     "though",
+     0.03785
+    ],
+    [
+     "although",
+     0.03058
+    ],
+    [
+     "leading",
+     0.02232
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "limited",
+   "p": 0.24631,
+   "others": [
+    [
+     "the",
+     0.18052
+    ],
+    [
+     "potential",
+     0.1182
+    ],
+    [
+     "some",
+     0.06405
+    ],
+    [
+     "ongoing",
+     0.05727
+    ],
+    [
+     "preliminary",
+     0.03572
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "evidence",
+   "p": 0.25563,
+   "others": [
+    [
+     "information",
+     0.19481
+    ],
+    [
+     "understanding",
+     0.1686
+    ],
+    [
+     "research",
+     0.07838
+    ],
+    [
+     "scientific",
+     0.0729
+    ],
+    [
+     "knowledge",
+     0.06878
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "on",
+   "p": 0.55411,
+   "others": [
+    [
+     "of",
+     0.14873
+    ],
+    [
+     "indicating",
+     0.10357
+    ],
+    [
+     "yet",
+     0.03688
+    ],
+    [
+     "about",
+     0.03033
+    ],
+    [
+     "for",
+     0.02551
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "their",
+   "p": 0.90472,
+   "others": [
+    [
+     "the",
+     0.03654
+    ],
+    [
+     "potential",
+     0.01768
+    ],
+    [
+     "effects",
+     0.00922
+    ],
+    [
+     "its",
+     0.00676
+    ],
+    [
+     "long",
+     0.0064
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "effects",
+   "p": 0.7631,
+   "others": [
+    [
+     "health",
+     0.06925
+    ],
+    [
+     "long",
+     0.05523
+    ],
+    [
+     "impact",
+     0.04882
+    ],
+    [
+     "potential",
+     0.02442
+    ],
+    [
+     "immediate",
+     0.00748
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "on",
+   "p": 0.99791,
+   "others": [
+    [
+     "specifically",
+     0.00051
+    ],
+    [
+     "and",
+     0.00032
+    ],
+    [
+     "to",
+     0.0001
+    ],
+    [
+     "yet",
+     6e-05
+    ],
+    [
+     "in",
+     5e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "human",
+   "p": 0.96922,
+   "others": [
+    [
+     "health",
+     0.02749
+    ],
+    [
+     "public",
+     0.0011
+    ],
+    [
+     "the",
+     0.0009
+    ],
+    [
+     "overall",
+     0.00059
+    ],
+    [
+     "individual",
+     0.00029
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "health.",
+   "p": 0.9999,
+   "others": [
+    [
+     "well",
+     3e-05
+    ],
+    [
+     "Health",
+     2e-05
+    ],
+    [
+     "healthcare",
+     1e-05
+    ],
+    [
+     "he",
+     1e-05
+    ],
+    [
+     "wellbeing",
+     1e-05
+    ]
+   ],
+   "special": {
+    "STOP": 0.0,
+    "TOOL": 0.0
+   }
+  },
+  {
+   "word": "STOP",
+   "p": 0.91862,
+   "others": [
+    [
+     "This",
+     0.01968
+    ],
+    [
+     "The",
+     0.01171
+    ],
+    [
+     "These",
+     0.01015
+    ],
+    [
+     "However",
+     0.00426
+    ],
+    [
+     "Further",
+     0.00392
+    ]
+   ],
+   "special": {
+    "STOP": 0.91862,
+    "TOOL": 4.3e-05
+   }
+  }
+ ]
+}

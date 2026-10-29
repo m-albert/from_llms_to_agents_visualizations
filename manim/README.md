@@ -20,21 +20,22 @@ Described in [scenes.md](scenes.md); one file per scene in `scenes/`.
 ### From next-word prediction to agentic AI
 
 New scenes (no 3b1b counterpart) for the four stages of `../llm_to_agentic_ai.svg`.
-Shared pieces (windows, model, input panel and loop arrows, system prompt, chips, bars, chat) are in `scenes/agentic_common.py`.
+Shared pieces (windows, model, input card, bars, chips, chat) are in `scenes/agentic_common.py`.
 
 | Scene | File | What it shows |
 |---|---|---|
 | `AgenticOverview` | `scenes/overview.py` | The schematic, built stage by stage. Also writes `AgenticOverview.svg` (copied to `../llm_to_agentic_ai_v2.svg`) |
-| `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights in a loop that stops after 10 words: all words about equally likely, 10 random words |
-| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; same loop now continues the question like web text; the last pass shows STOP (end of text) as one of the options at a real 0.17%, so only the 10-word rule stops it |
-| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training: many example conversations ending in STOP (supervised fine-tuning), then human raters picking the better of two answers (RLHF); the chat message is copied into the input, with the system prompt put in front; loop until STOP (no bars: words just come out of the model); a hallucinated claim from memory |
-| `Stage4Agent` | `scenes/stage_4_agent.py` | A Tools box in the software; tool descriptions go into the system prompt in front of the chat message; a finished TOOL call goes from the input to the tool, and the result is attached to the input; decide / use tool / observe; sources and remaining risk |
+| `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights: every word equally likely; the software stops after 10 random words |
+| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; the base model continues the input by repeating the question, cut off after 10 words |
+| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training (example conversations ending in STOP, human feedback); input = system prompt + conversation; STOP always among the options; an unchecked claim from memory |
+| `Stage4Agent` | `scenes/stage_4_agent.py` | Tool programs at the bottom; the system prompt says how to call them; the software spots TOOL + tool + "input", runs the tool and joins its output to the input |
 
-The core idea in all four: the model only turns text into next-word probabilities.
-The software around it is drawn as a loop through the model: the "Input to the model"
-panel goes up into the model, the next word comes out and is added back to the input
-(and shown in the chat), until the stop rule ("repeat 10 times" or "repeat until STOP")
-ends it. The software also builds the input (system prompt + chat) and runs tools.
+All four share one layout. In the software window, the input is assembled on the left,
+goes through the model in the centre, and the next-word distribution appears on the
+right. The picked word goes to the chat, and the next input is built from the chat.
+For the first three passes the whole input is visibly rebuilt (system prompt + the
+conversation copied from the chat). After that, only the newest word is added, faster.
+The stop rule sits under the model ("max 10 words" or "until STOP").
 
 ## Render
 
@@ -109,13 +110,16 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
 - `ChatbotPrediction`: always picks the most likely word (after the same "sampling"
   flicker), so the answer is reproducible, and stops at the end of the first sentence.
 
-- Agentic scenes: example outputs are schematic, like in the original figure. The bar
-  values are illustrative, except the first step of `Stage2BaseModel`, which shows the real
-  next-word probabilities of Qwen2.5-0.5B (base) for the bare question. That model's top
-  pick, " Micro...", starts an answer, because modern pre-training data contains much Q&A.
-  The second pick, " What" (10%), continues with another question, which is the behaviour
-  the stage shows. Its last pass is real too: after "... PFAS and health?" the model gives
-  " What" 58%, " How" 7%, ..., and its end-of-text token (shown as STOP) 0.17%, rank 38.
+- Agentic scenes: the bars and texts of stages 2-4 are real outputs of small local models,
+  computed by `tools/compute_distributions.py` into `data/agentic_distributions.json`
+  (`uv run python tools/compute_distributions.py`). Each text is the model's own most
+  likely word at every step (no repetition penalty), so the picked bar is always the top
+  one, with one exception: in stage 2's first pass the second choice, "What" (10%, after
+  "Micro" 11%), is picked. Alternatives shown are word-starting tokens.
+  Stage 2: Qwen2.5-0.5B (base) on the bare question. Stages 3-4: Qwen2.5-0.5B-Instruct with
+  the chat template; STOP is `<|im_end|>`, TOOL is `<tool_call>`. The stage 4 tool call is
+  the model's real call (`{"name": "Search", "arguments": {"input": ...}}`, shown as
+  `TOOL Search "..."`); the search result is made up. Stage 1's uniform bars are schematic.
 - Special words, in reality (checked against the Qwen2.5-Instruct chat template): STOP is an
   end-of-turn token such as `<|im_end|>`, which ends every turn, the user's too. TOOL is a
   call such as `<tool_call>{"name": ..., "arguments": ...}</tool_call>`. The software runs
@@ -123,7 +127,8 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
 - System prompt, in reality: the chat template puts it first, as its own turn (`<|im_start|>system
   ... <|im_end|>`). With tools, the template adds each tool's name, description and
   arguments (as JSON, inside `<tools>`) plus how to write a call, to that same system turn.
-  The stage 3/4 scenes show this as plain sentences.
+  The stage 3/4 scenes show this as plain sentences; stage 4's system prompt text is a
+  shortened paraphrase of what the template really contains.
 
 ## License
 

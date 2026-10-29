@@ -4,230 +4,171 @@ from scenes.agentic_common import *
 
 class Stage4Agent(AgenticScene):
     """
-    The same model, now in software that offers tools. The tool descriptions
-    are part of the system prompt, which is put in front of the user's
-    message in the input. The model can write the special word TOOL followed
-    by a call; the software, not the model, runs the tool and attaches the
-    result to the input, then runs the model again: decide, use tool,
-    observe, repeat. The final answer draws on retrieved sources, so
-    hallucination is less likely, but still possible.
+    The same chat model, in software that offers tools. The system prompt
+    says which tools exist and how to call them. The model writes TOOL, the
+    tool and its input; the software recognizes that shape at the end of
+    the text, runs the tool, and joins its output to the input, which then
+    goes through the model again. TOOL and STOP are always among the
+    options. Bars, tool call and answer are the real outputs of a small
+    chat model (Qwen2.5-0.5B-Instruct); the search result is made up.
     """
     stage_number = 4
     stage_title = "Tool-using agent"
     stage_subtitle = "Can retrieve and act; needs oversight"
-    loop_rule = "stop"
-    input_font_size = 17
-    tool_names = ["Search papers", "Read files", "Run code"]
+    roles = True
     system_prompt = [
-        ("You are a helpful assistant.", INK),
-        ("Tools: Search papers, Read files, Run code.", TOOL_COLOR),
-        ("To use one, write TOOL and the call.", INK),
+        ("You are a helpful assistant. Keep answers to one sentence. Tools:", INK),
+        ("Search, Read, Code.", TOOL_COLOR),
+        ("To use one, write TOOL + tool + “input”.", INK),
     ]
-    system_pill_label = "System prompt + tools"
-    answer_font_size = 22
-    tool_font_size = 20
+    stop_rule = "stop"
+    special_rows = ("STOP", "TOOL")
+    input_font_size = 15
+    chat_font_size = 18
+    input_bottom = -2.2
+    tool_names = ["Search", "Read", "Code"]
+    result_text = (
+        "3 papers: microplastics are found in human blood and tissue; "
+        "effects on human health are not yet clear."
+    )
     random_seed = 5
 
     def construct(self):
         self.setup_stage()
         machine = self.machine
         weights_label = self.get_weights_label("+ Assistant behavior")
-        self.add(
-            self.title_group, self.software_window, machine[:2], weights_label,
-            self.input_panel, self.loop_parts,
-        )
-        self.wait()
-
-        # Same model, new software: tools, a way to call them, a way back
-        tools = self.get_tools_box()
-        tool_paths = self.get_tool_paths(tools)
-        self.play(FadeIn(tools[:2]), LaggedStartMap(FadeIn, tools.rows, shift=0.2 * LEFT, lag_ratio=0.3))
-        self.play(LaggedStartMap(FadeIn, tool_paths, lag_ratio=0.4), run_time=2)
-        self.wait()
-
-        # The system prompt describes the tools; it goes in front of the chat message
-        card = self.get_system_prompt_card(font_size=18)
-        intro, tool_words, usage = card.segments
-        self.play(FadeIn(card.frame), FadeIn(intro), FadeIn(usage))
-        self.play(
-            FadeIn(tool_words[0]),
-            LaggedStart(
-                (TransformFromCopy(row, tool_words[2 * n + 1:2 * n + 3], path_arc=20 * DEGREES)
-                for n, row in enumerate(tools.rows)),
-                lag_ratio=0.3,
-            ),
-            run_time=1.8,
-        )
+        tools = self.get_tools()
+        self.add(self.title_group, self.software_window, machine[:2], weights_label)
+        self.play(self.build_software())
+        self.play(LaggedStartMap(FadeIn, tools, shift=0.2 * UP, lag_ratio=0.2))
+        # The system prompt names the tools the software offers
+        self.play(LaggedStart(
+            (TransformFromCopy(tile.label, word) for tile, word in zip(tools.tiles, self.system_block.segments[1])),
+            lag_ratio=0.2,
+        ), run_time=1.2)
         self.wait()
         self.play(FadeIn(self.chat_window), FadeIn(self.user_bubble, 0.25 * LEFT))
-        self.join_system_prompt(card)
 
-        # Pass 1: the model decides to use a tool
-        call1, flow1, bubble1 = self.get_tool_call_line(self.user_bubble.get_bottom()[1] - 0.15)
-        self.play(FadeIn(call1[0]))
-        n0 = len(self.input_flow)
-        self.emit_word("TOOL", flow1, bubble1, slow=True)
-        decide = self.get_stage_tag("Decide", self.get_out_point() + 0.55 * UP)
-        self.play(FadeIn(decide, 0.1 * DOWN))
-        for word in "Search: microplastics health".split(" "):
-            self.emit_word(word, flow1, bubble1, run_time=0.3, color=TOOL_COLOR)
+        # The model decides to call a tool, one word at a time
+        call_group, call_flow, call_bubble = self.get_answer(self.user_bubble.get_bottom()[1] - 0.2)
+        call_bubble.fill = "#DDF1EE"
+        call_bubble.bg.set_fill("#DDF1EE")
+        self.play(FadeIn(call_group[0]))
+        self.open_turn()
+        records = DISTRIBUTIONS["stage4_call"]
+        for n, record in enumerate(records):
+            self.run_pass(n, self.distribution_from_record(record), (call_flow, call_bubble), color=TOOL_COLOR)
 
-        # The software runs the search and attaches the result to the input
-        papers = self.get_paper_cards()
-        papers.next_to(call1, DOWN, buff=0.1).align_to(bubble1.bg, LEFT)
-        use_tool = self.get_stage_tag("Use tool", tools.get_top() + 0.25 * UP)
-        observe = self.get_stage_tag("Observe", ORIGIN)
-        observe.next_to(tool_paths.result_label, DOWN, buff=0.08)
-        self.run_tool(
-            tools, tool_paths, VGroup(*self.input_flow[n0:]), 0, papers, "Papers A, B, C",
-            tags=(use_tool, observe),
-        )
+        # The software sees TOOL + tool + "input" at the end and runs the tool
+        result_pill = self.run_tool(tools, n_call_words=len(records), call_bubble=call_bubble)
 
-        # Pass 2: read the papers found
-        call2, flow2, bubble2 = self.get_tool_call_line(papers.get_bottom()[1] - 0.1, with_icon=False)
-        n0 = len(self.input_flow)
-        for word in ["TOOL", *"Read: Paper A, B, C".split(" ")]:
-            self.emit_word(word, flow2, bubble2, run_time=0.3, color=TOOL_COLOR)
-        read_result = self.get_read_result()
-        read_result.next_to(call2, DOWN, buff=0.08).align_to(bubble2.bg, LEFT)
-        self.run_tool(tools, tool_paths, VGroup(*self.input_flow[n0:]), 1, read_result, "Full texts A, B, C")
+        # Back through the model, now with the result in the input
+        answer_group, flow, bubble = self.get_answer(result_pill.get_bottom()[1] - 0.12, with_icon=False)
+        n0 = len(records)
+        for n, record in enumerate(DISTRIBUTIONS["stage4_answer"]):
+            self.run_pass(n0 + n, self.distribution_from_record(record), (flow, bubble), fast_time=0.4)
+        self.flash_rule()
 
-        # Pass 3: answer from what was retrieved, then STOP
-        answer_group, flow3, bubble3 = self.get_answer(read_result.get_bottom()[1] - 0.1)
-        for word in "Retrieved papers: evidence is still emerging.".split(" "):
-            self.emit_word(word, flow3, bubble3, run_time=0.3)
-        self.emit_word("STOP", flow3, bubble3, run_time=0.5)
-        rect = self.flash_rule()
-        self.wait(0.5)
-        self.play(FadeOut(rect))
-
-        # Sources, linked to what was retrieved
-        sources = VGroup(
-            self.get_source_chip(letter) for letter in "ABC"
-        ).arrange(RIGHT, buff=0.12)
-        sources.next_to(bubble3.bg, DOWN, buff=0.1).align_to(bubble3.bg, LEFT)
-        links = VGroup(
-            DashedLine(source.get_top(), paper.get_bottom(), dash_length=0.06).set_stroke(TOOL_COLOR, 1.5)
-            for source, paper in zip(sources, papers)
-        )
-        self.play(LaggedStartMap(FadeIn, sources, shift=0.1 * UP, lag_ratio=0.2))
-        self.play(ShowCreation(links, lag_ratio=0.2), run_time=1.5)
-        self.wait()
-        self.play(FadeOut(links))
-
-        # Still fallible
-        warning = warning_label(["Less likely to hallucinate,", "but still possible"], font_size=21)
-        warning.next_to(sources, DOWN, buff=0.15).align_to(sources, LEFT)
+        warning = warning_label(["Less likely to hallucinate,", "but still possible"], font_size=18)
+        warning.next_to(bubble.bg, DOWN, buff=0.25).align_to(bubble.bg, LEFT)
         self.play(FadeIn(warning, 0.2 * UP))
-        takeaway = text("Check the sources. Tools act in the real world: agents need oversight.", font_size=24)
-        takeaway.move_to(3.72 * DOWN)
-        self.play(FadeIn(takeaway, 0.2 * UP))
         self.wait(3)
 
-    # Pieces
+    # Tools
 
-    def get_tools_box(self, left=-0.6, top=1.75, bottom=0.1):
-        right = self.window_right - 0.15
-        bg = RoundedRectangle(right - left, top - bottom, corner_radius=0.1)
+    def get_tools(self):
+        tiles = VGroup(self.get_tool_tile(name) for name in self.tool_names)
+        tiles.arrange(RIGHT, buff=0.35)
+        card = self.input_card.bg
+        tiles.move_to([card.get_x(), (card.get_bottom()[1] + self.window_bottom) / 2, 0])
+        tools = VGroup(*tiles)
+        tools.tiles = tiles
+        return tools
+
+    def get_tool_tile(self, name, size=0.62):
+        """A small program: a dark app window with a glyph, and its name."""
+        body = RoundedRectangle(size, size, corner_radius=0.08)
+        body.set_fill(CHIP_FILL, 1).set_stroke(width=0)
+        dots = VGroup(Dot(radius=0.025) for _ in range(3)).arrange(RIGHT, buff=0.03)
+        dots.set_fill(FRAME_GREY, 1).move_to(body.get_corner(UL) + [0.12, -0.08, 0])
+        if name == "Search":
+            glyph = VGroup(
+                Circle(radius=0.11).set_stroke(TRUE_WHITE, 3),
+                Line(ORIGIN, 0.12 * (RIGHT + DOWN)).set_stroke(TRUE_WHITE, 4).shift(0.08 * (RIGHT + DOWN)),
+            )
+        elif name == "Read":
+            glyph = doc_icon(0.3, color=CHIP_FILL)
+        else:
+            glyph = Text(">_", font=MONO, font_size=18, weight=BOLD).set_color(TRUE_WHITE)
+        glyph.move_to(body).shift(0.04 * DOWN)
+        label = mono(name, font_size=14)
+        label.next_to(body, DOWN, buff=0.06)
+        tile = VGroup(body, dots, glyph, label)
+        tile.body = body
+        tile.label = label
+        return tile
+
+    def get_result_card(self):
+        title = text("3 papers", font_size=14, weight=BOLD)
+        lines = VGroup(Line(ORIGIN, w * RIGHT) for w in [0.6, 0.5, 0.6]).arrange(DOWN, aligned_edge=LEFT, buff=0.06)
+        lines.set_stroke(FRAME_GREY, 2)
+        content = VGroup(title, lines).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+        bg = SurroundingRectangle(content, buff=0.08).round_corners(0.05)
         bg.set_fill(TRUE_WHITE, 1).set_stroke(TOOL_COLOR, 1.5)
-        bg.move_to([left, top, 0], UL)
-        header = text("Tools", font_size=20, color=TOOL_COLOR, weight=BOLD)
-        header.move_to(bg.get_corner(UL) + [0.2, -0.15, 0], UL)
-        rows = VGroup(text(name, font_size=19, color=TOOL_COLOR) for name in self.tool_names)
-        rows.arrange(DOWN, aligned_edge=LEFT, buff=0.15)
-        rows.next_to(header, DOWN, buff=0.18, aligned_edge=LEFT)
-        box = VGroup(bg, header, rows)
-        box.rows = rows
-        return box
+        return VGroup(bg, content)
 
-    def get_tool_paths(self, tools):
-        """Input -> tools (a TOOL call), tools -> input (the result)."""
-        bottom = tools[0].get_bottom()[1]
-        call_x, result_x = tools[0].get_left()[0] + 0.3, tools[0].get_right()[0] - 0.35
-        call = flow_arrow([call_x, self.input_top, 0], [call_x, bottom, 0], color=TOOL_COLOR)
-        result = flow_arrow([result_x, bottom, 0], [result_x, self.input_top, 0], color=TOOL_COLOR)
-        call_label = VGroup(chip("TOOL", font_size=13), text("call", font_size=16, color=TOOL_COLOR))
-        call_label.arrange(RIGHT, buff=0.06)
-        call_label.next_to(call, LEFT, buff=0.1).set_y(-0.4)
-        result_label = text("+ result", font_size=16, color=TOOL_COLOR)
-        result_label.move_to([(call_x + result_x) / 2, -0.4, 0])
-        paths = VGroup(call, call_label, result, result_label)
-        paths.call = call
-        paths.result = result
-        paths.result_label = result_label
-        return paths
+    def run_tool(self, tools, n_call_words, call_bubble):
+        """
+        Recognize TOOL + tool + "input" at the end of the text, run the tool,
+        join its output to the input (and show it in the chat).
+        """
+        # The newest word joins the input first
+        word, color, source = self.pending
+        self.play(self.append_to_input(word, color, source), run_time=0.4)
+        self.pending = None
+        call_words = VGroup(*self.input_convo[-n_call_words:])
+        highlights, underlines = self.highlight_words(call_words, color=TOOL_COLOR, fill="#DDF1EE")
+        self.add(highlights, call_words)
+        self.play(FadeIn(highlights), ShowCreation(underlines), self.pulse(self.rule_badge[0], color="#DDF1EE"))
 
-    def get_stage_tag(self, string, point):
-        tag = text(string, font_size=20, color=TOOL_COLOR, weight=BOLD, slant=ITALIC)
-        tag.move_to(point)
-        return tag
+        # Run it
+        tile = tools.tiles[0]
+        link = Arrow(call_words.get_bottom(), tile.body.get_top(), buff=0.08, thickness=3).set_fill(TOOL_COLOR)
+        glow = SurroundingRectangle(tile.body, buff=0.05).round_corners(0.1).set_stroke(TOOL_COLOR, 4)
+        spinner = Arc(start_angle=0, angle=1.5 * PI, radius=0.48).set_stroke(TOOL_COLOR, 3).move_to(tile.body)
+        self.play(GrowArrow(link), ShowCreation(glow))
+        self.play(Rotate(spinner, -2 * TAU, about_point=tile.body.get_center(), run_time=1.2, rate_func=linear), FadeIn(spinner, run_time=0.2))
+        self.remove(spinner)
 
-    def get_result_pill(self, string):
-        label = text("Result: " + string, font_size=self.input_font_size - 2, color=TOOL_COLOR)
-        bg = SurroundingRectangle(label, buff=0.05).round_corners(0.05)
+        # Its output is joined to the input (and recorded in the chat)
+        card = self.get_result_card().move_to(tile.body)
+        self.play(FadeIn(card, scale=0.5), FadeOut(link))
+        self.turns[-1]["closed"] = True
+        flow = self.input_flow
+        flow.line_break()
+        label = flow.add_word("Result:", color=MUTED)
+        result_words = flow.add_words(self.result_text.split(" "), color=TOOL_COLOR)
+        stop = flow.add_word("STOP")
+        flow.line_break()
+        assistant = flow.add_word("Assistant:", color=MUTED)
+        pill = self.get_result_pill()
+        pill.next_to(call_bubble.bg, DOWN, buff=0.1).align_to(call_bubble.bg, LEFT)
+        self.play(
+            FadeTransform(card.copy(), result_words),
+            FadeIn(label), FadeIn(stop),
+            TransformFromCopy(card, pill),
+            FadeOut(card),
+            run_time=1.5,
+        )
+        self.play(FadeIn(assistant), FadeOut(highlights), FadeOut(underlines), FadeOut(glow))
+        self.input_convo.add(label, *result_words, stop, assistant)
+        self.turns.append(dict(role="Result:", items=[(w, TOOL_COLOR, None) for w in self.result_text.split(" ")], closed=True))
+        self.open_turn()
+        self.wait()
+        return pill
+
+    def get_result_pill(self):
+        label = text("Result: 3 papers", font_size=self.chat_font_size - 2, color=TOOL_COLOR)
+        bg = SurroundingRectangle(label, buff=0.08).round_corners(0.08)
         bg.set_fill("#DDF1EE", 1).set_stroke(TOOL_COLOR, 1)
         return VGroup(bg, label)
-
-    def get_tool_call_line(self, top_y, with_icon=True):
-        icon = robot_icon(0.4)
-        icon.move_to([self.chat_left + 0.35, top_y - 0.2, 0])
-        if not with_icon:
-            icon.set_opacity(0)
-        flow = FlowText([self.chat_left + 0.85, top_y - 0.08, 0], 4.1, font_size=self.tool_font_size)
-        bubble = ChatBubble(flow, "#DDF1EE", buff=0.12)
-        bubble.bg.set_opacity(0)
-        return VGroup(icon, bubble), flow, bubble
-
-    def get_paper_cards(self):
-        cards = VGroup()
-        for letter in "ABC":
-            title = text(f"Paper {letter}", font_size=18)
-            lines = VGroup(
-                Line(ORIGIN, width * RIGHT).set_stroke(FRAME_GREY, 2)
-                for width in [0.8, 0.6]
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.07)
-            content = VGroup(title, lines).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
-            bg = SurroundingRectangle(content, buff=0.1).round_corners(0.06)
-            bg.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1)
-            cards.add(VGroup(bg, content))
-        cards.arrange(RIGHT, buff=0.15)
-        return cards
-
-    def get_read_result(self):
-        return text("Full text of Papers A, B, C", font_size=19, color=MUTED, slant=ITALIC)
-
-    def get_source_chip(self, letter):
-        label = text(f"Paper {letter}", font_size=18)
-        bg = SurroundingRectangle(label, buff=0.07).round_corners(0.05)
-        bg.set_stroke(INK, 1).set_fill(TRUE_WHITE, 1)
-        return VGroup(bg, label)
-
-    def run_tool(self, tools, paths, call_words, row_index, chat_result, result_string, tags=()):
-        """
-        The software sees a complete TOOL call in the input, runs the tool,
-        and attaches the result to the input (and shows it in the chat).
-        """
-        row = tools.rows[row_index]
-        call_rect = SurroundingRectangle(call_words, buff=0.04).set_stroke(TOOL_COLOR, 2)
-        self.play(ShowCreation(call_rect), run_time=0.5)
-        use_tool = tags[0] if tags else None
-        self.play(
-            TransformFromCopy(call_words, VGroup(VectorizedPoint(row.get_left())), path_arc=-20 * DEGREES, lag_ratio=0.01, remover=True),
-            self.pulse(paths.call, color=BAR_COLOR),
-            row.animate.scale(1.15, about_edge=LEFT).set_anim_args(rate_func=there_and_back, time_span=(0.6, 1.2)),
-            FadeOut(call_rect),
-            *([FadeIn(use_tool, 0.1 * DOWN)] if use_tool else []),
-            run_time=1.2,
-        )
-        pill = self.get_result_pill(result_string)
-        target = self.input_flow.next_word(pill)
-        source = pill.copy().move_to(row)
-        self.play(
-            FadeTransform(source, target, path_arc=-10 * DEGREES),
-            self.pulse(paths.result, color=BAR_COLOR),
-            FadeInFromPoint(chat_result, row.get_center()),
-            *([FadeIn(tags[1], 0.1 * DOWN)] if len(tags) > 1 else []),
-            run_time=1.4,
-        )
-        self.input_flow.add(target)
-        self.wait(0.5)
