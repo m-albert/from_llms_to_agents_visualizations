@@ -1,0 +1,50 @@
+The mitochondrion is a double-membrane organelle that produces most of the cell's supply of ATP.
+Paris is the capital and largest city of France, with an estimated population of over two million.
+def mean(values): return sum(values) / len(values)
+Preheat the oven to 180 degrees and grease a round cake tin with butter.
+Single-cell RNA sequencing measures gene expression in thousands of individual cells at once.
+The Rhine rises in the Swiss Alps and flows into the North Sea near Rotterdam.
+Has anyone figured out why my conda environment keeps breaking after every update?
+Photosynthesis converts light energy into chemical energy stored in glucose.
+In 1953, Watson and Crick proposed the double helix structure of DNA.
+for i in range(10): print(i ** 2)
+The committee will meet on Thursday to discuss the new budget proposal.
+Water boils at 100 degrees Celsius at sea level.
+CRISPR-Cas9 allows researchers to edit genomes with unprecedented precision.
+Basel lies on the Rhine at the point where Switzerland, France and Germany meet.
+It was the best of times, it was the worst of times, it was the age of wisdom.
+Add the onions and fry gently until soft and golden, about ten minutes.
+Results are reported as mean plus or minus standard deviation of three biological replicates.
+SELECT name, email FROM users WHERE active = 1 ORDER BY name;
+The stock market closed higher on Friday after a week of volatile trading.
+Neurons communicate through electrical impulses and chemical signals called neurotransmitters.
+To be, or not to be, that is the question.
+The Matterhorn is one of the highest peaks in the Alps, at 4478 metres.
+Thanks for the quick reply, that fixed the problem for me!
+Antibodies are Y-shaped proteins that recognise specific molecules called antigens.
+The train to Zurich departs from platform seven at quarter past nine.
+import numpy as np; x = np.linspace(0, 1, 100)
+Enzymes lower the activation energy of chemical reactions in living cells.
+The novel follows a young woman who returns to her childhood village after many years.
+Light travels at roughly three hundred thousand kilometres per second.
+Mix the flour, sugar and eggs until the batter is smooth.
+Microscopy images were segmented using a deep learning model trained on manual annotations.
+The museum is open daily from ten until six, except on public holidays.
+Proteins fold into three-dimensional shapes that determine their function.
+git commit -m "Fix off-by-one error in loop"
+Honeybees communicate the location of flowers with a waggle dance.
+The meeting has been moved to next week because several people are travelling.
+Stem cells can differentiate into many different specialised cell types.
+The Earth orbits the Sun once every 365.25 days.
+Please find attached the revised manuscript and our response to the reviewers.
+Organoids are miniature, simplified versions of organs grown in the lab.
+He opened the door slowly and peered into the dark, silent hallway.
+The human genome contains about three billion base pairs.
+Store in a cool, dry place and consume within three days of opening.
+Gradient descent updates parameters in the direction that reduces the loss.
+The football match ended in a draw after extra time.
+Ribosomes translate messenger RNA into chains of amino acids.
+Our lab is looking for a motivated PhD student in computational biology.
+Bacteria can exchange genes through a process called horizontal gene transfer.
+The weather forecast predicts rain in the afternoon and clearing skies by evening.
+Flow cytometry measures the physical and chemical characteristics of cells in a fluid stream.

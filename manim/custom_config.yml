@@ -1,0 +1,29 @@
+# Light theme config for the vendored 3b1b scenes. Run manimgl from this directory.
+directories:
+  mirror_module_path: False
+  base: "."
+  subdirs:
+    output: "media/videos"
+    raster_images: "assets/raster"
+    vector_images: "assets/vector"
+    data: "data"
+    downloads: "media/downloads"
+    latex_cache: "media/latex_cache"
+universal_import_line: "from manim_imports_ext import *"
+camera:
+  resolution: (1920, 1080)
+  background_color: "#FFFFFF"
+  fps: 30
+  background_opacity: 1.0
+# Dark defaults instead of manim's white/grey ones
+vmobject:
+  default_stroke_color: "#222222"
+  default_fill_color: "#444444"
+mobject:
+  default_mobject_color: "#000000"
+  default_light_color: "#444444"
+text:
+  font: "CMU Serif"
+  alignment: "CENTER"
+tex:
+  template: "default"

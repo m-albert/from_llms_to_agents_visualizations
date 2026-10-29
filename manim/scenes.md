@@ -1,0 +1,29 @@
+### Scenes
+
+- simple next word prediction
+	- based on 3blue1brown `PredictTheNextWord`
+		- which part do i refer to?
+			- start: "Paris is a city in ..."
+			- stop: After the different words and their probabilities are shown
+		- sentence to use: "The Single Cell Unit at D-BSSE is a ..."
+- chatbot / assistant prediction
+	- based on 3blue1brown `PredictTheNextWord`
+		- which part do i refer to?
+			- the part in which it's shown how next word prediction generates a chatbot conversation
+			- start: "what follows is a conversation between..."
+			- stop: When the AI assistant finished creating a useful answer
+	- use the following User question: "What do recent papers say about microplastics and health?"
+	- the answer should be short
+- LLM training level 0:
+	- short
+	- based on `LotsOfTextIntoTheMachine`
+    - here, include some text snippets about "microplastics" and "health", and quickly highlight these
+- LLM training level 1:
+	- short, recapitulating
+	- visual explanation of parameters / weights
+	- based on `ShowMachineWithDials`
+    - don't include the part in which the camera zooms out to show many more weights / parameter nobs
+- LLM training level 2:
+	- recapitulating
+	- visual explanation of training with back propagation
+	- based on `ShowSingleTrainingExample`

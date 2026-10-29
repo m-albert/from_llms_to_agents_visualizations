@@ -1,0 +1,22 @@
+[project]
+name = "retreat-manim"
+version = "0.1.0"
+description = "3Blue1Brown transformer scenes adapted for the retreat talk (light theme)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # 3b1b/manim, pinned to the commit the vendored scene code was taken with
+    "manimgl @ git+https://github.com/3b1b/manim.git@fafa083a4fb274bba9cabde0b6e2f50ba6da0622",
+    # Listed in manim's requirements.txt but missing from its setup.cfg
+    "av",
+    # Self-contained ffmpeg binary (render.sh links it into .venv/bin)
+    "imageio-ffmpeg",
+    # Imported by the vendored _2024/transformers modules
+    "torch",
+    "transformers",
+    "tiktoken",
+    "openai",
+    "gensim",
+]
+
+[tool.uv]
+package = false
