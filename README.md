@@ -44,7 +44,7 @@ The question is the same everywhere: *"What do recent papers say about microplas
 | 1 | Untrained model | Random output: nothing learned yet | Grey network, random weights. Computer: *Generate 10 words* | Ten random words as plain text, in the same bubble style as stage 2 ("orbit lamp the seven glass of whenever banana north quietly") |
 | 2 | Pre-trained base model | Completes text, not yet an assistant | Blue network, learned language patterns. Computer: *Generate 10 words* | Continues the question instead of answering it (10 words), with the note "Doesn't know when to stop" |
 | 3 | AI assistant | Helpful answers, but may hallucinate | Same network. Computer: *Generate until* **STOP** | A helpful-looking answer that ends in **STOP**. One claim is highlighted amber with the warning "Plausible, but unsupported" |
-| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network and computer, plus tools for concrete actions (*Search web*, *Read files*, *Execute code*, …), each attached to a **TOOL** special word | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, and placeholder sources Paper A/B/C |
+| 4 | Tool-using agent | Can retrieve and act; needs oversight | Same network, on a wider screen: the tools sit *inside* the computer, to the right of the model behind a dashed divider. They name concrete actions (*Search web*, *Read files*, *Execute code*, …), each attached to a **TOOL** special word | Tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), a cautious answer ending in **STOP**, and placeholder sources Paper A/B/C |
 
 ## Ideas the figure is built to get across
 
