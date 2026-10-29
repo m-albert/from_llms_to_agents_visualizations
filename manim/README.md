@@ -20,19 +20,21 @@ Described in [scenes.md](scenes.md); one file per scene in `scenes/`.
 ### From next-word prediction to agentic AI
 
 New scenes (no 3b1b counterpart) for the four stages of `../llm_to_agentic_ai.svg`.
-Shared pieces (windows, model, code panel, chips, bars, chat) are in `scenes/agentic_common.py`.
+Shared pieces (windows, model, input panel and loop arrows, system prompt, chips, bars, chat) are in `scenes/agentic_common.py`.
 
 | Scene | File | What it shows |
 |---|---|---|
 | `AgenticOverview` | `scenes/overview.py` | The schematic, built stage by stage. Also writes `AgenticOverview.svg` (copied to `../llm_to_agentic_ai_v2.svg`) |
-| `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights in a "repeat 10 times" loop: all words about equally likely, 10 random words |
-| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; same loop now continues the question like web text and is cut off after 10 words |
-| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training recap (examples, feedback, STOP); the chat as the model reads it; loop until STOP; a hallucinated claim from memory |
-| `Stage4Agent` | `scenes/stage_4_agent.py` | Tools in the software; TOOL calls run by the software, results pasted into the text; decide / use tool / observe; sources and remaining risk |
+| `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights in a loop that stops after 10 words: all words about equally likely, 10 random words |
+| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; same loop now continues the question like web text; the last pass shows STOP (end of text) as one of the options at a real 0.17%, so only the 10-word rule stops it |
+| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training: many example conversations ending in STOP (supervised fine-tuning), then human raters picking the better of two answers (RLHF); the chat message is copied into the input, with the system prompt put in front; loop until STOP (no bars: words just come out of the model); a hallucinated claim from memory |
+| `Stage4Agent` | `scenes/stage_4_agent.py` | A Tools box in the software; tool descriptions go into the system prompt in front of the chat message; a finished TOOL call goes from the input to the tool, and the result is attached to the input; decide / use tool / observe; sources and remaining risk |
 
 The core idea in all four: the model only turns text into next-word probabilities.
-The software around it (shown as a small loop of pseudo-code) picks the words, decides
-when to stop, and runs tools.
+The software around it is drawn as a loop through the model: the "Input to the model"
+panel goes up into the model, the next word comes out and is added back to the input
+(and shown in the chat), until the stop rule ("repeat 10 times" or "repeat until STOP")
+ends it. The software also builds the input (system prompt + chat) and runs tools.
 
 ## Render
 
@@ -112,11 +114,16 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
   next-word probabilities of Qwen2.5-0.5B (base) for the bare question. That model's top
   pick, " Micro...", starts an answer, because modern pre-training data contains much Q&A.
   The second pick, " What" (10%), continues with another question, which is the behaviour
-  the stage shows.
+  the stage shows. Its last pass is real too: after "... PFAS and health?" the model gives
+  " What" 58%, " How" 7%, ..., and its end-of-text token (shown as STOP) 0.17%, rank 38.
 - Special words, in reality (checked against the Qwen2.5-Instruct chat template): STOP is an
   end-of-turn token such as `<|im_end|>`, which ends every turn, the user's too. TOOL is a
   call such as `<tool_call>{"name": ..., "arguments": ...}</tool_call>`. The software runs
   it, adds the result to the text (`<tool_response>`) and calls the model again.
+- System prompt, in reality: the chat template puts it first, as its own turn (`<|im_start|>system
+  ... <|im_end|>`). With tools, the template adds each tool's name, description and
+  arguments (as JSON, inside `<tools>`) plus how to write a call, to that same system turn.
+  The stage 3/4 scenes show this as plain sentences.
 
 ## License
 

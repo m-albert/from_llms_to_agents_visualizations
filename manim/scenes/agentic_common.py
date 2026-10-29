@@ -1,7 +1,8 @@
 """
 Shared pieces for the "from next-word prediction to agentic AI" scenes:
 software and chat windows, the 3b1b model drawing, the software loop shown
-as pseudo-code, special-word chips, bar charts and chat bubbles.
+as a loop through the model (input panel and arrows), special-word chips,
+bar charts and chat bubbles.
 
 New code here uses explicit hex colors (PALETTE below) rather than the
 theme-rebound 3b1b names, so what you read is what you get.
@@ -143,61 +144,37 @@ def window_content_top(window, buff=0.25):
     return window.body.get_top()[1] - window.bar_height - buff
 
 
-class CodePanel(VGroup):
-    """The software's loop, as pseudo-code, with a line highlighter."""
-    def __init__(self, lines, width, height=None, font_size=20, line_buff=0.2, **kwargs):
-        line_mobs = VGroup(
-            mono(line if line.strip() else ".", font_size=font_size)
-            for line in lines
-        )
-        for line, mob in zip(lines, line_mobs):
-            if not line.strip():
-                mob.set_opacity(0)
-            # Indentation in monospace: shift by the width of a character
-        line_mobs.arrange(DOWN, aligned_edge=LEFT, buff=line_buff)
-        char_width = mono("x" * 10, font_size=font_size).get_width() / 10
-        for line, mob in zip(lines, line_mobs):
-            indent = len(line) - len(line.lstrip(" "))
-            mob.shift(indent * char_width * RIGHT)
-        self.recolor_special_words(lines, line_mobs)
-
-        height = height or line_mobs.get_height() + 0.5
-        bg = RoundedRectangle(width, height, corner_radius=0.1)
-        bg.set_fill(PANEL_FILL, 1).set_stroke(width=0)
-        line_mobs.move_to(bg, LEFT).shift(0.25 * RIGHT)
-
-        highlight = Rectangle(width - 0.2, line_mobs[0].get_height() + 0.14)
-        highlight.set_fill(BAR_COLOR, 0.3).set_stroke(BAR_COLOR, 1.5)
-        highlight.move_to(line_mobs[0]).match_x(bg)
-        highlight.set_opacity(0)
-
-        super().__init__(bg, line_mobs, highlight, **kwargs)
-        self.bg = bg
-        self.lines = line_mobs
-        self.highlight = highlight
-
-    def recolor_special_words(self, lines, line_mobs):
-        for line, mob in zip(lines, line_mobs):
-            if "#" in line:
-                mob[line[line.index("#"):].strip()].set_color(MUTED)
-            for word in SPECIAL_WORDS:
-                if word in line:
-                    for part in mob[word]:
-                        part.set_color(WARN if word == "STOP" else TOOL_COLOR)
-                        part.set_fill(CHIP_FILL)
-
-    def highlight_line(self, index, **kwargs):
-        target = self.highlight.generate_target()
-        target.match_y(self.lines[index])
-        target.set_fill(opacity=0.3).set_stroke(opacity=1)
-        return MoveToTarget(self.highlight, **kwargs)
-
-    def unhighlight(self):
-        return self.highlight.animate.set_opacity(0)
+def flow_arrow(*points, color=MUTED, stroke_width=2.5, tip=True):
+    """Right-angled connector through the given points, with an arrow tip."""
+    points = [np.array(p, dtype=float) for p in points]
+    line = Polyline(*points).set_stroke(color, stroke_width)
+    result = VGroup(line)
+    if tip:
+        direction = points[-1] - points[-2]
+        tip_mob = ArrowTip(angle=angle_of_vector(direction), width=0.16, length=0.16)
+        tip_mob.set_fill(color, 1)
+        tip_mob.shift(points[-1] - tip_mob.get_tip_point())
+        line.set_points_as_corners([*points[:-1], points[-1] - 0.12 * normalize(direction)])
+        result.add(tip_mob)
+    return result
 
 
-def bar_chart(words, probs, max_len=1.8, bar_height=0.27, font_size=24, pct_labels=None):
-    """Next-word distribution: label | bar | percentage, plus a vdots row."""
+def doc_icon(height=0.38, color=MUTED):
+    page = RoundedRectangle(0.8 * height, height, corner_radius=0.04)
+    page.set_fill(TRUE_WHITE, 1).set_stroke(color, 2)
+    lines = VGroup(
+        Line(ORIGIN, w * 0.5 * height * RIGHT) for w in [1, 0.8, 1, 0.6]
+    ).arrange(DOWN, aligned_edge=LEFT, buff=0.12 * height)
+    lines.set_stroke(color, 1.5).move_to(page)
+    return VGroup(page, lines)
+
+
+def bar_chart(words, probs, max_len=1.8, bar_height=0.27, font_size=24, pct_labels=None, n_main=None):
+    """
+    Next-word distribution: label | bar | percentage, plus a vdots row.
+    Rows after the first n_main go below the dots (e.g. a rare word worth showing).
+    """
+    n_main = n_main or len(words)
     rows = VGroup()
     top = max(probs)
     for n, (word, prob) in enumerate(zip(words, probs)):
@@ -209,11 +186,11 @@ def bar_chart(words, probs, max_len=1.8, bar_height=0.27, font_size=24, pct_labe
         rows.add(VGroup(label, bar, pct_mob))
     for n, row in enumerate(rows):
         label, bar, pct = row
-        bar.move_to(n * 1.4 * bar_height * DOWN, LEFT)
+        bar.move_to((n + (n >= n_main)) * 1.4 * bar_height * DOWN, LEFT)
         label.next_to(bar, LEFT, buff=0.12)
         pct.next_to(bar, RIGHT, buff=0.08)
     dots = Tex(R"\vdots", font_size=font_size).set_color(MUTED)
-    dots.next_to(rows[-1][0], DOWN, buff=0.12)
+    dots.next_to(rows[n_main - 1][0], DOWN, buff=0.12)
     chart = VGroup(*rows, dots)
     chart.rows = rows
     return chart
@@ -232,22 +209,36 @@ class FlowText(VGroup):
         self.line_height = line_height or 0.42 * font_size / 24
         self.space = 0.09 * font_size / 24
         self.n_lines = 1
+        self.break_pending = False
 
     def next_word(self, word, color=INK):
-        """Create the next word, already in its final position (not added)."""
-        stripped = word.strip()
-        if stripped in SPECIAL_WORDS:
+        """
+        Create the next word, already in its final position (not added).
+        word can also be a mobject (e.g. a pill), placed like a special-word chip.
+        """
+        if isinstance(word, Mobject):
+            mob = word
+            strut = None
+            width = mob.get_width()
+        elif word.strip() in SPECIAL_WORDS:
+            stripped = word.strip()
             mob = chip(stripped, font_size=0.8 * self.font_size)
             strut = None
             width = mob.get_width()
         else:
+            stripped = word.strip()
             # Lay the word out after an "A" (no descender) so that every
             # word shares a baseline: the A's bottom is the baseline
             full = text("A" + stripped, font_size=self.font_size, color=color)
             strut = full[0]
             width = full[1:].get_width()
+        line_start = len(self) == 0
+        if self.break_pending and len(self) > 0:
+            self.n_lines += 1
+            line_start = True
+        self.break_pending = False
         baseline_y = self.top_left[1] - self.n_lines * self.line_height + 0.3 * self.line_height
-        if len(self) == 0:
+        if line_start:
             x = self.top_left[0]
         else:
             x = self[-1].get_right()[0] + self.space
@@ -271,6 +262,10 @@ class FlowText(VGroup):
 
     def add_words(self, words, color=INK):
         return VGroup(self.add_word(word, color) for word in words)
+
+    def line_break(self):
+        """Start the next word on a new line."""
+        self.break_pending = True
 
     def get_bottom_y(self):
         return self.top_left[1] - self.n_lines * self.line_height
@@ -309,29 +304,29 @@ class ChatBubble(VGroup):
 
 class AgenticScene(BuildStills, PredictTheNextWord):
     """
-    Layout shared by the four stage scenes: a software window on the left
-    (the model, its next-word distribution and the loop that drives it),
-    a chat window on the right, and a title on top.
+    Layout shared by the four stage scenes. The software window on the left
+    is a loop around the model: the input text (bottom) goes up into the
+    model, the next word comes out, and the software adds it back to the
+    input (and shows it in the chat on the right) until its stop rule says
+    otherwise.
     """
     machine_name = "Large\nLanguage\nModel"
     stage_number = 1
     stage_title = ""
     stage_subtitle = ""
     question = "What do recent papers say about microplastics and health?"
-    code_lines = [
-        "repeat 10 times:",
-        "    probabilities = model(text)",
-        "    word = pick(probabilities)",
-        "    text = text + word",
-    ]
-    code_width = 7.8
-    # Which code line each step of the loop highlights
-    model_line, pick_line, append_line = 1, 2, 3
+    # Stop rule of the software: after 10 words ("count") or at STOP ("stop")
+    loop_rule = "count"
+    # Stages 1 and 2 show the next-word probabilities and the pick
+    show_bars = False
     trained = True
     window_left, window_right = -6.85, 1.35
     chat_left, chat_right = 1.6, 6.9
     window_top, window_bottom = 2.75, -3.4
+    model_center = (-5.0, 0.8)
+    input_top = -0.95
     answer_font_size = 26
+    input_font_size = 22
 
     def construct(self):
         pass
@@ -351,29 +346,16 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         subtitle.next_to(title, RIGHT, buff=0.4, aligned_edge=DOWN)
         return VGroup(number, title, subtitle)
 
-    def get_software_window(self):
-        window = app_window(
-            self.window_right - self.window_left,
-            self.window_top - self.window_bottom,
-            title="Software",
-        )
-        window.move_to([
-            (self.window_left + self.window_right) / 2,
-            (self.window_top + self.window_bottom) / 2, 0
-        ])
+    def get_window(self, left, right, title):
+        window = app_window(right - left, self.window_top - self.window_bottom, title=title)
+        window.move_to([(left + right) / 2, (self.window_top + self.window_bottom) / 2, 0])
         return window
 
+    def get_software_window(self):
+        return self.get_window(self.window_left, self.window_right, "Software")
+
     def get_chat_window(self):
-        window = app_window(
-            self.chat_right - self.chat_left,
-            self.window_top - self.window_bottom,
-            title="Chat",
-        )
-        window.move_to([
-            (self.chat_left + self.chat_right) / 2,
-            (self.window_top + self.window_bottom) / 2, 0
-        ])
-        return window
+        return self.get_window(self.chat_left, self.chat_right, "Chat")
 
     def get_model(self, trained=None):
         trained = self.trained if trained is None else trained
@@ -386,35 +368,86 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         flat_dials, last_dials = self.get_machine_dials(blocks)
         last_dials.set_stroke(opacity=0.12)
         blocks[-1].add(last_dials)
-        machine.set_height(2.2)
-        machine.move_to([self.window_left + 1.85, 1.05, 0])
+        machine.set_height(2.0)
+        machine.move_to([*self.model_center, 0])
         self.blocks = blocks
         self.dials = last_dials
         return machine
 
+    def get_weights_label(self, string):
+        label = text(string, font_size=22, color=MUTED)
+        label.next_to(self.machine[0], UP, buff=0.12)
+        return label
+
     def get_out_arrow(self, machine):
         arrow = Arrow(
             machine[0].get_right() + 0.05 * RIGHT,
-            machine[0].get_right() + 1.0 * RIGHT,
+            machine[0].get_right() + 0.8 * RIGHT,
             buff=0, thickness=4,
         )
         arrow.set_fill(MUTED)
         return arrow
 
-    code_font_size = 23
+    def get_out_point(self):
+        """Where the next word appears, right of the model."""
+        return self.out_arrow.get_end() + 0.8 * RIGHT
 
-    def get_code_panel(self):
-        panel = CodePanel(self.code_lines, width=self.code_width, font_size=self.code_font_size, line_buff=0.24 * self.code_font_size / 23)
-        panel.move_to([self.window_left + 0.15, -0.55, 0], UL)
+    def get_input_panel(self):
+        left, right = self.window_left + 0.15, self.window_right - 0.15
+        bottom = self.window_bottom + 0.15
+        bg = RoundedRectangle(right - left, self.input_top - bottom, corner_radius=0.1)
+        bg.set_fill(PANEL_FILL, 1).set_stroke(width=0)
+        bg.move_to([left, self.input_top, 0], UL)
+        title = text("Input to the model", font_size=17, color=MUTED, weight=BOLD)
+        title.move_to(bg.get_corner(UL) + [0.2, -0.2, 0], UL)
+        self.input_flow = FlowText(
+            [left + 0.2, title.get_bottom()[1] - 0.12, 0], right - left - 0.4,
+            font_size=self.input_font_size,
+        )
+        panel = VGroup(bg, title)
+        panel.bg = bg
+        panel.title = title
         return panel
+
+    def get_in_arrow(self):
+        x = self.machine[0].get_x()
+        return flow_arrow([x, self.input_top, 0], [x, self.machine[0].get_bottom()[1] - 0.03, 0])
+
+    def get_return_arrow(self):
+        """Output word back into the input: '+ word'."""
+        x = self.get_out_point()[0]
+        top = -0.3 if self.show_bars else self.get_out_point()[1] - 0.35
+        arrow = flow_arrow([x, top, 0], [x, self.input_top, 0])
+        label = text("+ word", font_size=18, color=ACCENT)
+        label.move_to([x - 0.15, -0.3, 0], RIGHT)
+        return VGroup(arrow, label)
+
+    def get_rule_label(self):
+        if self.loop_rule == "count":
+            self.counter = mono("0/10", font_size=17, color=MUTED)
+            parts = VGroup(text("repeat 10 times", font_size=18, color=MUTED), self.counter)
+        else:
+            parts = VGroup(text("repeat until", font_size=18, color=MUTED), chip("STOP", font_size=14))
+        parts.arrange(RIGHT, buff=0.12)
+        parts.move_to([self.get_out_point()[0] - 0.15, -0.65, 0], RIGHT)
+        return parts
+
+    def get_counter(self, n, total=10):
+        return mono(f"{n}/{total}", font_size=17, color=MUTED).move_to(self.counter)
+
+    def update_counter(self, n, animate=True):
+        new = self.get_counter(n)
+        if animate:
+            self.play(Transform(self.counter, new), run_time=0.3)
+        else:
+            self.counter.become(new)
 
     def get_user_bubble(self, string=None, font_size=None):
         font_size = font_size or self.answer_font_size
         string = string or self.question
         icon = person_icon(0.42)
         icon.move_to([self.chat_right - 0.4, 0, 0])
-        width = 3.9
-        flow = FlowText(ORIGIN, width, font_size=font_size)
+        flow = FlowText(ORIGIN, 3.9, font_size=font_size)
         flow.add_words(string.split(" "))
         flow.move_to([self.chat_right - 0.85, window_content_top(self.chat_window, 0.35), 0], UR)
         flow.top_left = np.array([flow.get_left()[0], flow.get_top()[1], 0])
@@ -423,7 +456,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         return VGroup(bubble, icon)
 
     def get_answer(self, top_y, width=4.1, fill=PANEL_FILL):
-        """Empty assistant bubble with the robot icon; returns (group, flow)."""
+        """Empty assistant bubble with the robot icon; returns (group, flow, bubble)."""
         icon = robot_icon(0.4)
         icon.move_to([self.chat_left + 0.35, top_y - 0.2, 0])
         flow = FlowText([self.chat_left + 0.85, top_y - 0.1, 0], width, font_size=self.answer_font_size)
@@ -431,36 +464,57 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         bubble.bg.set_opacity(0)
         return VGroup(icon, bubble), flow, bubble
 
-    def setup_stage(self, show=True):
+    def setup_stage(self):
         self.software_window = self.get_software_window()
         self.chat_window = self.get_chat_window()
         self.machine = self.get_model()
         self.out_arrow = self.get_out_arrow(self.machine)
-        self.code = self.get_code_panel()
+        self.input_panel = self.get_input_panel()
+        self.in_arrow = self.get_in_arrow()
+        self.return_arrow = self.get_return_arrow()
+        self.rule_label = self.get_rule_label()
+        self.loop_parts = VGroup(self.in_arrow, self.out_arrow, self.return_arrow, self.rule_label)
         self.title_group = self.get_title()
         self.user_bubble = self.get_user_bubble()
-        if show:
-            self.add(
-                self.title_group,
-                self.software_window, self.chat_window,
-                self.machine, self.out_arrow, self.code,
-                self.user_bubble,
-            )
 
-    # Animations of one pass through the loop
+    def build_loop(self, run_time=2.5):
+        """Input panel, then the arrows around the model."""
+        return LaggedStart(
+            FadeIn(self.input_panel),
+            ShowCreation(self.in_arrow, lag_ratio=0),
+            GrowArrow(self.out_arrow),
+            ShowCreation(self.return_arrow[0], lag_ratio=0),
+            FadeIn(self.return_arrow[1]),
+            FadeIn(self.rule_label),
+            lag_ratio=0.3,
+            run_time=run_time,
+        )
 
-    def feed_model(self, source, run_time=1.2, line_index="default"):
-        """A copy of the text flies into the model, whose layers light up."""
-        if line_index == "default":
-            line_index = self.model_line
-        copy = source.copy()
-        anims = [
-            Transform(copy, VGroup(VectorizedPoint(self.machine[0].get_top())), lag_ratio=0.01, remover=True, path_arc=30 * DEGREES),
-            self.block_flash(),
-        ]
-        if line_index is not None:
-            anims.insert(0, self.code.highlight_line(line_index))
-        self.play(LaggedStart(*anims, lag_ratio=0.4), run_time=run_time)
+    def send_question(self, run_time=1.5):
+        """The chat message is copied into the (so far empty) input."""
+        targets = self.input_flow.add_words(self.question.split(" "))
+        self.play(
+            TransformFromCopy(self.user_bubble[0].flow, targets, path_arc=30 * DEGREES, lag_ratio=0.01),
+            run_time=run_time,
+        )
+
+    # One pass through the loop
+
+    def pulse(self, mob, color=BAR_COLOR, **kwargs):
+        return mob.animate.set_color(color).set_anim_args(rate_func=there_and_back, **kwargs)
+
+    def feed_model(self, run_time=1.2):
+        """A copy of the input flies up into the model, whose layers light up."""
+        point = VGroup(VectorizedPoint(self.machine[0].get_bottom()))
+        self.play(
+            LaggedStart(
+                self.pulse(self.in_arrow),
+                Transform(self.input_flow.copy(), point, lag_ratio=0.002, remover=True),
+                self.block_flash(),
+                lag_ratio=0.3,
+            ),
+            run_time=run_time,
+        )
 
     def block_flash(self, color=BAR_COLOR, run_time=1.0):
         blocks = self.blocks
@@ -474,12 +528,11 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             group=blocks,
         )
 
-    def show_distribution(self, words, probs, pct_labels=None, max_len=1.5, run_time=0.8):
-        chart = bar_chart(words, probs, max_len=max_len, pct_labels=pct_labels)
-        chart.move_to(self.out_arrow.get_end() + 0.35 * RIGHT, LEFT)
-        # Bars, not labels, start right of the arrow
+    def show_distribution(self, words, probs, pct_labels=None, max_len=1.5, n_main=None, run_time=0.8):
+        chart = bar_chart(words, probs, max_len=max_len, pct_labels=pct_labels, n_main=n_main, font_size=22)
+        # Bars, not labels, start a fixed distance right of the arrow
         chart.shift((self.out_arrow.get_end()[0] + 1.3 - chart.rows[0][1].get_left()[0]) * RIGHT)
-        chart.match_y(self.machine[0])
+        chart.shift((window_content_top(self.software_window, 0.15) - chart.get_top()[1]) * UP)
         self.play(
             LaggedStart(
                 (FadeInFromPoint(row, self.out_arrow.get_end()) for row in chart),
@@ -489,10 +542,8 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         )
         return chart
 
-    def pick(self, chart, index, run_time=1.0, line_index="default", seed=0):
+    def pick(self, chart, index, run_time=1.0, seed=0):
         """Highlight hops around the bars, weighted by size, and lands on index."""
-        if line_index == "default":
-            line_index = self.pick_line
         rows = chart.rows
         widths = np.array([row[1].get_width() for row in rows])
         dist = widths / widths.sum()
@@ -504,48 +555,79 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             i = index if alpha > 0.85 else np.random.choice(len(rows), p=dist)
             mob.surround(rows[i], buff=0.04)
 
-        anims = [UpdateFromAlphaFunc(rect, update)]
-        if line_index is not None:
-            anims.append(self.code.highlight_line(line_index))
-        self.play(*anims, run_time=run_time)
+        self.play(UpdateFromAlphaFunc(rect, update), run_time=run_time)
         chart.add(rect)
         return rect
 
-    def append_word(self, chart, index, flow, bubble, word, run_time=0.8, line_index="default"):
-        """The chosen word moves from the chart into the chat."""
-        if line_index == "default":
-            line_index = self.append_line
-        target = flow.next_word(word)
-        source = chart.rows[index][0].copy()
-        anims = [
-            FadeTransform(source, target),
-            UpdateFromFunc(bubble.bg, lambda m: m.set_opacity(1)),
-        ]
-        if line_index is not None:
-            anims.append(self.code.highlight_line(line_index))
-        self.play(*anims, run_time=run_time)
-        self.remove(source)
-        flow.add(target)
-        bubble.refresh()
-        self.add(bubble)
-        self.play(FadeOut(chart), run_time=0.3)
-        return target
+    def add_targets(self, word, chat_flow, color=INK):
+        """The word's places at the end of the chat answer and of the input."""
+        chat_target = chat_flow.next_word(word, color) if chat_flow is not None else None
+        input_target = self.input_flow.next_word(word, color)
+        return chat_target, input_target
 
-    def quick_word(self, flow, bubble, word, run_time=0.35, color=INK):
-        """A full loop pass in a fraction of a second: pulse, word out."""
-        target = flow.next_word(word, color)
-        bubble.bg.set_opacity(1)
-        start = VectorizedPoint(self.out_arrow.get_end())
-        self.play(
+    def place_word(self, source, chat_flow, bubble, word, color=INK, run_time=0.8, extra_anims=()):
+        """source moves into the input (down the '+ word' arrow) and into the chat."""
+        chat_target, input_target = self.add_targets(word, chat_flow, color)
+        anims = [
+            FadeTransform(source.copy(), input_target),
+            self.pulse(self.return_arrow[0]),
+            *extra_anims,
+        ]
+        if chat_target is not None:
+            anims += [
+                FadeTransform(source, chat_target),
+                UpdateFromFunc(bubble.bg, lambda m: m.set_opacity(1)),
+            ]
+        else:
+            anims.append(FadeOut(source))
+        self.play(*anims, run_time=run_time)
+        self.input_flow.add(input_target)
+        if chat_target is not None:
+            chat_flow.add(chat_target)
+            bubble.refresh()
+            self.add(bubble)
+
+    def append_word(self, chart, index, chat_flow, bubble, word, run_time=0.8):
+        """The picked word moves from the chart into the input and the chat."""
+        source = chart.rows[index][0].copy()
+        self.place_word(source, chat_flow, bubble, word, run_time=run_time)
+        self.play(FadeOut(chart), run_time=0.3)
+
+    def emit_word(self, word, chat_flow, bubble, run_time=0.35, color=INK, slow=False):
+        """
+        One pass without bars: the model lights up, the next word appears to
+        its right, and goes into the input and the chat. slow=True shows
+        the steps one at a time.
+        """
+        mob = word_mob(word, font_size=self.answer_font_size, color=color)
+        mob.move_to(self.get_out_point())
+        if slow:
+            self.feed_model(run_time=1.0)
+            self.play(FadeInFromPoint(mob, self.out_arrow.get_end()), run_time=0.5)
+            self.place_word(mob, chat_flow, bubble, word, color, run_time=0.7)
+            return
+        chat_target, input_target = self.add_targets(word, chat_flow, color)
+        start = self.out_arrow.get_end()
+        anims = [
+            self.pulse(self.in_arrow),
             self.block_flash(run_time=run_time),
-            FadeTransform(start, target),
-            run_time=run_time,
-        )
-        self.remove(start)
-        flow.add(target)
-        bubble.refresh()
-        self.add(bubble)
-        return target
+            FadeTransform(VectorizedPoint(start), input_target),
+            self.pulse(self.return_arrow[0]),
+        ]
+        if chat_target is not None:
+            anims.append(FadeTransform(VectorizedPoint(start), chat_target))
+            bubble.bg.set_opacity(1)
+        self.play(*anims, run_time=run_time)
+        self.input_flow.add(input_target)
+        if chat_target is not None:
+            chat_flow.add(chat_target)
+            bubble.refresh()
+            self.add(bubble)
+
+    def flash_rule(self):
+        rect = SurroundingRectangle(self.rule_label, buff=0.08).set_stroke(WARN, 2)
+        self.play(ShowCreation(rect))
+        return rect
 
     def randomize_dials(self, run_time=2, lag_factor=0.5):
         dials = self.dials
@@ -554,3 +636,70 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             lag_ratio=lag_factor / len(dials),
             run_time=run_time,
         )
+
+    # System prompt: joined with the chat on its way into the input
+
+    system_prompt = [("You are a helpful assistant. Answer clearly and concisely.", INK)]
+    system_pill_label = "System prompt"
+
+    def get_system_prompt_card(self, width=5.2, font_size=19):
+        """The developer's instructions, waiting in the (empty) input panel."""
+        title = text("System prompt", font_size=font_size + 1, color=MUTED, weight=BOLD)
+        flow = FlowText(ORIGIN, width - 0.4, font_size=font_size)
+        segments = VGroup()
+        for string, color in self.system_prompt:
+            segments.add(flow.add_words(string.split(" "), color=color))
+            flow.line_break()
+        note = text("Set by the developer, not shown in the chat", font_size=font_size - 4, color=MUTED, slant=ITALIC)
+        title.move_to(ORIGIN, UL)
+        flow.shift(title.get_corner(DL) + 0.12 * DOWN - flow.top_left)
+        note.next_to(flow, DOWN, buff=0.15, aligned_edge=LEFT)
+        content = VGroup(title, flow, note)
+        bg = SurroundingRectangle(content, buff=0.18).round_corners(0.1)
+        bg.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1.5)
+        card = VGroup(bg, content)
+        card.move_to(self.input_panel.bg).shift(0.15 * DOWN)
+        card.flow = flow
+        card.segments = segments
+        card.frame = VGroup(bg, title, note)
+        return card
+
+    def get_system_pill(self, font_size=16):
+        icon = doc_icon(0.24)
+        label = text(self.system_pill_label, font_size=font_size, color=MUTED)
+        content = VGroup(icon, label).arrange(RIGHT, buff=0.1)
+        bg = SurroundingRectangle(content, buff=0.06).round_corners(0.06)
+        bg.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1)
+        return VGroup(bg, content)
+
+    def join_system_prompt(self, card):
+        """
+        The chat message travels into the input; the software puts the
+        system prompt in front of it and adds the roles and STOPs.
+        """
+        flow = self.input_flow
+        pill = flow.add_word(self.get_system_pill())
+        flow.line_break()
+        user_label = flow.add_word("User:", color=MUTED)
+        user_words = flow.add_words(self.question.split(" "))
+        user_stop = flow.add_word("STOP")
+        flow.line_break()
+        assistant_label = flow.add_word("Assistant:", color=MUTED)
+        note = text("System prompt + chat, joined by the software", font_size=15, color=MUTED, slant=ITALIC)
+        note.next_to(self.input_panel.title, RIGHT, buff=0.3, aligned_edge=DOWN)
+
+        self.play(
+            LaggedStart(
+                FadeTransform(card, pill),
+                TransformFromCopy(self.user_bubble[0].flow, user_words, path_arc=30 * DEGREES, lag_ratio=0.01),
+                lag_ratio=0.35,
+            ),
+            FadeIn(note),
+            run_time=2.2,
+        )
+        self.play(
+            LaggedStartMap(FadeIn, VGroup(user_label, user_stop, assistant_label), lag_ratio=0.4),
+            run_time=1.2,
+        )
+        self.wait()
+        self.play(FadeOut(note))
