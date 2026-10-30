@@ -9,7 +9,7 @@ class Stage3Assistant(AgenticScene):
     The input is now the system prompt plus the conversation in chat format,
     and the software repeats until the model picks STOP, which is always
     among the options. Bars and answer are the real outputs of a small chat
-    model (Qwen2.5-0.5B-Instruct, always its most likely word): fluent, but
+    model (Qwen2.5-1.5B-Instruct, always its most likely word): fluent, but
     it cites "recent papers" it never read, and its specifics come from
     learned patterns, not from any source.
     """
@@ -17,12 +17,14 @@ class Stage3Assistant(AgenticScene):
     stage_title = "AI assistant"
     stage_subtitle = "Helpful answers, but may hallucinate"
     roles = True
-    system_prompt = [("You are a helpful assistant. Answer in one short sentence.", INK)]
+    # Displayed system prompt; the bars were computed with a prompt that also
+    # asks for short answers (see tools/compute_distributions.py)
+    system_prompt = [("What follows is a conversation between a human and a helpful and kind assistant.", INK)]
     stop_rule = "stop"
     special_rows = ("STOP",)
     input_font_size = 17
-    # Cites "papers" it never read; the specific claim comes from learned patterns
-    claims = ["Recent papers suggest", "particularly in the gastrointestinal tract."]
+    # Cites "papers" it never read; the specifics come from learned patterns
+    claims = ["Recent papers suggest", "potential biomagnification in the food chain."]
     example_conversations = [
         ("How far away is the Moon?", "About 384,000 km."),
         ("Translate 'Danke' into English.", "Thank you."),

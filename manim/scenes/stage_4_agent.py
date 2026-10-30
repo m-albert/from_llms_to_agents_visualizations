@@ -10,27 +10,28 @@ class Stage4Agent(AgenticScene):
     the text, runs the tool, and joins its output to the input, which then
     goes through the model again. TOOL and STOP are always among the
     options. Bars, tool call and answer are the real outputs of a small
-    chat model (Qwen2.5-0.5B-Instruct); the search result is made up.
+    chat model (Qwen2.5-1.5B-Instruct). The search returns two real papers;
+    the answer cites both, but overstates one: the study found a link, not
+    a cause.
     """
     stage_number = 4
     stage_title = "Tool-using agent"
     stage_subtitle = "Can retrieve and act; needs oversight"
     roles = True
+    # Displayed system prompt; the bars were computed with a prompt that also
+    # asks for short answers with a citation (see tools/compute_distributions.py)
     system_prompt = [
-        ("You are a helpful assistant. Keep answers to one sentence. Tools:", INK),
+        ("What follows is a conversation between a human and a helpful and kind assistant. Tools:", INK),
         ("Search, Read, Code.", TOOL_COLOR),
         ("To use one, write TOOL + tool + “input”.", INK),
     ]
     stop_rule = "stop"
     special_rows = ("STOP", "TOOL")
-    input_font_size = 15
+    input_font_size = 14
     chat_font_size = 18
     input_bottom = -2.2
     tool_names = ["Search", "Read", "Code"]
-    result_text = (
-        "3 papers: microplastics are found in human blood and tissue; "
-        "effects on human health are not yet clear."
-    )
+    papers = DISTRIBUTIONS["stage4_text"]["papers"]
     random_seed = 5
 
     def construct(self):
@@ -60,17 +61,31 @@ class Stage4Agent(AgenticScene):
             self.run_pass(n, self.distribution_from_record(record), (call_flow, call_bubble), color=TOOL_COLOR)
 
         # The software sees TOOL + tool + "input" at the end and runs the tool
-        result_pill = self.run_tool(tools, n_call_words=len(records), call_bubble=call_bubble)
+        sources = self.run_tool(tools, n_call_words=len(records), call_bubble=call_bubble)
 
         # Back through the model, now with the result in the input
-        answer_group, flow, bubble = self.get_answer(result_pill.get_bottom()[1] - 0.12, with_icon=False)
+        answer_group, flow, bubble = self.get_answer(sources.get_bottom()[1] - 0.12, with_icon=False)
         n0 = len(records)
         for n, record in enumerate(DISTRIBUTIONS["stage4_answer"]):
-            self.run_pass(n0 + n, self.distribution_from_record(record), (flow, bubble), fast_time=0.4)
+            self.run_pass(n0 + n, self.distribution_from_record(record), (flow, bubble), fast_time=0.35)
         self.flash_rule()
 
-        warning = warning_label(["Less likely to hallucinate,", "but still possible"], font_size=18)
-        warning.next_to(bubble.bg, DOWN, buff=0.25).align_to(bubble.bg, LEFT)
+        # The citations point to what the tool returned
+        citations = [VGroup(*flow[-8:-4]), VGroup(*flow[-4:])]
+        for citation, source in zip(citations, sources):
+            highlights, underlines = self.highlight_words(citation, color=TOOL_COLOR, fill="#DDF1EE")
+            link = DashedLine(citation.get_top(), source.get_bottom(), dash_length=0.05).set_stroke(TOOL_COLOR, 1.5)
+            self.add(highlights, flow)
+            self.play(FadeIn(highlights), ShowCreation(underlines), ShowCreation(link), run_time=0.8)
+            self.play(FadeOut(link), run_time=0.3)
+
+        # But the second study found a link, not a cause
+        claim = VGroup(*flow[-14:-8])
+        highlights, underlines = self.highlight_words(claim)
+        self.add(highlights, flow)
+        self.play(FadeIn(highlights), ShowCreation(underlines))
+        warning = warning_label(["Check the sources: the study", "shows a link, not a cause"], font_size=17)
+        warning.next_to(bubble.bg, DOWN, buff=0.2).align_to(bubble.bg, LEFT)
         self.play(FadeIn(warning, 0.2 * UP))
         self.wait(3)
 
@@ -109,7 +124,7 @@ class Stage4Agent(AgenticScene):
         return tile
 
     def get_result_card(self):
-        title = text("3 papers", font_size=14, weight=BOLD)
+        title = text("2 papers", font_size=14, weight=BOLD)
         lines = VGroup(Line(ORIGIN, w * RIGHT) for w in [0.6, 0.5, 0.6]).arrange(DOWN, aligned_edge=LEFT, buff=0.06)
         lines.set_stroke(FRAME_GREY, 2)
         content = VGroup(title, lines).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
@@ -147,28 +162,38 @@ class Stage4Agent(AgenticScene):
         flow = self.input_flow
         flow.line_break()
         label = flow.add_word("Result:", color=MUTED)
-        result_words = flow.add_words(self.result_text.split(" "), color=TOOL_COLOR)
+        # Titles and findings are in the input in full; shortened here with "…"
+        result_words = VGroup()
+        for n, paper in enumerate(self.papers):
+            if n > 0:
+                flow.line_break()
+            string = f"[{n + 1}] {paper['ref']}: " + " ".join(paper["title"].split()[:2]) + " …"
+            result_words.add(*flow.add_words(string.split(" "), color=TOOL_COLOR))
         stop = flow.add_word("STOP")
         flow.line_break()
         assistant = flow.add_word("Assistant:", color=MUTED)
-        pill = self.get_result_pill()
-        pill.next_to(call_bubble.bg, DOWN, buff=0.1).align_to(call_bubble.bg, LEFT)
+        sources = VGroup(self.get_source_card(paper) for paper in self.papers)
+        sources.arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+        sources.next_to(call_bubble.bg, DOWN, buff=0.1).align_to(call_bubble.bg, LEFT)
         self.play(
             FadeTransform(card.copy(), result_words),
             FadeIn(label), FadeIn(stop),
-            TransformFromCopy(card, pill),
+            TransformFromCopy(card, sources),
             FadeOut(card),
             run_time=1.5,
         )
         self.play(FadeIn(assistant), FadeOut(highlights), FadeOut(underlines), FadeOut(glow))
         self.input_convo.add(label, *result_words, stop, assistant)
-        self.turns.append(dict(role="Result:", items=[(w, TOOL_COLOR, None) for w in self.result_text.split(" ")], closed=True))
+        self.turns.append(dict(role="Result:", items=[(w, TOOL_COLOR, None) for w in result_words], closed=True))
         self.open_turn()
         self.wait()
-        return pill
+        return sources
 
-    def get_result_pill(self):
-        label = text("Result: 3 papers", font_size=self.chat_font_size - 2, color=TOOL_COLOR)
-        bg = SurroundingRectangle(label, buff=0.08).round_corners(0.08)
+    def get_source_card(self, paper):
+        """A search result as the chat shows it: a small paper card with its reference."""
+        icon = doc_icon(0.22, color=TOOL_COLOR)
+        label = text(paper["ref"], font_size=self.chat_font_size - 3, color=TOOL_COLOR)
+        content = VGroup(icon, label).arrange(RIGHT, buff=0.1)
+        bg = SurroundingRectangle(content, buff=0.07).round_corners(0.06)
         bg.set_fill("#DDF1EE", 1).set_stroke(TOOL_COLOR, 1)
-        return VGroup(bg, label)
+        return VGroup(bg, content)

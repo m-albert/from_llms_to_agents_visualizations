@@ -28,7 +28,7 @@ Shared pieces (windows, model, input card, bars, chips, chat) are in `scenes/age
 | `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights: every word equally likely; the software stops after 10 random words |
 | `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; the base model continues the input by repeating the question, cut off after 10 words |
 | `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training (example conversations ending in STOP, human feedback); input = system prompt + conversation; STOP always among the options; an unchecked claim from memory |
-| `Stage4Agent` | `scenes/stage_4_agent.py` | Tool programs at the bottom; the system prompt says how to call them; the software spots TOOL + tool + "input", runs the tool and joins its output to the input |
+| `Stage4Agent` | `scenes/stage_4_agent.py` | Tool programs at the bottom; the system prompt says how to call them; the software spots TOOL + tool + "input", runs the search and joins its output (two real papers) to the input; the answer cites both, but overstates one (link vs cause) |
 
 All four share one layout. In the software window, the input is assembled on the left,
 goes through the model in the centre, and the next-word distribution appears on the
@@ -116,10 +116,19 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
   likely word at every step (no repetition penalty), so the picked bar is always the top
   one, with one exception: in stage 2's first pass the second choice, "What" (10%, after
   "Micro" 11%), is picked. Alternatives shown are word-starting tokens.
-  Stage 2: Qwen2.5-0.5B (base) on the bare question. Stages 3-4: Qwen2.5-0.5B-Instruct with
-  the chat template; STOP is `<|im_end|>`, TOOL is `<tool_call>`. The stage 4 tool call is
-  the model's real call (`{"name": "Search", "arguments": {"input": ...}}`, shown as
-  `TOOL Search "..."`); the search result is made up. Stage 1's uniform bars are schematic.
+  Stage 2: Qwen2.5-0.5B (base) on the bare question (it repeats the question more clearly
+  than the 1.5B base). Stages 3-4: Qwen2.5-1.5B-Instruct with the chat template (0.5B could
+  not cite sources); STOP is `<|im_end|>`, TOOL is `<tool_call>`. The stage 4 tool call is
+  the model's real call (`{"name": "Search", "arguments": {"input": "microplastics health"}}`,
+  shown as `TOOL Search "..."`). The search result is written by hand but cites two real
+  papers (Leslie et al. 2022, Environment International; Marfella et al. 2024, NEJM), title
+  plus a one-line finding each; the Input card shortens the titles with "…".
+  Stage 1's uniform bars are schematic.
+- Displayed vs real system prompt: stages 3-4 show "What follows is a conversation between a
+  human and a helpful and kind assistant." (stage 4 plus the tool lines). The bars were
+  computed with prompts that also ask for a short answer (stage 3: "Answer in one short
+  sentence."; stage 4: "Answer in under 20 words and end with one source in parentheses");
+  the exact prompts are in `tools/compute_distributions.py`.
 - Special words, in reality (checked against the Qwen2.5-Instruct chat template): STOP is an
   end-of-turn token such as `<|im_end|>`, which ends every turn, the user's too. TOOL is a
   call such as `<tool_call>{"name": ..., "arguments": ...}</tool_call>`. The software runs
