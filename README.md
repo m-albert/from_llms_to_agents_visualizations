@@ -1,6 +1,6 @@
 # From next-token prediction to agentic AI
 
-`llm_to_agentic_ai.svg` is a single wide figure (viewBox `0 0 1980 1000`) for the retreat talk
+`llm_to_agentic_ai.svg` is a single wide figure (viewBox `0 0 1980 1040`) for the retreat talk
 "Understanding AI: From Next-Token Prediction to Agentic AI". It is meant to be understood in
 30–60 seconds by scientists who use AI but don't know how it works inside.
 
@@ -60,7 +60,7 @@ The years are approximate. The figure is a conceptual sequence, not a strict his
 | 2 | Pre-trained base model | Completes text, not yet an assistant | Blue network, learned language patterns. Software: *Generate 10 words* | Continues the question instead of answering it (10 words), with the note "Continues from input prompt" |
 | 3 | AI assistant | Helpful answers, but may hallucinate | Same network, in a wider window. Software: *Generate until* **STOP**, plus a system prompt: *“What follows is a conversation between a human and a helpful, knowledgeable and kind assistant…”* | A helpful-looking answer that ends in **STOP**. One claim is highlighted amber with the warning "Plausible, but from memory and potentially hallucinated" |
 | 4 | Reasoning model | Thinks first, but still no sources | Same network and window. The system prompt is the stage 3 assistant text, shortened. Below it, a separate SPLIT OUTPUT panel (white, solid border) shows that the software turns **THINK** into *Private thoughts* and **ANSWER** into the answer. The special words are learned in training, so they are deliberately *not* in the system prompt | A dashed grey thought bubble (**THINK** *Harm in humans proven? Not yet → don't overclaim.*), then the answer bubble (**ANSWER** Microplastics are found in human tissue, but harm is still unclear. **STOP**), and the amber warning "More careful, but still answers from memory" |
-| 5 | Tool-using agent | Can retrieve and act; needs oversight | Same network and window. The system prompt now opens with the same text (shortened to *“What follows is a conver…”*) and continues: *“The assistant can use these tools by writing* **TOOL** *+ tool + <input>:”*, followed by the available tools (*Search web*, *Read files*, *Execute code*, …). Both the tool list and how to call a tool are part of the system prompt. Under *Generate until* **STOP**, a teal PROGRAMS row shows the same tools as small program tiles (web, files, code): the programs the software actually runs when the model writes TOOL | A dashed THINK bubble (**THINK** *Need sources first.*) that contains the tool steps (**TOOL** Search papers / Read PDFs / Summarize findings), then an answer bubble (**ANSWER** Evidence is still emerging. **STOP**), placeholder sources Paper A/B/C, and the amber warning "Less likely to hallucinate, but still possible" |
+| 5 | Tool-using agent | Can retrieve and act; needs oversight | Same network and window. The system prompt now opens with the same text (shortened to *“What follows is a conver…”*) and continues: *“The assistant can use these tools by writing* **TOOL** *+ tool + <input>:”*, followed by the available tools (*Search web*, *Read files*, *Execute code*, …). Both the tool list and how to call a tool are part of the system prompt. Under *Generate until* **STOP**, a teal PROGRAMS row shows the same tools as small program tiles (web, files, code): the programs the software actually runs when the model writes TOOL | A dashed THINK bubble (**THINK** *Need sources first.*) that contains one tool call (**TOOL** Search web *“microplastics health publication”*) and a hint of its results (↳ Paper 1: The effects of micro… / ↳ Paper 2: Microplastics in hu…). Then a longer answer bubble that cites them (**ANSWER** Microplastics are found in human blood and tissue (Paper 1). Whether they harm health is not yet proven (Paper 2). **STOP**), so it is clear the answer did not get worse, and the amber warning "Less likely to hallucinate, but still possible" |
 
 ## Ideas the figure is built to get across
 
@@ -105,7 +105,7 @@ The years are approximate. The figure is a conceptual sequence, not a strict his
   system prompt panels, 12–15) and the chip labels.
 - Plain, editable SVG: real `<text>` elements, no images, `foreignObject`, filters or external
   fonts. Parts are grouped with named ids (`pretraining`, `posttraining`, `reasoning`, `tools`, `agent-loop`,
-  `middle-row-model`, `model-1` … `model-5`, `system-prompt-3` … `system-prompt-5`, `output-split-4`, `programs-5`, `stage-1` … `stage-5`, `stage-4-thoughts`, `stage-5-thoughts`, `unsupported-claim`,
+  `middle-row-model`, `model-1` … `model-5`, `system-prompt-3` … `system-prompt-5`, `output-split-4`, `programs-5`, `stage-1` … `stage-5`, `stage-4-thoughts`, `stage-5-thoughts`, `stage-5-tool-call`, `stage-5-tool-result`, `unsupported-claim`,
   `hallucination-warning`, `connectors`). Everything except the background
   sits in a `figure` group, shifted up by 66 units so the content is vertically centred. The steps row
   has extra space below it to separate it from the stage headers.
