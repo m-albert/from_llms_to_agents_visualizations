@@ -1,6 +1,7 @@
 from manim_imports_ext import *
 from manimlib.utils.svg_export import _get_path_data
 from scenes.agentic_common import *
+from scenes.stage_5_agent import Stage5Agent
 
 
 STEP_FILL = "#EDF2FA"
@@ -49,18 +50,20 @@ def export_svg(mobjects, filename, pixel_width=1920, pixel_height=1080, backgrou
 
 class AgenticOverview(AgenticScene):
     """
-    The four stages side by side (the llm_to_agentic_ai schematic), built up
+    The five stages side by side (the llm_to_agentic_ai schematic), built up
     stage by stage in the style of the manim scenes. The last frame is also
     written out as an SVG next to the video.
     """
-    col_xs = [-5.3, -1.77, 1.77, 5.3]
-    col_width = 3.3
-    steps_y = 3.25
-    year_y, title_y, subtitle_y = 2.3, 1.95, 1.63
-    model_y = 0.7
-    caption_y = -0.27
-    chat_top, chat_bottom = -0.5, -3.38
-    font_scale = 1.0
+    col_xs = [-5.64, -2.82, 0.0, 2.82, 5.64]
+    col_width = 2.62
+    steps_y = 3.3
+    year_y, title_y, subtitle_y = 2.38, 2.06, 1.78
+    model_y = 0.78
+    window_height = 1.62
+    caption_y = -0.2
+    chat_top, chat_bottom = -0.42, -3.5
+    warning_y = -3.78
+    chat_font_size = 12
     stages = [
         dict(
             year="2017", year_note="Transformer architecture",
@@ -85,13 +88,27 @@ class AgenticOverview(AgenticScene):
             warning=["Plausible, but from memory", "and potentially hallucinated"],
         ),
         dict(
-            year="2023-today", year_note="tool use & agents",
+            year="2024", year_note="o1, DeepSeek-R1",
+            title="Reasoning model", subtitle="Thinks first, but still no sources",
+            trained=True, software=["Generate until", "STOP"], caption="+ Thinking, marked by special words",
+            panel="split",
+            thought="Harm in humans proven? Not yet → don't overclaim.",
+            answer="ANSWER Microplastics are found in human tissue, but harm is still unclear. STOP",
+            warning=["More careful, but still", "answers from memory"],
+        ),
+        dict(
+            year="2024-today", year_note="tool use & agents",
             title="Tool-using agent", subtitle="Can retrieve and act; needs oversight",
             trained=True, software=["Generate until", "STOP"], caption="+ Tools, called by a special word",
+            panel="tools",
             tools=["Search web", "Read files", "Execute code"],
-            tool_steps=["Search papers", "Read PDFs", "Summarize findings"],
-            answer="Retrieved papers: evidence is still emerging. STOP",
-            sources=["Paper A", "Paper B", "Paper C"],
+            thought="Need sources first.",
+            tool_call=("Search web", "“microplastics health publication”"),
+            results=["Paper 1: The effects of micro…", "Paper 2: Microplastics in hu…"],
+            answer=(
+                "ANSWER Microplastics are found in human blood and tissue (Paper 1). "
+                "Whether they harm health is not yet proven (Paper 2). STOP"
+            ),
             warning=["Less likely to hallucinate,", "but still possible"],
         ),
     ]
@@ -100,6 +117,8 @@ class AgenticOverview(AgenticScene):
              items=["Books", "Web", "Code", "Papers"]),
         dict(title="Post-training", subtitle="Answer helpfully, then stop",
              items=["Examples", "Feedback", "e.g. STOP"]),
+        dict(title="Reasoning training", subtitle="Think privately, then answer",
+             items=["Problems", "Rewards", "THINK ANSWER"]),
         dict(title="Tools + agent loop", subtitle="Run the model in a loop with tools",
              items=None),
     ]
@@ -117,7 +136,7 @@ class AgenticOverview(AgenticScene):
         self.wait()
 
         # Each step leads to the next stage
-        for n in range(1, 4):
+        for n in range(1, len(self.stages)):
             card = step_cards[n - 1]
             self.play(FadeIn(card.card, 0.2 * DOWN))
             self.play(ShowCreation(card.connector), FadeIn(card.chevron, scale=0.5))
@@ -144,17 +163,17 @@ class AgenticOverview(AgenticScene):
 
         # Header: year, number + title, subtitle
         year = VGroup(
-            text(f"≈ {stage['year']}", font_size=16, color=ACCENT, weight=BOLD),
-            text(f"· {stage['year_note']}", font_size=16, color=MUTED),
-        ).arrange(RIGHT, buff=0.08)
+            text(f"≈ {stage['year']}", font_size=13, color=ACCENT, weight=BOLD),
+            text(f"· {stage['year_note']}", font_size=13, color=MUTED),
+        ).arrange(RIGHT, buff=0.06)
         number = VGroup(
-            Circle(radius=0.15).set_fill(ACCENT, 1).set_stroke(width=0),
-            text(str(n + 1), font_size=18, color=TRUE_WHITE, weight=BOLD),
+            Circle(radius=0.12).set_fill(ACCENT, 1).set_stroke(width=0),
+            text(str(n + 1), font_size=15, color=TRUE_WHITE, weight=BOLD),
         )
         number[1].move_to(number[0])
-        title = text(stage["title"], font_size=24, weight=BOLD)
-        title_row = VGroup(number, title).arrange(RIGHT, buff=0.12)
-        subtitle = text(stage["subtitle"], font_size=17, color=MUTED)
+        title = text(stage["title"], font_size=19, weight=BOLD)
+        title_row = VGroup(number, title).arrange(RIGHT, buff=0.1)
+        subtitle = text(stage["subtitle"], font_size=13, color=MUTED)
         for mob, y in [(year, self.year_y), (title_row, self.title_y), (subtitle, self.subtitle_y)]:
             mob.move_to([left, y, 0], LEFT)
         column.header = VGroup(year, title_row, subtitle)
@@ -172,9 +191,9 @@ class AgenticOverview(AgenticScene):
         return column
 
     def get_model_window(self, stage, x):
-        has_tools = "tools" in stage
-        width = self.col_width if has_tools else 2.1
-        window = app_window(width, 1.5, title="", title_font_size=12, bar_height=0.2)
+        panel = stage.get("panel")
+        width = self.col_width if panel else 1.6
+        window = app_window(width, self.window_height, title="", title_font_size=10, bar_height=0.18)
         window.move_to([x, self.model_y, 0])
         machine = self.get_transformer_drawing()
         blocks = machine[0]
@@ -182,76 +201,126 @@ class AgenticOverview(AgenticScene):
         flat_dials, last_dials = self.get_machine_dials(blocks)
         last_dials.set_stroke(opacity=0.15)
         blocks.add(last_dials)
-        blocks.set_height(0.5)
-        model_x = x - width / 2 + 0.85 if has_tools else x
-        blocks.move_to([model_x, self.model_y + 0.22, 0])
+        blocks.set_height(0.42)
         software = self.get_software_label(stage["software"])
-        software.next_to(blocks, DOWN, buff=0.1)
-        group = VGroup(window, blocks, software)
-        if has_tools:
+        left_part = VGroup(blocks, software)
+        if panel == "tools":
+            left_part.add(self.get_programs(stage["tools"]))
+        left_part.arrange(DOWN, buff=0.08)
+        content_y = self.model_y - window.bar_height / 2
+        model_x = x - width / 2 + 0.52 if panel else x
+        left_part.move_to([model_x, content_y, 0])
+        group = VGroup(window, left_part)
+        if panel:
+            divider_x = x - width / 2 + 1.02
             divider = DashedLine(
-                window.get_top() + (0.3 + 2.1 - width / 2) * RIGHT + 0.3 * DOWN,
-                window.get_bottom() + (0.3 + 2.1 - width / 2) * RIGHT + 0.1 * UP,
+                [divider_x, window.get_top()[1] - window.bar_height - 0.08, 0],
+                [divider_x, window.get_bottom()[1] + 0.08, 0],
                 dash_length=0.05,
             ).set_stroke(FRAME_GREY, 1)
-            divider.match_x(window).shift(0.12 * RIGHT)
-            tools = VGroup(
-                VGroup(chip("TOOL", font_size=11), text(name, font_size=14, color=TOOL_COLOR)).arrange(RIGHT, buff=0.08)
-                for name in stage["tools"]
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
-            dots = text("...", font_size=14, color=TOOL_COLOR)
-            dots.next_to(tools, DOWN, buff=0.02).align_to(tools[0][1], LEFT)
-            tools.add(dots)
-            tools.next_to(divider, RIGHT, buff=0.12).match_y(window).shift(0.08 * DOWN)
-            group.add(divider, tools)
-        caption = text(stage["caption"], font_size=17, color=MUTED)
+            content = self.get_split_panel() if panel == "split" else self.get_prompt_panel(stage["tools"])
+            content.move_to([divider_x + 0.08, content_y, 0], LEFT)
+            group.add(divider, content)
+        caption = text(stage["caption"], font_size=13, color=MUTED)
         caption.move_to([x, self.caption_y, 0])
         group.add(caption)
         return group
 
+    def get_panel_title(self, string, color):
+        return text(string, font_size=9, color=color, weight=BOLD)
+
+    def get_split_panel(self):
+        """How the software splits the output (not part of the system prompt)."""
+        rows = VGroup(
+            VGroup(chip(word, font_size=8), text(label, font_size=10, color=color, slant=slant)).arrange(RIGHT, buff=0.05)
+            for word, label, color, slant in [
+                ("THINK", "→ Private thoughts", MUTED, ITALIC),
+                ("ANSWER", "→ Answer", INK, NORMAL),
+            ]
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        return VGroup(self.get_panel_title("SPLIT OUTPUT", MUTED), rows).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+
+    def get_prompt_panel(self, tools):
+        """The system prompt lists the tools and how to call them."""
+        intro = VGroup(
+            text("“…can use these tools", font_size=10, slant=ITALIC),
+            text("by writing", font_size=10, slant=ITALIC),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.04)
+        syntax = VGroup(chip("TOOL", font_size=8), text("+ tool + <input>:", font_size=10, slant=ITALIC)).arrange(RIGHT, buff=0.05)
+        names = VGroup(text(name, font_size=10, color=TOOL_COLOR) for name in tools)
+        names.add(text("…”", font_size=10, color=TOOL_COLOR))
+        names.arrange(DOWN, aligned_edge=LEFT, buff=0.03)
+        return VGroup(self.get_panel_title("SYSTEM PROMPT", ACCENT), intro, syntax, names).arrange(DOWN, aligned_edge=LEFT, buff=0.05)
+
+    def get_programs(self, tools):
+        """The same tools, as programs the software can run."""
+        tiles = VGroup()
+        for name in tools:
+            tile = Stage5Agent.get_tool_tile(self, name)
+            tile.remove(tile.label)
+            tiles.add(tile.set_height(0.2))
+        tiles.arrange(RIGHT, buff=0.05)
+        label = self.get_panel_title("PROGRAMS", TOOL_COLOR)
+        return VGroup(label, tiles).arrange(DOWN, buff=0.04)
+
     def get_software_label(self, lines):
-        top = text(lines[0], font_size=14, color=MUTED)
+        top = text(lines[0], font_size=11, color=MUTED)
         if lines[1] in SPECIAL_WORDS:
-            bottom = chip(lines[1], font_size=11)
+            bottom = chip(lines[1], font_size=9)
         else:
-            bottom = text(lines[1], font_size=14, color=MUTED)
-        return VGroup(top, bottom).arrange(DOWN, buff=0.06)
+            bottom = text(lines[1], font_size=11, color=MUTED)
+        return VGroup(top, bottom).arrange(DOWN, buff=0.05)
 
     def get_question(self, x):
-        flow = FlowText(ORIGIN, 2.3, font_size=15)
+        flow = FlowText(ORIGIN, 1.9, font_size=self.chat_font_size)
         flow.add_words(self.question.replace(" and ", " & ").split(" "))
-        bubble = ChatBubble(flow, USER_FILL, buff=0.1)
-        icon = person_icon(0.24)
+        bubble = ChatBubble(flow, USER_FILL, buff=0.08)
+        icon = person_icon(0.2)
         group = VGroup(bubble, icon)
-        bubble.move_to([x + 1.32, self.chat_top - 0.15, 0], UR)
-        icon.next_to(bubble, RIGHT, buff=0.08)
+        bubble.move_to([x + self.col_width / 2 - 0.32, self.chat_top - 0.12, 0], UR)
+        icon.next_to(bubble, RIGHT, buff=0.06)
         return group
+
+    def get_thought_box(self, stage, left, top, width):
+        """Dashed box with the private thoughts (and, for the agent, the tool call and its results)."""
+        flow = FlowText(ORIGIN, width - 0.16, font_size=self.chat_font_size - 1, slant=ITALIC)
+        flow.add_word("THINK")
+        flow.add_words(stage["thought"].split(" "), color=MUTED)
+        content = VGroup(flow)
+        if "tool_call" in stage:
+            name, query = stage["tool_call"]
+            row = VGroup(chip("TOOL", font_size=8), text(name, font_size=11, color=TOOL_COLOR)).arrange(RIGHT, buff=0.06)
+            query_mob = text(query, font_size=10, color=TOOL_COLOR, slant=ITALIC)
+            call = VGroup(row, query_mob).arrange(DOWN, aligned_edge=LEFT, buff=0.05)
+            pill = SurroundingRectangle(call, buff=0.05).round_corners(0.06)
+            pill.set_stroke(TOOL_COLOR, 1).set_fill("#DDF1EE", 1)
+            results = VGroup(text("↳ " + result, font_size=10, color=MUTED) for result in stage["results"])
+            results.arrange(DOWN, aligned_edge=LEFT, buff=0.04)
+            content.add(VGroup(pill, call), results)
+        content.arrange(DOWN, aligned_edge=LEFT, buff=0.07)
+        content.move_to([left + 0.08, top - 0.08, 0], UL)
+        rect = RoundedRectangle(width, content.get_height() + 0.16, corner_radius=0.08)
+        rect.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1)
+        rect.move_to([left, top, 0], UL)
+        return VGroup(DashedVMobject(rect, num_dashes=110), content)
 
     def get_answer_parts(self, stage, x, question):
         left = x - self.col_width / 2
-        top = question.get_bottom()[1] - 0.1
-        icon = robot_icon(0.24)
-        icon.move_to([left + 0.22, top - 0.14, 0])
+        top = question.get_bottom()[1] - 0.08
+        icon = robot_icon(0.2)
+        icon.move_to([left + 0.17, top - 0.12, 0])
         parts = VGroup(icon)
-        content_left = left + 0.45
+        content_left = left + 0.36
+        content_width = self.col_width - 0.36 - 0.1
 
-        if "tool_steps" in stage:
-            steps = VGroup()
-            for name in stage["tool_steps"]:
-                label = text(name, font_size=14, color=TOOL_COLOR)
-                tag = chip("TOOL", font_size=10)
-                row = VGroup(tag, label).arrange(RIGHT, buff=0.08)
-                pill = SurroundingRectangle(row, buff=0.04).round_corners(0.08)
-                pill.set_stroke(TOOL_COLOR, 1).set_fill("#DDF1EE", 1)
-                steps.add(VGroup(pill, row))
-            steps.arrange(DOWN, aligned_edge=LEFT, buff=0.04)
-            steps.move_to([content_left, top, 0], UL)
-            parts.add(steps)
-            top = steps.get_bottom()[1] - 0.06
+        if "thought" in stage:
+            thought = self.get_thought_box(stage, content_left, top, content_width)
+            parts.add(thought)
+            top = thought.get_bottom()[1] - 0.07
 
-        flow = FlowText([content_left + 0.1, top - 0.08, 0], 2.55, font_size=15)
+        flow = FlowText([content_left + 0.08, top - 0.06, 0], content_width - 0.16, font_size=self.chat_font_size)
         flow.add_words(stage["answer"].split(" "))
-        bubble = ChatBubble(flow, PANEL_FILL, buff=0.1)
+        bubble = ChatBubble(flow, PANEL_FILL, buff=0.08)
         parts.add(bubble)
 
         if "claim" in stage:
@@ -267,55 +336,37 @@ class AgenticOverview(AgenticScene):
             bubble.remove(flow)
             bubble.add(highlights, underlines, flow)
 
-        if "sources" in stage:
-            sources = VGroup()
-            for name in stage["sources"]:
-                label = text(name, font_size=14)
-                bg = SurroundingRectangle(label, buff=0.05).round_corners(0.04)
-                bg.set_stroke(INK, 1).set_fill(TRUE_WHITE, 1)
-                sources.add(VGroup(bg, label))
-            sources.arrange(RIGHT, buff=0.08)
-            sources.next_to(bubble.bg, DOWN, buff=0.07).align_to(bubble.bg, LEFT)
-            parts.add(sources)
-
         if "note" in stage:
-            note = text(stage["note"], font_size=14, color=MUTED, slant=ITALIC)
-            note.next_to(bubble.bg, DOWN, buff=0.15).align_to(bubble.bg, LEFT).shift(0.1 * RIGHT)
+            note = text(stage["note"], font_size=12, color=MUTED, slant=ITALIC)
+            note.next_to(bubble.bg, DOWN, buff=0.12).align_to(bubble.bg, LEFT).shift(0.08 * RIGHT)
             parts.add(note)
 
         warning = None
         if "warning" in stage:
-            warning = warning_label(stage["warning"], font_size=16)
-            warning.move_to([x, (self.chat_bottom - 4.0) / 2, 0])
+            warning = warning_label(stage["warning"], font_size=13)
+            warning.move_to([x, self.warning_y, 0])
         return parts, warning
 
     # Steps
 
     def get_step_card(self, n, step):
         x = (self.col_xs[n] + self.col_xs[n + 1]) / 2
-        title = text(step["title"], font_size=22, color=ACCENT, weight=BOLD)
-        subtitle = text(step["subtitle"], font_size=15, color=MUTED)
+        title = text(step["title"], font_size=18, color=ACCENT, weight=BOLD)
+        subtitle = text(step["subtitle"], font_size=12, color=MUTED)
         if step["items"]:
-            items = VGroup(
-                VGroup(
-                    text("e.g.", font_size=13, color=MUTED),
-                    word_mob(item.split(" ")[-1], font_size=15),
-                ).arrange(RIGHT, buff=0.06)
-                if item.startswith("e.g.") else text(item, font_size=15)
-                for item in step["items"]
-            )
-            items.arrange(RIGHT, buff=0.25)
+            items = VGroup(self.get_step_item(item) for item in step["items"])
+            items.arrange(RIGHT, buff=0.18)
         else:
             items = self.get_mini_loop()
-        content = VGroup(title, subtitle, items).arrange(DOWN, buff=0.1)
-        card_bg = RoundedRectangle(3.0, 1.32, corner_radius=0.12)
+        content = VGroup(title, subtitle, items).arrange(DOWN, buff=0.09)
+        card_bg = RoundedRectangle(2.6, 1.22, corner_radius=0.12)
         card_bg.set_fill(STEP_FILL, 1).set_stroke(STEP_STROKE, 1.5)
         card_bg.move_to([x, self.steps_y, 0])
         content.move_to(card_bg)
         connector = Line(card_bg.get_bottom(), [x, self.model_y, 0]).set_stroke(ACCENT, 2)
         chevron = VGroup(
-            Circle(radius=0.14).set_fill(ACCENT, 1).set_stroke(width=0),
-            Tex(R"\rightarrow", font_size=20).set_color(TRUE_WHITE),
+            Circle(radius=0.12).set_fill(ACCENT, 1).set_stroke(width=0),
+            Tex(R"\rightarrow", font_size=17).set_color(TRUE_WHITE),
         )
         chevron.move_to([x, self.model_y, 0])
         result = VGroup(card_bg, content, connector, chevron)
@@ -324,19 +375,31 @@ class AgenticOverview(AgenticScene):
         result.chevron = chevron
         return result
 
+    def get_step_item(self, item):
+        """A word; "e.g. STOP": an example special word; "THINK ANSWER": special words, stacked."""
+        words = item.split(" ")
+        if all(word in SPECIAL_WORDS for word in words):
+            return VGroup(chip(word, font_size=10) for word in words).arrange(DOWN, buff=0.04)
+        if words[0] == "e.g.":
+            return VGroup(
+                text("e.g.", font_size=11, color=MUTED),
+                word_mob(words[-1], font_size=13),
+            ).arrange(RIGHT, buff=0.05)
+        return text(item, font_size=13)
+
     def get_mini_loop(self):
         words = VGroup(
-            text(word, font_size=16, color=TOOL_COLOR, weight=BOLD)
+            text(word, font_size=13, color=TOOL_COLOR, weight=BOLD)
             for word in ["Decide", "Use tool", "Observe"]
-        ).arrange(RIGHT, buff=0.35)
+        ).arrange(RIGHT, buff=0.28)
         arrows = VGroup(
-            Arrow(w1, w2, buff=0.06, thickness=2).set_fill(TOOL_COLOR)
+            Arrow(w1, w2, buff=0.05, thickness=2).set_fill(TOOL_COLOR)
             for w1, w2 in zip(words[:-1], words[1:])
         )
         loop_back = Arrow(
             words[2].get_bottom(), words[0].get_bottom(),
             path_arc=-70 * DEGREES, buff=0.04, thickness=2,
         ).set_fill(TOOL_COLOR)
-        cont = text("continue", font_size=12, color=TOOL_COLOR, slant=ITALIC)
+        cont = text("continue", font_size=10, color=TOOL_COLOR, slant=ITALIC)
         cont.next_to(loop_back, DOWN, buff=0.02)
         return VGroup(words, arrows, loop_back, cont)

@@ -2,7 +2,7 @@
 Shared pieces for the "from next-word prediction to agentic AI" scenes:
 software and chat windows, the 3b1b model drawing, the input the software
 assembles for it, next-word bar charts (real model data), special-word
-chips and chat bubbles.
+chips, chat bubbles and the dashed box for a reasoning model's thoughts.
 
 New code here uses explicit hex colors (PALETTE below) rather than the
 theme-rebound 3b1b names, so what you read is what you get.
@@ -30,7 +30,7 @@ CHIP_FILL = "#262A33"      # special words
 BAR_COLOR = "#5CC4AC"
 MONO = "Menlo"
 
-SPECIAL_WORDS = ("STOP", "TOOL")
+SPECIAL_WORDS = ("STOP", "TOOL", "THINK", "ANSWER")
 
 
 # Small building blocks
@@ -204,11 +204,12 @@ class FlowText(VGroup):
     Running text that wraps inside a fixed width; words (and special-word
     chips) are added one at a time without moving the earlier ones.
     """
-    def __init__(self, top_left, width, font_size=24, line_height=None, **kwargs):
+    def __init__(self, top_left, width, font_size=24, line_height=None, slant=NORMAL, **kwargs):
         super().__init__(**kwargs)
         self.top_left = np.array(top_left)
         self.max_width = width
         self.font_size = font_size
+        self.slant = slant
         self.line_height = line_height or 0.42 * font_size / 24
         self.space = 0.09 * font_size / 24
         self.n_lines = 1
@@ -232,7 +233,7 @@ class FlowText(VGroup):
             stripped = word.strip()
             # Lay the word out after an "A" (no descender) so that every
             # word shares a baseline: the A's bottom is the baseline
-            full = text("A" + stripped, font_size=self.font_size, color=color)
+            full = text("A" + stripped, font_size=self.font_size, color=color, slant=self.slant)
             strut = full[0]
             width = full[1:].get_width()
         line_start = len(self) == 0
@@ -301,6 +302,57 @@ class ChatBubble(VGroup):
     def refresh(self):
         self.bg.become(self.get_bg())
         return self
+
+    def reveal(self):
+        self.bg.set_opacity(1)
+
+
+class ThoughtBubble(VGroup):
+    """
+    Dashed box for a reasoning model's private thoughts, as wide as the chat.
+    It grows with its parts: running text (FlowText) and e.g. tool results.
+    """
+    def __init__(self, top_left, width, buff=0.12, **kwargs):
+        self.top_left = np.array(top_left)
+        self.box_width = width
+        self.buff = buff
+        self.parts = []
+        self.keep = VGroup()  # parts that stay visible when the thoughts are folded away
+        self.bg = self.get_bg()
+        super().__init__(self.bg, **kwargs)
+
+    def add_flow(self, top_y, font_size):
+        flow = FlowText(
+            [self.top_left[0] + self.buff, top_y, 0], self.box_width - 2 * self.buff,
+            font_size=font_size, slant=ITALIC,
+        )
+        self.add_part(flow)
+        return flow
+
+    def add_part(self, part):
+        self.parts.append(part)
+        self.add(part)
+
+    def get_bottom_y(self):
+        ys = [
+            part.get_bottom_y() if isinstance(part, FlowText) else part.get_bottom()[1]
+            for part in self.parts
+        ]
+        return min(ys, default=self.top_left[1] - 0.3)
+
+    def get_bg(self):
+        height = self.top_left[1] - self.get_bottom_y() + self.buff
+        rect = RoundedRectangle(self.box_width, height, corner_radius=0.15)
+        rect.set_fill(opacity=0).set_stroke(FRAME_GREY, 1.5)
+        rect.move_to(self.top_left, UL)
+        return DashedVMobject(rect, num_dashes=80)
+
+    def refresh(self):
+        self.bg.become(self.get_bg())
+        return self
+
+    def reveal(self):
+        pass
 
 
 # Next-word distributions computed with real models (tools/compute_distributions.py)
@@ -446,10 +498,15 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             content = VGroup(text("until", font_size=16, color=MUTED), chip("STOP", font_size=13))
         content.arrange(RIGHT, buff=0.1)
         self.rule_target = content[-1]
+        rows = [content]
         if "TOOL" in self.special_rows:
-            tool_rule = VGroup(chip("TOOL", font_size=13), text("call: run tool", font_size=16, color=MUTED))
-            tool_rule.arrange(RIGHT, buff=0.1)
-            content = VGroup(content, tool_rule).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+            rows.append(VGroup(chip("TOOL", font_size=13), text("call: run tool", font_size=16, color=MUTED)))
+        if "THINK" in self.special_rows:
+            rows.append(VGroup(chip("THINK", font_size=13), text("private thoughts", font_size=16, color=MUTED)))
+            rows.append(VGroup(chip("ANSWER", font_size=13), text("shown as answer", font_size=16, color=MUTED)))
+        for row in rows[1:]:
+            row.arrange(RIGHT, buff=0.1)
+        content = VGroup(*rows).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
         bg = SurroundingRectangle(content, buff=0.08).round_corners(0.08)
         bg.set_fill(PANEL_FILL, 1).set_stroke(width=0)
         badge = VGroup(bg, content)
@@ -479,6 +536,57 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         bubble.bg.set_opacity(0)
         return VGroup(icon, bubble), flow, bubble
 
+    def get_thought(self, top_y):
+        """
+        Empty box for the private thoughts with the robot icon; returns
+        (icon, flow, bubble). Picked words go here until ANSWER.
+        """
+        icon = robot_icon(0.36)
+        icon.move_to([self.chat_left + 0.3, top_y - 0.18, 0])
+        left = self.chat_left + 0.6
+        bubble = ThoughtBubble([left, top_y, 0], self.chat_right - 0.15 - left)
+        flow = bubble.add_flow(top_y - 0.06, self.chat_font_size - 2)
+        bubble.refresh()
+        self.thought_bubble = bubble
+        self.chat = (flow, bubble)
+        return icon, flow, bubble
+
+    def get_folded_thought(self):
+        """What is left of the thoughts once the answer starts: one dashed line."""
+        content = VGroup(
+            chip("THINK", font_size=0.8 * (self.chat_font_size - 2)),
+            text("Private thoughts", font_size=self.chat_font_size - 2, color=MUTED, slant=ITALIC),
+            text("▸", font_size=self.chat_font_size - 2, color=MUTED),
+        ).arrange(RIGHT, buff=0.1)
+        rect = SurroundingRectangle(content, buff=0.1).round_corners(0.12)
+        rect.set_fill(opacity=0).set_stroke(FRAME_GREY, 1.5)
+        folded = VGroup(DashedVMobject(rect, num_dashes=40), content)
+        folded.move_to(self.thought_bubble.top_left, UL)
+        return folded
+
+    def start_answer(self):
+        """
+        ANSWER ends the private thoughts: the software folds them away (they
+        stay in the input) and opens the answer bubble. Returns (flow, bubble).
+        """
+        thought = self.thought_bubble
+        anims = []
+        if self.pending is not None:
+            anims.append(self.append_to_input(*self.pending))
+            self.pending = None
+        folded = self.get_folded_thought()
+        keep = thought.keep
+        hidden = VGroup(*(part for part in [thought.bg, *thought.parts] if part not in keep))
+        target_keep = keep.copy().next_to(folded, DOWN, buff=0.1, aligned_edge=LEFT)
+        anims += [FadeOut(hidden), FadeIn(folded), Transform(keep, target_keep)]
+        self.play(*anims, run_time=0.8)
+        self.add(folded, keep)
+        self.folded_thought = folded
+        top_y = VGroup(folded, keep).get_bottom()[1] - 0.12
+        group, flow, bubble = self.get_answer(top_y, with_icon=False)
+        self.thought_bubble = None
+        return flow, bubble
+
     def setup_stage(self):
         self.software_window = self.get_window(self.window_left, self.window_right, "Software")
         self.chat_window = self.get_window(self.chat_left, self.chat_right, "Chat")
@@ -498,6 +606,9 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             (word, INK, mob) for word, mob in zip(self.question.split(" "), self.user_bubble.flow)
         ], closed=True)]
         self.pending = None
+        # Where picked words go: (flow, bubble); switches when ANSWER ends the thoughts
+        self.chat = None
+        self.thought_bubble = None
 
     def open_turn(self, role="Assistant:"):
         self.turns.append(dict(role=role, items=[], closed=False))
@@ -626,7 +737,10 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         """
         The picked word goes to the chat (it becomes part of the
         conversation). STOP instead goes to the software's rule and ends it.
+        ANSWER ends the private thoughts and starts the answer.
         """
+        if word == "ANSWER" and self.thought_bubble is not None:
+            chat = self.chat = self.start_answer()
         source = chart.rows[index][0].copy()
         if word == "STOP":
             self.play(
@@ -641,7 +755,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         target = flow.next_word(word, color)
         self.play(
             FadeTransform(source, target),
-            UpdateFromFunc(bubble.bg, lambda m: m.set_opacity(1)),
+            UpdateFromFunc(bubble.bg, lambda m: bubble.reveal()),
             FadeOut(chart),
             run_time=run_time,
         )
@@ -652,7 +766,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         self.pending = (word, color, target)
         return target
 
-    def run_pass(self, n, distribution, chat, color=INK, fast_time=0.5):
+    def run_pass(self, n, distribution, chat=None, color=INK, fast_time=0.5):
         """
         Pass n (from 0) through the loop. The first n_detailed passes show
         every step: the input is re-assembled, flows into the model, the
@@ -661,6 +775,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         """
         words, probs, pct_labels, n_main, index = distribution
         word = words[index]
+        chat = chat or self.chat
         if self.stop_rule == "count":
             self.update_counter(n + 1)
         if n < self.n_detailed:
@@ -678,6 +793,57 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             self.pending = None
         self.play(*anims, run_time=fast_time)
         return self.deliver(chart, index, word, color, chat, run_time=0.8 * fast_time)
+
+    def skip_pass(self, n_words, run_time=1.6):
+        """
+        Many passes at once, for the words of the thoughts that are not shown
+        one by one: the model runs n_words more times, and the chat and the
+        input only get "…".
+        """
+        anims = []
+        if self.pending is not None:
+            anims.append(self.append_to_input(*self.pending))
+            self.pending = None
+        count = Integer(0, font_size=22).set_color(MUTED)
+        label = VGroup(text("+", font_size=22, color=MUTED), count, text("words", font_size=22, color=MUTED))
+        label.arrange(RIGHT, buff=0.08)
+        label.move_to(self.arrows[1].get_end() + 1.3 * RIGHT)
+        n_flashes = 5
+        flashes = Succession(*(self.block_flash(run_time=run_time / n_flashes) for _ in range(n_flashes)))
+        self.add(label)
+        self.play(
+            *anims, flashes,
+            self.pulse(self.arrows[0], run_time=run_time),
+            ChangeDecimalToValue(count, n_words, run_time=run_time),
+            run_time=run_time,
+        )
+        flow, bubble = self.chat
+        dots = flow.next_word("…", MUTED)
+        self.play(FadeIn(dots, scale=0.5), FadeOut(label), run_time=0.4)
+        flow.add(dots)
+        bubble.refresh()
+        self.turns[-1]["items"].append(("…", MUTED, dots))
+        self.pending = ("…", MUTED, dots)
+
+    def run_records(self, records, n0=0, colors=None, fast_time=0.35):
+        """
+        Passes for a list of records (tools/compute_distributions.py), with
+        {"skip": n} entries for words that are not shown. colors(record)
+        gives each word's color in the chat.
+        """
+        n = n0
+        for record in records:
+            if "skip" in record:
+                self.skip_pass(record["skip"])
+                continue
+            color = colors(record) if colors else INK
+            self.run_pass(n, self.distribution_from_record(record), color=color, fast_time=fast_time)
+            n += 1
+        return n
+
+    def thought_color(self, record):
+        """Words of the thoughts are grey; the answer is in the normal color."""
+        return MUTED if self.thought_bubble is not None and record["word"] != "ANSWER" else INK
 
     def update_counter(self, n, total=10):
         self.counter.become(mono(f"{n}/{total}", font_size=15, color=MUTED).move_to(self.counter))

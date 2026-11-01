@@ -19,8 +19,8 @@ Described in [scenes.md](scenes.md); one file per scene in `scenes/`.
 
 ### From next-word prediction to agentic AI
 
-New scenes (no 3b1b counterpart) for the four stages of `../llm_to_agentic_ai.svg`.
-Shared pieces (windows, model, input card, bars, chips, chat) are in `scenes/agentic_common.py`.
+New scenes (no 3b1b counterpart) for the five stages of `../llm_to_agentic_ai.svg`.
+Shared pieces (windows, model, input card, bars, chips, chat, thought box) are in `scenes/agentic_common.py`.
 
 | Scene | File | What it shows |
 |---|---|---|
@@ -28,14 +28,22 @@ Shared pieces (windows, model, input card, bars, chips, chat) are in `scenes/age
 | `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights: every word equally likely; the software stops after 10 random words |
 | `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; the base model continues the input by repeating the question, cut off after 10 words |
 | `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training (example conversations ending in STOP, human feedback); input = system prompt + conversation; STOP always among the options; an unchecked claim from memory |
-| `Stage4Agent` | `scenes/stage_4_agent.py` | Tool programs at the bottom; the system prompt says how to call them; the software spots TOOL + tool + "input", runs the search and joins its output (two real papers) to the input; the answer cites both, but overstates one (link vs cause) |
+| `Stage4Reasoning` | `scenes/stage_4_reasoning.py` | Reasoning training (practice problems; the thoughts between THINK and ANSWER are not checked, a correct answer is rewarded); same system prompt as stage 3; the software shows the thoughts in a dashed box, skips most of them ("…", "+45 words"), folds them away at ANSWER; careful answer, but specifics from memory |
+| `Stage5Agent` | `scenes/stage_5_agent.py` | Tool programs at the bottom; the system prompt says how to call them; while thinking, the model writes TOOL + tool + "input"; the software runs the search and joins its output (two real papers) to the input and to the thoughts; the model thinks again, then answers citing both papers |
 
-All four share one layout. In the software window, the input is assembled on the left,
+All five share one layout. In the software window, the input is assembled on the left,
 goes through the model in the centre, and the next-word distribution appears on the
 right. The picked word goes to the chat, and the next input is built from the chat.
 For the first three passes the whole input is visibly rebuilt (system prompt + the
 conversation copied from the chat). After that, only the newest word is added, faster.
-The stop rule sits under the model ("max 10 words" or "until STOP").
+The stop rule sits under the model ("max 10 words" or "until STOP"), with the rules for TOOL, THINK and ANSWER
+where the stage has them.
+
+The bars are real next-word probabilities, computed by `tools/compute_distributions.py` into
+`data/agentic_distributions.json`: Qwen2.5 base and instruct models for stages 2–3, and the
+reasoning model Qwen3-1.7B for stages 4–5 (THINK and ANSWER are its `<think>` and `</think>` tokens).
+Its thoughts run to 60–100 words; only some sentences get bars, the rest are shown as "…".
+Re-running the script downloads the models (~8 GB in total).
 
 ## Render
 
