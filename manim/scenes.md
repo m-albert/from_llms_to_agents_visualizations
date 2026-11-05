@@ -6,6 +6,14 @@
 			- start: "Paris is a city in ..."
 			- stop: After the different words and their probabilities are shown
 		- sentence to use: "The Single Cell Unit at D-BSSE is a ..."
+- next word prediction in parts (`PredictNextWordPart1a`, `1b`, `2`, `3`)
+	- based on 3blue1brown `PredictTheNextWord`, keeping "Paris is a city in ..."
+	- each part starts on the last frame of the previous one
+	- part 1a: the machine flies in, and the camera settles on its final position
+	- part 1b: the sentence appears, and the machine predicts the single word "France"
+	- part 2: "France" gets replaced by the probability distribution
+	- part 3: the sentence is continued. The first three times, the whole sentence including the new word visibly goes back into the model, then it is completed quickly
+	- gifs: `./render_gif.sh scenes/predict_next_word_parts.py PredictNextWordPart1a`
 - chatbot / assistant prediction
 	- based on 3blue1brown `PredictTheNextWord`
 		- which part do i refer to?

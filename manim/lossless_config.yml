@@ -1,0 +1,3 @@
+# For render_gif.sh: lossless intermediate video, which the mp4 and gif are encoded from.
+file_writer:
+  crf: 0
