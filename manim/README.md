@@ -26,10 +26,20 @@ Shared pieces (windows, model, input card, bars, chips, chat, thought box) are i
 |---|---|---|
 | `AgenticOverview` | `scenes/overview.py` | The schematic, built stage by stage. Also writes `AgenticOverview.svg` (copied to `../llm_to_agentic_ai_v2.svg`) |
 | `Stage1Untrained` | `scenes/stage_1_untrained.py` | Random weights: every word equally likely; the software stops after 10 random words |
-| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training recap; the base model continues the input by repeating the question, cut off after 10 words |
-| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training (example conversations ending in STOP, human feedback); input = system prompt + conversation; STOP always among the options; an unchecked claim from memory |
-| `Stage4Reasoning` | `scenes/stage_4_reasoning.py` | Reasoning training (practice problems; the thoughts between THINK and ANSWER are not checked, a correct answer is rewarded); same system prompt as stage 3; the software shows the thoughts in a dashed box, skips most of them ("…", "+45 words"), folds them away at ANSWER; careful answer, but specifics from memory |
-| `Stage5Agent` | `scenes/stage_5_agent.py` | Tool programs at the bottom; the system prompt says how to call them; while thinking, the model writes TOOL + tool + "input"; the software runs the search and joins its output (two real papers) to the input and to the thoughts; the model thinks again, then answers citing both papers |
+| `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training: two texts in detail (the model guesses the hidden next word, the real word is shown, the weights are adjusted so it becomes more likely), then ≈ 10 trillion words more; the base model continues the input with another question ("…and in seafood? What do recent papers say about PFAS"), cut off after 10 words |
+| `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training: two example conversations ending in STOP, then ≈ 10,000 to 1,000,000 more; two human-feedback comparisons, then ≈ 100,000 to 1,000,000 more; input = system prompt + conversation; STOP always among the options; a fluent answer that overclaims ("A landmark study proved direct harm in humans.") |
+| `Stage4Reasoning` | `scenes/stage_4_reasoning.py` | Reasoning training: two attempts in detail (the thoughts between THINK and ANSWER are not checked, a correct answer is rewarded, a wrong one is not), then ≈ 100,000 problems with many attempts each; same system prompt as stage 3; the software shows the thoughts in a dashed box and folds them away at ANSWER; the thoughts catch the stage 3 overclaim ("Harm in humans proven? Not yet → don't overclaim."), so the answer is careful, but still from memory |
+| `Stage5Agent` | `scenes/stage_5_agent.py` | Tool programs at the bottom; the system prompt says how to call them; while thinking, the model writes TOOL + tool + "input"; the software runs the search and joins its output (two papers) to the input and to the thoughts; the model answers from them and cites both |
+
+`Stage2BaseModelInference`, `Stage3AssistantInference` and `Stage4ReasoningInference` (same files)
+are the same scenes without the training part: they start with the trained model and show
+only how it answers. Stages 1 and 5 have no training part, so `Stage1Untrained` and
+`Stage5Agent` are inference only already.
+
+The order-of-magnitude numbers are rough, for scale: pre-training on trillions of words
+(today's open models report 10–15 trillion tokens), post-training on tens of thousands to
+millions of example conversations and hundreds of thousands of comparisons, reasoning
+training on around a hundred thousand problems, each tried many times.
 
 All five share one layout. In the software window, the input is assembled on the left,
 goes through the model in the centre, and the next-word distribution appears on the
@@ -37,13 +47,35 @@ right. The picked word goes to the chat, and the next input is built from the ch
 For the first three passes the whole input is visibly rebuilt (system prompt + the
 conversation copied from the chat). After that, only the newest word is added, faster.
 The stop rule sits under the model ("max 10 words" or "until STOP"), with the rules for TOOL, THINK and ANSWER
-where the stage has them.
+where the stage has them. Where there is a system prompt (stages 3–5), a border briefly
+highlights it once the software is set up.
 
-The bars are real next-word probabilities, computed by `tools/compute_distributions.py` into
-`data/agentic_distributions.json`: Qwen2.5 base and instruct models for stages 2–3, and the
-reasoning model Qwen3-1.7B for stages 4–5 (THINK and ANSWER are its `<think>` and `</think>` tokens).
-Its thoughts run to 60–100 words; only some sentences get bars, the rest are shown as "…".
-Re-running the script downloads the models (~8 GB in total).
+The words and bars of the stage scenes are scripted, not real model output, in
+`scenes/stage_outputs.py` (one line per word: the picked word, the alternatives and the special
+words, in percent). They match the overview schematic and are written for one arc across the
+stages: random words → continues the question → a fluent answer that overclaims → thoughts that
+catch the overclaim and a careful answer → a search and an answer that cites its sources.
+
+`tools/compute_distributions.py` and `data/agentic_distributions.json` (real outputs of Qwen2.5
+and Qwen3 models) are no longer used by any scene.
+
+### Example bots
+
+Two concrete agents built like `Stage5Agent` (same layout, an off-the-shelf reasoning model),
+so that what their software does is visible: system prompt, tools, and the data the tools reach
+(a folder at the bottom of the software window). Shared pieces in `scenes/example_common.py`,
+scripted words and data in `scenes/example_outputs.py`.
+
+| Scene | File | What it shows |
+|---|---|---|
+| `WikiSearchBot` | `scenes/example_wiki_bot.py` | The wiki's pages are downloaded beforehand as markdown files (`wiki/`). System prompt: "You're a wiki search bot. You can search wiki files by saying TOOL search_wiki_files &lt;search&gt;." The tool goes through the files and returns, per match, the file name and the text around it; the bot answers from the two matches and cites the pages (file names) |
+| `CourseTutorBot` | `scenes/example_course_tutor.py` | A tutor in JupyterLab, below the student's notebook. Tools: `read_code <cell>` (reads a cell of the notebook) and `read_solution <exercise>` (reads a file in `solutions/`, which students can't see). The system prompt says to hint, not to solve; the model reads the code and the solution in its private thoughts, and the student gets a hint |
+
+| `PrivacyDataFlow` | `scenes/example_privacy.py` | Privacy and data security. A dashed boundary marks the model provider (cloud API); input, software, files and chat are on your side. Every pass sends the whole input across (a lock: encrypted in transit) and the provider's logs count what they keep. The tool reads a file with a donor's name and unpublished results, which from then on is sent with every pass; the answer leaves the donor out, but the name was sent 15 times. The tool could also reach `donors.csv` and `api_keys.txt`. Ends with checking the provider's terms and switching to a local model (the boundary turns into "your institution's server"). Numbered captions below the windows |
+
+The tutor's system prompt ends with "...by running TOOL read_code &lt;cell&gt; or TOOL
+read_solution &lt;exercise&gt;." (how the tools are called is the scene's choice). The wiki
+pages, code and solution are made up.
 
 ## Render
 

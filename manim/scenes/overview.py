@@ -104,7 +104,7 @@ class AgenticOverview(AgenticScene):
             tools=["Search web", "Read files", "Execute code"],
             thought="Need sources first.",
             tool_call=("Search web", "“microplastics health publication”"),
-            results=["Paper 1: The effects of micro…", "Paper 2: Microplastics in hu…"],
+            results=["Paper 1: Microplastics in hu…", "Paper 2: The effects of micro…"],
             answer=(
                 "ANSWER Microplastics are found in human blood and tissue (Paper 1). "
                 "Whether they harm health is not yet proven (Paper 2). STOP"

@@ -7,9 +7,6 @@ chips, chat bubbles and the dashed box for a reasoning model's thoughts.
 New code here uses explicit hex colors (PALETTE below) rather than the
 theme-rebound 3b1b names, so what you read is what you get.
 """
-import json
-from pathlib import Path
-
 from manim_imports_ext import *
 from _2024.transformers.chm import PredictTheNextWord
 from scenes.stills import BuildStills
@@ -172,14 +169,15 @@ def doc_icon(height=0.38, color=MUTED):
     return VGroup(page, lines)
 
 
-def bar_chart(words, probs, max_len=1.8, bar_height=0.27, font_size=24, pct_labels=None, n_main=None):
+def bar_chart(words, probs, max_len=1.8, bar_height=0.27, font_size=24, pct_labels=None, n_main=None, scale_max=None):
     """
     Next-word distribution: label | bar | percentage, plus a vdots row.
     Rows after the first n_main go below the dots (e.g. a rare word worth showing).
+    Bars are scaled to scale_max (default: the largest probability).
     """
     n_main = n_main or len(words)
     rows = VGroup()
-    top = max(probs)
+    top = scale_max or max(probs)
     for n, (word, prob) in enumerate(zip(words, probs)):
         label = word_mob(word, font_size=font_size)
         bar = Rectangle(max(prob / top * max_len, 0.02), bar_height)
@@ -355,11 +353,6 @@ class ThoughtBubble(VGroup):
         pass
 
 
-# Next-word distributions computed with real models (tools/compute_distributions.py)
-
-DISTRIBUTIONS = json.loads(Path(__file__).parents[1].joinpath("data", "agentic_distributions.json").read_text())
-
-
 def pct_label(p):
     if p >= 0.0995:
         return f"{100 * p:.0f}%"
@@ -403,6 +396,9 @@ class AgenticScene(BuildStills, PredictTheNextWord):
     model_center = (-1.85, 0.35)
     input_font_size = 18
     chat_font_size = 20
+    bar_max_len = 1.0
+    software_title = "Software"
+    chat_title = "Chat"
 
     def construct(self):
         pass
@@ -576,7 +572,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             self.pending = None
         folded = self.get_folded_thought()
         keep = thought.keep
-        hidden = VGroup(*(part for part in [thought.bg, *thought.parts] if part not in keep))
+        hidden = VGroup(*(part for part in [thought.bg, *thought.parts] if part is not keep and part not in keep))
         target_keep = keep.copy().next_to(folded, DOWN, buff=0.1, aligned_edge=LEFT)
         anims += [FadeOut(hidden), FadeIn(folded), Transform(keep, target_keep)]
         self.play(*anims, run_time=0.8)
@@ -588,8 +584,8 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         return flow, bubble
 
     def setup_stage(self):
-        self.software_window = self.get_window(self.window_left, self.window_right, "Software")
-        self.chat_window = self.get_window(self.chat_left, self.chat_right, "Chat")
+        self.software_window = self.get_window(self.window_left, self.window_right, self.software_title)
+        self.chat_window = self.get_window(self.chat_left, self.chat_right, self.chat_title)
         self.machine = self.get_model()
         self.input_card = self.get_input_card()
         self.system_block = self.get_system_block() if self.system_prompt else None
@@ -683,6 +679,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         )
 
     def distribution_from_record(self, record):
+        """record: one pass from scenes/stage_outputs.py."""
         """Rows for the chart: the picked word and the top others, then the special words."""
         word = record["word"]
         rows = [] if word in SPECIAL_WORDS else [(word, record["p"])]
@@ -695,8 +692,11 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         words = [r[0] for r in rows]
         return words, [r[1] for r in rows], [pct_label(r[1]) for r in rows], n_main, words.index(word)
 
-    def get_chart(self, words, probs, pct_labels, n_main=None):
-        chart = bar_chart(words, probs, max_len=1.0, bar_height=0.24, font_size=19, pct_labels=pct_labels, n_main=n_main)
+    def get_chart(self, words, probs, pct_labels, n_main=None, scale_max=None):
+        chart = bar_chart(
+            words, probs, max_len=self.bar_max_len, bar_height=0.24, font_size=19,
+            pct_labels=pct_labels, n_main=n_main, scale_max=scale_max,
+        )
         out_end = self.arrows[1].get_end()
         chart.shift((out_end[0] + 1.2 - chart.rows[0][1].get_left()[0]) * RIGHT)
         chart.match_y(self.machine[0])
@@ -794,52 +794,15 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         self.play(*anims, run_time=fast_time)
         return self.deliver(chart, index, word, color, chat, run_time=0.8 * fast_time)
 
-    def skip_pass(self, n_words, run_time=1.6):
-        """
-        Many passes at once, for the words of the thoughts that are not shown
-        one by one: the model runs n_words more times, and the chat and the
-        input only get "…".
-        """
-        anims = []
-        if self.pending is not None:
-            anims.append(self.append_to_input(*self.pending))
-            self.pending = None
-        count = Integer(0, font_size=22).set_color(MUTED)
-        label = VGroup(text("+", font_size=22, color=MUTED), count, text("words", font_size=22, color=MUTED))
-        label.arrange(RIGHT, buff=0.08)
-        label.move_to(self.arrows[1].get_end() + 1.3 * RIGHT)
-        n_flashes = 5
-        flashes = Succession(*(self.block_flash(run_time=run_time / n_flashes) for _ in range(n_flashes)))
-        self.add(label)
-        self.play(
-            *anims, flashes,
-            self.pulse(self.arrows[0], run_time=run_time),
-            ChangeDecimalToValue(count, n_words, run_time=run_time),
-            run_time=run_time,
-        )
-        flow, bubble = self.chat
-        dots = flow.next_word("…", MUTED)
-        self.play(FadeIn(dots, scale=0.5), FadeOut(label), run_time=0.4)
-        flow.add(dots)
-        bubble.refresh()
-        self.turns[-1]["items"].append(("…", MUTED, dots))
-        self.pending = ("…", MUTED, dots)
-
     def run_records(self, records, n0=0, colors=None, fast_time=0.35):
         """
-        Passes for a list of records (tools/compute_distributions.py), with
-        {"skip": n} entries for words that are not shown. colors(record)
-        gives each word's color in the chat.
+        Passes for a list of records (scenes/stage_outputs.py), numbered
+        from n0. colors(record) gives each word's color in the chat.
         """
-        n = n0
-        for record in records:
-            if "skip" in record:
-                self.skip_pass(record["skip"])
-                continue
+        for n, record in enumerate(records, start=n0):
             color = colors(record) if colors else INK
             self.run_pass(n, self.distribution_from_record(record), color=color, fast_time=fast_time)
-            n += 1
-        return n
+        return n0 + len(records)
 
     def thought_color(self, record):
         """Words of the thoughts are grey; the answer is in the normal color."""
@@ -852,6 +815,103 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         rect = SurroundingRectangle(self.rule_badge, buff=0.05).set_stroke(WARN, 2)
         self.play(ShowCreation(rect))
         self.play(FadeOut(rect))
+
+    def highlight_system_prompt(self):
+        """A quick border around the system prompt in the input."""
+        rect = SurroundingRectangle(self.system_block, buff=0.05).round_corners(0.06)
+        rect.set_stroke(ACCENT, 3)
+        label = text("System prompt", font_size=15, color=ACCENT, weight=BOLD)
+        label.next_to(rect, UP, buff=0.04).align_to(rect, RIGHT)
+        self.play(ShowCreation(rect), FadeIn(label, 0.05 * UP), run_time=0.8)
+        self.wait(0.6)
+        self.play(FadeOut(rect), FadeOut(label), run_time=0.6)
+
+    # Training (shown in the chat area, before the chat appears)
+
+    def training_header(self, title, subtitle):
+        header = VGroup(
+            text(title, font_size=32, color=ACCENT, weight=BOLD),
+            text(subtitle, font_size=20, color=MUTED),
+        ).arrange(DOWN, buff=0.12)
+        header.move_to([(self.chat_left + self.chat_right) / 2, 2.3, 0])
+        return header
+
+    def get_part_label(self, string):
+        label = text(string, font_size=22, weight=BOLD)
+        label.move_to([(self.chat_left + self.chat_right) / 2, 1.45, 0])
+        return label
+
+    def absorb(self, card):
+        """A training example goes into the model; the dials shift a little."""
+        return AnimationGroup(
+            card.animate.scale(0.1).move_to(self.machine[0]).set_opacity(0).set_anim_args(remover=True),
+            self.randomize_dials(lag_factor=1),
+            self.block_flash(),
+        )
+
+    def place_card(self, content, title):
+        title_mob = text(title, font_size=16, color=MUTED, weight=BOLD)
+        title_mob.next_to(content, UP, buff=0.15, aligned_edge=LEFT)
+        group = VGroup(title_mob, content)
+        bg = SurroundingRectangle(group, buff=0.15).round_corners(0.1)
+        bg.set_stroke(FRAME_GREY, 1).set_fill(TRUE_WHITE, 1)
+        card = VGroup(bg, group)
+        card.move_to([(self.chat_left + self.chat_right) / 2, 1.1, 0], UP)
+        return card
+
+    def get_mini_card(self, kind):
+        """A tiny training example for many_examples: a few grey lines, plus a hint of its kind."""
+        bg = RoundedRectangle(0.42, 0.3, corner_radius=0.04)
+        bg.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1)
+        lines = VGroup(Line(ORIGIN, w * RIGHT) for w in [0.26, 0.2, 0.24])
+        lines.arrange(DOWN, aligned_edge=LEFT, buff=0.05).set_stroke(FRAME_GREY, 1.5)
+        lines.move_to(bg).shift(0.04 * LEFT)
+        tile = VGroup(bg, lines)
+        if kind == "conversation":
+            # Ends in STOP
+            tag = Rectangle(0.07, 0.045).set_fill(CHIP_FILL, 1).set_stroke(width=0)
+            tag.next_to(lines[-1], RIGHT, buff=0.02)
+            tile.add(tag)
+        elif kind in ("comparison", "problem"):
+            # Checked: better answer, or correct answer
+            tag = Tex(R"\checkmark", font_size=12).set_color(TOOL_COLOR)
+            tag.move_to(bg.get_corner(DR) + [-0.05, 0.05, 0])
+            tile.add(tag)
+        return tile
+
+    def many_examples(self, kind, lines, n=48, waves=2, run_time=4, extra_anims=()):
+        """
+        After the examples shown in detail: many more of the same kind go
+        into the model, with their order of magnitude written out. Each wave
+        fills a grid of small cards, which then all go into the model.
+        """
+        center_x = (self.chat_left + self.chat_right) / 2
+        label = VGroup(
+            text(lines[0], font_size=24, weight=BOLD),
+            *(text(line, font_size=19, color=MUTED) for line in lines[1:]),
+        ).arrange(DOWN, buff=0.1)
+        label.move_to([center_x, 0.75, 0])
+        self.play(FadeIn(label, 0.1 * DOWN))
+        self.stills_every(1.0)
+        wave_time = run_time / waves
+        for wave in range(waves):
+            tiles = VGroup(self.get_mini_card(kind) for _ in range(n))
+            tiles.arrange_in_grid(n_rows=6, h_buff=0.1, v_buff=0.1)
+            tiles.move_to([center_x, -1.45, 0])
+            self.play(LaggedStartMap(FadeIn, tiles, scale=0.8, lag_ratio=0.02), run_time=0.35 * wave_time)
+            self.play(
+                LaggedStart(
+                    (tile.animate.scale(0.1).move_to(self.machine[0]).set_opacity(0) for tile in tiles),
+                    lag_ratio=0.02,
+                ),
+                self.randomize_dials(run_time=0.65 * wave_time, lag_factor=3),
+                self.block_flash(run_time=0.65 * wave_time),
+                *(extra_anims if wave == 0 else ()),
+                run_time=0.65 * wave_time,
+            )
+            self.remove(tiles)
+        self.stills_every(None)
+        self.play(FadeOut(label, 0.1 * UP))
 
     def build_software(self, run_time=2.0):
         parts = [FadeIn(self.input_card), GrowArrow(self.arrows[0]), GrowArrow(self.arrows[1]), FadeIn(self.rule_badge)]

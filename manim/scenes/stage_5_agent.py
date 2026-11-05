@@ -1,5 +1,6 @@
 from manim_imports_ext import *
 from scenes.agentic_common import *
+from scenes.stage_outputs import STAGE5_ANSWER, STAGE5_CALL, STAGE5_PAPERS, words
 
 
 class Stage5Agent(AgenticScene):
@@ -9,19 +10,15 @@ class Stage5Agent(AgenticScene):
     While thinking, the model writes TOOL, the tool and its input; the
     software recognizes that shape at the end of the text, runs the tool,
     and joins its output to the input, which then goes through the model
-    again. Tool call and result stay inside the private thoughts; the model
-    thinks again, then answers. THINK, ANSWER, TOOL and STOP are always
-    among the options. Bars, thoughts, tool call and answer are the real
-    outputs of a small reasoning model (Qwen3-1.7B); only some sentences of
-    the thoughts are shown word by word, the rest as "…". The search
-    returns two real papers, and the answer cites both.
+    again. Tool call and result stay inside the private thoughts; then the
+    model answers from the result and cites it. THINK, ANSWER, TOOL and
+    STOP are always among the options. Words, bars and the two papers
+    are scripted (scenes/stage_outputs.py).
     """
     stage_number = 5
     stage_title = "Tool-using agent"
     stage_subtitle = "Can retrieve and act; needs oversight"
     roles = True
-    # Displayed system prompt; the bars were computed with a prompt that also
-    # asks for short answers with citations (see tools/compute_distributions.py)
     system_prompt = [
         ("What follows is a conversation between a human and a helpful and kind assistant. Tools:", INK),
         ("Search web, Read files, Execute code.", TOOL_COLOR),
@@ -29,11 +26,11 @@ class Stage5Agent(AgenticScene):
     ]
     stop_rule = "stop"
     special_rows = ("THINK", "ANSWER", "TOOL", "STOP")
-    input_font_size = 12
-    chat_font_size = 17
+    input_font_size = 13
+    chat_font_size = 18
     input_bottom = -2.2
     tool_names = ["Search web", "Read files", "Execute code"]
-    papers = DISTRIBUTIONS["stage5_text"]["papers"]
+    papers = STAGE5_PAPERS
     random_seed = 5
 
     def construct(self):
@@ -43,6 +40,7 @@ class Stage5Agent(AgenticScene):
         tools = self.get_tools()
         self.add(self.title_group, self.software_window, machine[:2], weights_label)
         self.play(self.build_software())
+        self.highlight_system_prompt()
         self.play(LaggedStartMap(FadeIn, tools, shift=0.2 * UP, lag_ratio=0.2))
         # The system prompt names the tools the software offers
         tool_words = self.system_block.segments[1]
@@ -60,25 +58,23 @@ class Stage5Agent(AgenticScene):
         icon, flow, bubble = self.get_thought(self.user_bubble.get_bottom()[1] - 0.2)
         self.play(FadeIn(icon), FadeIn(bubble))
         self.open_turn()
-        records = DISTRIBUTIONS["stage5_call"]
         self.in_call = False
-        n = self.run_records(records, colors=self.call_color)
+        n = self.run_records(STAGE5_CALL, colors=self.call_color)
 
         # The software sees TOOL + tool + "input" at the end and runs the tool
-        n_call_words = len(records) - [r.get("word") for r in records].index("TOOL")
+        n_call_words = len(STAGE5_CALL) - words(STAGE5_CALL).index("TOOL")
         sources = self.run_tool(tools, n_call_words=n_call_words)
 
-        # Back through the model, now with the result in the input: it
-        # thinks again, then answers
-        self.run_records(DISTRIBUTIONS["stage5_answer"], n0=n, colors=self.thought_color)
+        # Back through the model, now with the result in the input: it answers
+        self.run_records(STAGE5_ANSWER, n0=n, colors=self.thought_color)
         self.flash_rule()
 
         # The citations point to what the tool returned
         flow = self.chat[0]
-        answer = DISTRIBUTIONS["stage5_text"]["answer"].split(" ")
-        for paper, source in zip(self.papers, sources):
-            start = 1 + answer.index("(" + paper["ref"].split(" ")[0])
-            citation = VGroup(*flow[start:start + 4])
+        answer = words(STAGE5_ANSWER)[:-1]  # ANSWER ... (as in the chat; STOP isn't)
+        starts = [n for n, word in enumerate(answer) if word == "(Paper"]
+        for start, source in zip(starts, sources):
+            citation = VGroup(*flow[start:start + 2])
             highlights, underlines = self.highlight_words(citation, color=TOOL_COLOR, fill="#DDF1EE")
             link = DashedLine(citation.get_top(), source.get_bottom(), dash_length=0.05).set_stroke(TOOL_COLOR, 1.5)
             self.add(highlights, flow)
@@ -107,19 +103,27 @@ class Stage5Agent(AgenticScene):
         tools.tiles = tiles
         return tools
 
-    def get_tool_tile(self, name, size=0.62):
-        """A small program: a dark app window with a glyph, and its name."""
+    def get_tool_tile(self, name, size=0.62, glyph=None):
+        """
+        A small program: a dark app window with a glyph ("search", "files",
+        "code" or "terminal"; by default from the name), and its name.
+        """
+        if glyph is None:
+            glyph = "search" if name.startswith("Search") else "files" if name.startswith("Read") else "terminal"
+        kind = glyph
         body = RoundedRectangle(size, size, corner_radius=0.08)
         body.set_fill(CHIP_FILL, 1).set_stroke(width=0)
         dots = VGroup(Dot(radius=0.025) for _ in range(3)).arrange(RIGHT, buff=0.03)
         dots.set_fill(FRAME_GREY, 1).move_to(body.get_corner(UL) + [0.12, -0.08, 0])
-        if name.startswith("Search"):
+        if kind == "search":
             glyph = VGroup(
                 Circle(radius=0.11).set_stroke(TRUE_WHITE, 3),
                 Line(ORIGIN, 0.12 * (RIGHT + DOWN)).set_stroke(TRUE_WHITE, 4).shift(0.08 * (RIGHT + DOWN)),
             )
-        elif name.startswith("Read"):
+        elif kind == "files":
             glyph = doc_icon(0.3, color=CHIP_FILL)
+        elif kind == "code":
+            glyph = Text("</>", font=MONO, font_size=16, weight=BOLD).set_color(TRUE_WHITE)
         else:
             glyph = Text(">_", font=MONO, font_size=18, weight=BOLD).set_color(TRUE_WHITE)
         glyph.move_to(body).shift(0.04 * DOWN)
@@ -169,24 +173,21 @@ class Stage5Agent(AgenticScene):
         flow = self.input_flow
         flow.line_break()
         label = flow.add_word("Result:", color=MUTED)
-        # Titles and findings are in the input in full; shortened here with "…"
         result_words = VGroup()
         for n, paper in enumerate(self.papers):
             if n > 0:
                 flow.line_break()
-            string = f"[{n + 1}] {paper['ref']}: " + " ".join(paper["title"].split()[:2]) + " …"
+            string = f"Paper {n + 1}: {paper['title']}: {paper['finding']}."
             result_words.add(*flow.add_words(string.split(" "), color=TOOL_COLOR))
         stop = flow.add_word("STOP")
         flow.line_break()
         assistant = flow.add_word("Assistant:", color=MUTED)
         bubble = self.thought_bubble
-        sources = VGroup(self.get_source_card(paper) for paper in self.papers)
+        sources = VGroup(self.get_source_card(n, paper) for n, paper in enumerate(self.papers))
         sources.arrange(DOWN, aligned_edge=LEFT, buff=0.08)
         sources.move_to([bubble.top_left[0] + bubble.buff, self.chat[0].get_bottom_y() - 0.06, 0], UL)
         bubble.add_part(sources)
         bubble.keep = sources
-        # The thoughts go on below the result
-        self.chat = (bubble.add_flow(sources.get_bottom()[1] - 0.04, self.chat_font_size - 2), bubble)
         self.play(
             FadeTransform(card.copy(), result_words),
             FadeIn(label), FadeIn(stop),
@@ -202,10 +203,13 @@ class Stage5Agent(AgenticScene):
         self.wait()
         return sources
 
-    def get_source_card(self, paper):
-        """A search result as the chat shows it: a small paper card with its reference."""
-        icon = doc_icon(0.22, color=TOOL_COLOR)
-        label = text(paper["ref"], font_size=self.chat_font_size - 3, color=TOOL_COLOR)
+    def get_source_card(self, n, paper):
+        """A search result as the chat shows it: a small paper card with its title."""
+        icon = doc_icon(0.3, color=TOOL_COLOR)
+        label = VGroup(
+            text(f"Paper {n + 1}", font_size=self.chat_font_size - 4, color=TOOL_COLOR, weight=BOLD),
+            text(paper["title"], font_size=self.chat_font_size - 6, color=TOOL_COLOR),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.04)
         content = VGroup(icon, label).arrange(RIGHT, buff=0.1)
         bg = SurroundingRectangle(content, buff=0.07).round_corners(0.06)
         bg.set_fill("#DDF1EE", 1).set_stroke(TOOL_COLOR, 1)
