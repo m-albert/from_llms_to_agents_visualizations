@@ -229,12 +229,13 @@ class AgenticOverview(AgenticScene):
     written out as an SVG next to the video.
 
     Horizontally this is the schematic's grid: columns of 340 units with
-    gutters of 40, which is what leaves room for the chevrons between them.
+    gutters of 40. The step cards sit over the gutters, and the arrow on the
+    bottom edge of each card points from one stage to the next.
     """
     col_xs = [-5.46, -2.73, 0.0, 2.73, 5.46]
     col_width = 2.44
     row_label_x = -6.9
-    steps_y = 3.16
+    steps_y = 3.26
     step_height = 1.24
     # Baselines
     year_y, title_y, subtitle_y = 2.29, 2.0, 1.76
@@ -339,7 +340,7 @@ class AgenticOverview(AgenticScene):
         for n in range(1, len(self.stages)):
             card = step_cards[n - 1]
             self.play(FadeIn(card.card, 0.2 * DOWN))
-            self.play(ShowCreation(card.connector), FadeIn(card.chevron, scale=0.5))
+            self.play(FadeIn(card.arrow, scale=0.5))
             self.play(
                 LaggedStartMap(FadeIn, columns[n].header, shift=0.1 * DOWN, lag_ratio=0.2),
                 TransformFromCopy(columns[n - 1].model, columns[n].model),
@@ -718,44 +719,35 @@ class AgenticOverview(AgenticScene):
         card_bg = RoundedRectangle(self.col_width, self.step_height, corner_radius=0.11)
         card_bg.set_fill(STEP_FILL, 1).set_stroke(STEP_STROKE, 1.5)
         card_bg.move_to([x, self.steps_y, 0])
-        top, bottom = card_bg.get_top()[1], card_bg.get_bottom()[1]
+        top = card_bg.get_top()[1]
         title = on_baseline(step["title"], x, top - 0.22, side=ORIGIN, font_size=16, color=ACCENT, weight=BOLD)
         subtitle = on_baseline(step["subtitle"], x, top - 0.4, side=ORIGIN, font_size=12, color=MUTED)
         content = VGroup(title, subtitle)
         if step["items"]:
-            items, feeds = self.get_step_items(step["items"], x, top - 0.64, top - 0.95, bottom)
-            content.add(items, feeds)
+            content.add(self.get_step_items(step["items"], x, top - 0.64, top - 0.95))
         else:
             content.add(self.get_mini_loop(x, top - 0.72))
-        connector = Line(card_bg.get_bottom(), [x, self.model_y, 0]).set_stroke(ACCENT, 2)
-        chevron = VGroup(
-            Circle(radius=0.11).set_fill(ACCENT, 1).set_stroke(width=0),
-            icon_part("M-3 -6L3 0L-3 6", stroke=TRUE_WHITE, width=2.2),
-        )
-        chevron.move_to([x, self.model_y, 0])
-        result = VGroup(card_bg, content, connector, chevron)
+        arrow = self.get_step_arrow().move_to(card_bg.get_bottom())
+        result = VGroup(card_bg, content, arrow)
         result.card = VGroup(card_bg, content)
-        result.connector = connector
-        result.chevron = chevron
+        result.arrow = arrow
         return result
 
-    def get_step_items(self, items, x, icon_y, label_y, card_bottom):
-        """Icon (or special words) above each label; thin lines lead from the labels to the connector."""
+    def get_step_arrow(self):
+        """Thin arrow in a white pill, so that it doesn't read as one of the stage numbers."""
+        pill = RoundedRectangle(0.38, 0.18, corner_radius=0.09)
+        pill.set_fill(TRUE_WHITE, 1).set_stroke(STEP_STROKE, 1.5)
+        return VGroup(pill, open_arrow(0.1 * LEFT, 0.1 * RIGHT, ACCENT, width=1.5, head=0.045))
+
+    def get_step_items(self, items, x, icon_y, label_y):
+        """Icon (or special words) above each label."""
         labels = VGroup(on_baseline(item["label"], 0, label_y, font_size=12) for item in items)
         labels.arrange(RIGHT, buff=0.16, center=False, coor_mask=RIGHT)
         labels.set_x(x)
         result = VGroup()
-        feeds = VGroup()
         for item, label in zip(items, labels):
             result.add(self.get_step_item(item).move_to([label.get_x(), icon_y, 0]), label)
-            start = np.array([label.get_x(), label_y - 0.06, 0])
-            end = np.array([x, card_bottom, 0])
-            feeds.add(CubicBezier(
-                start, start + 0.11 * DOWN,
-                end + 0.04 * UP + 0.25 * (start[0] - x) * RIGHT, end,
-            ))
-        feeds.set_stroke(STEP_STROKE, 1.2).set_fill(opacity=0)
-        return result, feeds
+        return result
 
     def get_step_item(self, item):
         """An icon; or special words, stacked, optionally with e.g. in front."""
