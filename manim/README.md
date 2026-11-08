@@ -182,5 +182,7 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
 
 ## License
 
-The 3b1b code is CC BY-NC-SA 4.0 (`LICENSE.txt`): fine for a non-commercial talk;
-credit 3Blue1Brown on the slide.
+The 3b1b code is CC BY-NC-SA 4.0 (`LICENSE.txt`), and so is everything adapted from it,
+including these scenes and their output (see `../LICENSE`). Fine for a non-commercial talk;
+credit 3Blue1Brown on the slide. The fonts in `assets/fonts/` are under the SIL Open Font
+License (`assets/fonts/OFL.txt`).

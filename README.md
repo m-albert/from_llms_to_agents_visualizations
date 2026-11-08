@@ -121,3 +121,12 @@ Stages 2–4 also come without the training part (`Stage2BaseModelInference` etc
 
 - [manim/README.md](manim/README.md): how to render, and what each scene shows in detail.
 - [docs/llm_to_agentic_ai.md](docs/llm_to_agentic_ai.md): design notes for the first schematic.
+
+## License
+
+[CC BY-NC-SA 4.0](LICENSE): free to share and adapt for non-commercial use, with credit, under
+the same license. When reusing a figure or animation, credit it as e.g. *"Marvin Albert, adapted
+from 3Blue1Brown, CC BY-NC-SA 4.0"*.
+
+Adapted from the code of [3Blue1Brown's videos](https://github.com/3b1b/videos) (CC BY-NC-SA 4.0).
+The fonts in `manim/assets/fonts/` are under the [SIL Open Font License](manim/assets/fonts/OFL.txt).
