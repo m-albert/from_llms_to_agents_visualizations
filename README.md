@@ -21,15 +21,15 @@ The same model gets the same question five times. Four steps change what it can 
 
 ### Security overview
 
-Two parts, two questions. The LLM sees your data: where does it go? The harness acts for you: what can it reach?
+Two parts, two questions. The software around the model (the harness) acts for you: what can it reach? It sends your data to the LLM, which may run elsewhere: where does that data go?
 
 ![Security overview](security_overview.png)
 
 [SVG](security_overview.svg)
 
-### Security: three setups
+### Who runs each part?
 
-Who runs the harness, and who runs the LLM?
+Three common setups: who runs the harness, and who runs the LLM?
 
 ![Security combinations](security_combinations.png)
 
@@ -67,11 +67,11 @@ A tutor in JupyterLab that gives hints, not solutions.
 
 ![Training level 0](gifs/TrainingLevel0.gif)
 
-**Training 2: parameters.** The model is a machine with many dials.
+**Training 2: weights.** The model is a machine with many dials, its weights (also called parameters).
 
 ![Training level 1](gifs/TrainingLevel1.gif)
 
-**Training 3: learning from an example.** Each example nudges the dials a little.
+**Training 3: learning from an example.** Each example nudges the weights a little.
 
 ![Training level 2](gifs/TrainingLevel2.gif)
 
@@ -97,7 +97,7 @@ A tutor in JupyterLab that gives hints, not solutions.
 
 ![Stage 4](gifs/Stage4Reasoning.gif)
 
-**5. Agent.** It uses tools, such as a web search, and cites its sources.
+**5. Tool-using agent.** It uses tools, such as a web search, and answers from its sources, but might still hallucinate.
 
 ![Stage 5](gifs/Stage5Agent.gif)
 

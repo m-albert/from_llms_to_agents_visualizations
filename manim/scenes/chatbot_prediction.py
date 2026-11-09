@@ -2,23 +2,32 @@ from manim_imports_ext import *
 from _2024.transformers.helpers import get_paragraph
 from _2024.transformers.generation import ChatBotPrompt, clean_text
 from scenes.stills import BuildStills
+from scenes.agentic_common import SPECIAL_WORDS, SYSTEM_PROMPT, TRAINED_FILL
+from scenes.stage_outputs import STAGE3
 
 
 class ChatbotPrediction(BuildStills, ChatBotPrompt):
     """
     3b1b's ChatBotPrompt: next-word prediction on a transcript of a chat
     turns the model into an assistant. The first word is animated in full,
-    the rest are shown one highlighted word at a time.
+    the rest are shown one highlighted word at a time. System prompt and
+    answer are the ones of Stage3Assistant: the words and bars come from
+    scenes/stage_outputs.py (its first sentence), not from a model.
     """
+    system_prompt = SYSTEM_PROMPT
     user_prompt = "User: What do recent papers say about microplastics and health?"
+    ai_seed = "Assistant: "
     # Upstream recolors the first len(seed_text) letters of the answer text,
-    # so the seed is just the "AI Assistant:" prefix, in the text color
-    seed_text = "AI Assistant:"
+    # so the seed is just the "Assistant:" prefix, in the text color
+    seed_text = "Assistant:"
     seed_text_color = WHITE
     max_predictions = 40
 
     def construct(self):
+        self.n_predicted = 0
         text_mob, next_word_line, machine = self.init_text_and_machine()
+        # Trained model: blue, as in the stage scenes
+        machine[0].set_fill(TRAINED_FILL)
 
         all_strs = list(map(clean_text, [self.system_prompt, self.user_prompt, self.ai_seed]))
         system_prompt, user_prompt, ai_seed = all_text = VGroup(
@@ -74,6 +83,14 @@ class ChatbotPrediction(BuildStills, ChatBotPrompt):
         self.still_on_wait = False
         self.play(FadeOut(next_word_line))
         self.wait(3)
+
+    def predict_next_token(self, text):
+        """The scripted distribution of the next word of the stage 3 answer (picked word first)."""
+        record = STAGE3[self.n_predicted]
+        self.n_predicted += 1
+        rows = [(record["word"], record["p"])]
+        rows += [(word, p) for word, p in record["others"] if word not in SPECIAL_WORDS]
+        return [" " + word for word, p in rows], [p for word, p in rows]
 
     def wait(self, *args, **kwargs):
         super().wait(*args, **kwargs)

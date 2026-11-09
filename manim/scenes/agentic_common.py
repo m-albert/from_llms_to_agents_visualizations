@@ -21,13 +21,18 @@ TRAINED_FILL = "#A9C6E8"   # trained model blocks
 UNTRAINED_FILL = "#C4C4C4" # untrained model blocks
 USER_FILL = "#E2EDF8"      # user bubbles
 TOOL_COLOR = "#2A9D8F"     # tool use (teal)
+TOOL_FILL = "#DDF1EE"
 WARN = "#C77700"           # hallucination warnings (amber)
 WARN_FILL = "#FCEBC9"
 CHIP_FILL = "#262A33"      # special words
-BAR_COLOR = "#5CC4AC"
+BAR_COLOR = "#5CC4AC"      # also the forward pass through the model
+ADJUST_COLOR = "#FC6255"   # weights adjusted (the backward flash of training)
 MONO = "Menlo"
 
 SPECIAL_WORDS = ("STOP", "TOOL", "THINK", "ANSWER")
+
+# The same system prompt wherever the assistant appears
+SYSTEM_PROMPT = "What follows is a conversation between a user and a helpful and kind assistant."
 
 
 # Small building blocks
@@ -112,12 +117,36 @@ def warning_sign(height=0.3):
     return VGroup(tri, mark).set_height(height)
 
 
-def warning_label(lines, font_size=22, width=None):
-    words = VGroup(text(line, font_size=font_size, color=WARN, weight=BOLD) for line in lines)
+def verdict_sign(kind, height=0.3):
+    """
+    The verdict on a stage's answer: "none" (grey cross, no answer at all),
+    "warn" (amber warning, may be hallucinated) or "ok" (teal check, sourced).
+    """
+    if kind == "warn":
+        return warning_sign(height)
+    color = MUTED if kind == "none" else TOOL_COLOR
+    disc = Circle(radius=0.5).set_fill(color, 1).set_stroke(width=0)
+    if kind == "none":
+        mark = VGroup(Line(UL, DR), Line(UR, DL)).set_width(0.36)
+    else:
+        mark = Polyline(0.24 * LEFT + 0.02 * DOWN, 0.08 * LEFT + 0.18 * DOWN, 0.26 * RIGHT + 0.2 * UP)
+    mark.set_stroke(TRUE_WHITE, 6).set_fill(opacity=0).move_to(disc).shift(0.02 * DOWN * (kind == "ok"))
+    return VGroup(disc, mark).set_height(height)
+
+
+VERDICT_COLORS = dict(none=MUTED, warn=WARN, ok=TOOL_COLOR)
+
+
+def verdict_label(kind, lines, font_size=22):
+    words = VGroup(text(line, font_size=font_size, color=VERDICT_COLORS[kind], weight=BOLD) for line in lines)
     words.arrange(DOWN, aligned_edge=LEFT, buff=0.08)
-    sign = warning_sign(height=0.35 * font_size / 22 * 1.0)
-    sign.next_to(words[0], LEFT, buff=0.15)
+    sign = verdict_sign(kind, height=0.35 * font_size / 22)
+    sign.next_to(words[0], LEFT, buff=0.15 * font_size / 22)
     return VGroup(sign, words)
+
+
+def warning_label(lines, font_size=22):
+    return verdict_label("warn", lines, font_size)
 
 
 def app_window(width, height, title="", title_font_size=18, bar_height=0.38):
@@ -386,7 +415,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
     stop_rule = "count"
     # Special words always listed below the bars
     special_rows = ()
-    # Passes during which the whole input is visibly re-assembled
+    # Passes shown step by step (the later ones go quickly)
     n_detailed = 3
     window_left, window_right = -6.95, 2.65
     chat_left, chat_right = 2.9, 6.95
@@ -394,10 +423,10 @@ class AgenticScene(BuildStills, PredictTheNextWord):
     input_right = -3.6
     input_bottom = -3.25
     model_center = (-1.85, 0.35)
-    input_font_size = 18
+    input_font_size = 22
     chat_font_size = 20
     bar_max_len = 1.0
-    software_title = "Software"
+    software_title = "Harness"
     chat_title = "Chat"
 
     def construct(self):
@@ -442,7 +471,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         return machine
 
     def get_weights_label(self, string):
-        label = text(string, font_size=18, color=MUTED)
+        label = text(string, font_size=20, color=MUTED)
         label.next_to(self.machine[0], UP, buff=0.15)
         return label
 
@@ -452,7 +481,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         bg = RoundedRectangle(self.input_right - left, top - self.input_bottom, corner_radius=0.1)
         bg.set_fill(TRUE_WHITE, 1).set_stroke(FRAME_GREY, 1.5)
         bg.move_to([left, top, 0], UL)
-        title = text("Input", font_size=17, color=MUTED, weight=BOLD)
+        title = text("Input", font_size=19, color=MUTED, weight=BOLD)
         title.move_to(bg.get_corner(UL) + [0.15, -0.12, 0], UL)
         card = VGroup(bg, title)
         card.bg = bg
@@ -488,18 +517,18 @@ class AgenticScene(BuildStills, PredictTheNextWord):
 
     def get_rule_badge(self):
         if self.stop_rule == "count":
-            self.counter = mono("0/10", font_size=15, color=MUTED)
-            content = VGroup(text("max 10 words", font_size=16, color=MUTED), self.counter)
+            self.counter = mono("0/10", font_size=17, color=MUTED)
+            content = VGroup(text("max 10 words", font_size=19, color=MUTED), self.counter)
         else:
-            content = VGroup(text("until", font_size=16, color=MUTED), chip("STOP", font_size=13))
+            content = VGroup(text("until", font_size=19, color=MUTED), chip("STOP", font_size=15))
         content.arrange(RIGHT, buff=0.1)
         self.rule_target = content[-1]
         rows = [content]
         if "TOOL" in self.special_rows:
-            rows.append(VGroup(chip("TOOL", font_size=13), text("call: run tool", font_size=16, color=MUTED)))
+            rows.append(VGroup(chip("TOOL", font_size=15), text("call: run tool", font_size=19, color=MUTED)))
         if "THINK" in self.special_rows:
-            rows.append(VGroup(chip("THINK", font_size=13), text("private thoughts", font_size=16, color=MUTED)))
-            rows.append(VGroup(chip("ANSWER", font_size=13), text("shown as answer", font_size=16, color=MUTED)))
+            rows.append(VGroup(chip("THINK", font_size=15), text("private thoughts", font_size=19, color=MUTED)))
+            rows.append(VGroup(chip("ANSWER", font_size=15), text("shown as answer", font_size=19, color=MUTED)))
         for row in rows[1:]:
             row.arrange(RIGHT, buff=0.1)
         content = VGroup(*rows).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
@@ -602,6 +631,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
             (word, INK, mob) for word, mob in zip(self.question.split(" "), self.user_bubble.flow)
         ], closed=True)]
         self.pending = None
+        self.n_synced = 0  # Items of input_specs() already in the input
         # Where picked words go: (flow, bubble); switches when ANSWER ends the thoughts
         self.chat = None
         self.thought_bubble = None
@@ -622,32 +652,39 @@ class AgenticScene(BuildStills, PredictTheNextWord):
                 specs.append(("STOP", INK, None, False))
         return specs
 
-    def rebuild_input(self, run_time=1.5):
+    def sync_input(self, run_time=1.5):
         """
-        The software builds the input from scratch: system prompt (already
-        there) + the whole conversation so far, copied from the chat.
+        The software adds what is new in the conversation to the input (the
+        system prompt is already there): on the first pass the whole
+        conversation so far, later only the newest words, copied from the chat.
         """
-        old = self.input_convo
-        flow = self.new_input_flow(self.convo_top)
+        specs = self.input_specs()
+        flow = self.input_flow
         anims = []
-        for n, (word, color, source, new_line) in enumerate(self.input_specs()):
-            if new_line and n > 0:
+        for word, color, source, new_line in specs[self.n_synced:]:
+            if new_line and len(flow) > 0:
                 flow.line_break()
             mob = flow.add_word(word, color)
+            self.input_convo.add(mob)
             if source is not None:
                 anims.append(TransformFromCopy(source, mob, path_arc=20 * DEGREES))
             else:
                 anims.append(FadeIn(mob))
-        if len(old) > 0:
-            self.play(FadeOut(old), run_time=0.3)
-        self.play(LaggedStart(*anims, lag_ratio=0.03), run_time=run_time)
-        self.input_flow = flow
-        self.input_convo = VGroup(*flow)
+        self.n_synced = len(specs)
         self.pending = None
+        if len(anims) > 1:
+            self.play(LaggedStart(*anims, lag_ratio=0.03), run_time=run_time)
+        elif anims:
+            self.play(*anims, run_time=0.5)
+
+    def mark_input_synced(self):
+        """Call after joining words to the input by hand (e.g. a tool's result)."""
+        self.n_synced = len(self.input_specs())
 
     def append_to_input(self, word, color, source):
         mob = self.input_flow.add_word(word, color)
         self.input_convo.add(mob)
+        self.n_synced += 1
         return TransformFromCopy(source, mob, path_arc=20 * DEGREES)
 
     def input_content(self):
@@ -658,17 +695,27 @@ class AgenticScene(BuildStills, PredictTheNextWord):
     def pulse(self, mob, color=BAR_COLOR, **kwargs):
         return mob.animate.set_color(color).set_anim_args(rate_func=there_and_back, **kwargs)
 
-    def block_flash(self, color=BAR_COLOR, run_time=1.0):
+    def block_flash(self, color=BAR_COLOR, run_time=1.0, reverse=False):
+        """
+        The layers light up one after the other: input to output for a pass
+        through the model, output to input (reverse) when training adjusts
+        the weights (as in TrainingLevel2).
+        """
         blocks = self.blocks
+        ordered = blocks[:-1][::-1] if reverse else blocks[:-1]
         return LaggedStart(
             (
                 block.animate.set_fill(color).set_anim_args(rate_func=there_and_back)
-                for block in blocks[:-1]
+                for block in ordered
             ),
             lag_ratio=0.1,
             run_time=run_time,
             group=blocks,
         )
+
+    def adjust_flash(self, run_time=1.0):
+        """Training adjusts the weights: the backward flash."""
+        return self.block_flash(ADJUST_COLOR, run_time=run_time, reverse=True)
 
     def randomize_dials(self, run_time=2, lag_factor=0.5):
         dials = self.dials
@@ -769,7 +816,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
     def run_pass(self, n, distribution, chat=None, color=INK, fast_time=0.5):
         """
         Pass n (from 0) through the loop. The first n_detailed passes show
-        every step: the input is re-assembled, flows into the model, the
+        every step: the new words join the input, it flows into the model, the
         distribution appears and a word is picked. Later passes only add the
         newest word to the input and go quickly.
         """
@@ -779,7 +826,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         if self.stop_rule == "count":
             self.update_counter(n + 1)
         if n < self.n_detailed:
-            self.rebuild_input()
+            self.sync_input()
             self.feed_model()
             chart = self.get_chart(words, probs, pct_labels, n_main)
             self.play(LaggedStart((FadeIn(row, 0.1 * RIGHT) for row in chart), lag_ratio=0.05), run_time=0.6)
@@ -809,7 +856,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         return MUTED if self.thought_bubble is not None and record["word"] != "ANSWER" else INK
 
     def update_counter(self, n, total=10):
-        self.counter.become(mono(f"{n}/{total}", font_size=15, color=MUTED).move_to(self.counter))
+        self.counter.become(mono(f"{n}/{total}", font_size=17, color=MUTED).move_to(self.counter))
 
     def flash_rule(self):
         rect = SurroundingRectangle(self.rule_badge, buff=0.05).set_stroke(WARN, 2)
@@ -820,7 +867,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         """A quick border around the system prompt in the input."""
         rect = SurroundingRectangle(self.system_block, buff=0.05).round_corners(0.06)
         rect.set_stroke(ACCENT, 3)
-        label = text("System prompt", font_size=15, color=ACCENT, weight=BOLD)
+        label = text("System prompt", font_size=17, color=ACCENT, weight=BOLD)
         label.next_to(rect, UP, buff=0.04).align_to(rect, RIGHT)
         self.play(ShowCreation(rect), FadeIn(label, 0.05 * UP), run_time=0.8)
         self.wait(0.6)
@@ -846,7 +893,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
         return AnimationGroup(
             card.animate.scale(0.1).move_to(self.machine[0]).set_opacity(0).set_anim_args(remover=True),
             self.randomize_dials(lag_factor=1),
-            self.block_flash(),
+            self.adjust_flash(),
         )
 
     def place_card(self, content, title):
@@ -905,7 +952,7 @@ class AgenticScene(BuildStills, PredictTheNextWord):
                     lag_ratio=0.02,
                 ),
                 self.randomize_dials(run_time=0.65 * wave_time, lag_factor=3),
-                self.block_flash(run_time=0.65 * wave_time),
+                self.adjust_flash(run_time=0.65 * wave_time),
                 *(extra_anims if wave == 0 else ()),
                 run_time=0.65 * wave_time,
             )

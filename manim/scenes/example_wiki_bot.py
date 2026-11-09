@@ -26,7 +26,7 @@ class WikiSearchBot(ExampleAgentScene):
         ("TOOL search_wiki_files <search>.", TOOL_COLOR),
     ]
     tool_names = ["search_wiki_files"]
-    tool_glyphs = {"search_wiki_files": "search"}
+    tool_glyphs = {"search_wiki_files": "folder"}
     input_font_size = 14
     chat_font_size = 18
     random_seed = 7

@@ -1,12 +1,15 @@
 from manim_imports_ext import *
 from _2024.transformers.chm import PredictTheNextWord
 from scenes.stills import BuildStills
+from scenes.agentic_common import TRAINED_FILL
 
 
 class NextWordPrediction(BuildStills, PredictTheNextWord):
     """
     Opening of 3b1b's PredictTheNextWord: text goes into the model, it gives
-    one word, then the full probability distribution over next words.
+    one word, then the full probability distribution over next words, of
+    which that word was the most likely. The model is trained, so it is
+    blue, as in the stage scenes.
     """
     seed_text = "The Single Cell Unit at D-BSSE is a"
     show_machine_intro = False  # True: start with the 3D build-up of the model
@@ -15,6 +18,7 @@ class NextWordPrediction(BuildStills, PredictTheNextWord):
         # Setup machine
         text_mob, next_word_line, machine = self.init_text_and_machine()
         machine.move_to(ORIGIN)
+        machine[0].set_fill(TRAINED_FILL)
         machine[1].set_backstroke(BLACK, 3)
 
         text_group = VGroup(text_mob, next_word_line)
@@ -66,9 +70,22 @@ class NextWordPrediction(BuildStills, PredictTheNextWord):
         self.wait()
         machine.replace_submobject(2, out_arrow)
 
-        # Probability distribution
-        self.play(FadeOut(prediction, DOWN))
-        self.animate_prediction_ouptut(machine, self.cur_str)
+        # Probability distribution: the word was just the most likely option
+        bar_groups = self.get_distribution(words, probs, machine)
+        top_label, top_rest = bar_groups[0][0], bar_groups[0][1:]
+        self.play(
+            ReplacementTransform(prediction, top_label),
+            GrowFromEdge(top_rest, LEFT),
+            run_time=1.2,
+        )
+        self.play(
+            LaggedStart(
+                (FadeInFromPoint(bar_group, machine[0][-1].get_right()) for bar_group in bar_groups[1:]),
+                lag_ratio=0.05,
+                group=bar_groups[1:],
+            ),
+            run_time=1.2,
+        )
         self.wait(2)
 
     def get_distribution(self, words, probs, machine, **kwargs):

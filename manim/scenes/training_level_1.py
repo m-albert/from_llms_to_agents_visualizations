@@ -7,8 +7,9 @@ from scenes.stills import BuildStills
 class TrainingLevel1(BuildStills, ShowMachineWithDials):
     """
     3b1b's ShowMachineWithDials, up to (not including) the zoom-out to many
-    more parameters: the model's behavior is set by its parameters (dials),
-    turning them changes the predicted distribution, and they start out random.
+    more parameters: the model's behavior is set by its weights (the dials;
+    also called parameters), turning them changes the predicted
+    distribution, and they start out random.
     """
     def construct(self):
         # Show machine (same position as in PredictTheNextWord)
@@ -37,12 +38,15 @@ class TrainingLevel1(BuildStills, ShowMachineWithDials):
             Line(small_rect.get_corner(UR), big_rect.get_corner(DR)),
         )
         rect_lines.set_stroke(WHITE, width=(1, 3))
+        weight_label = Text("one weight", font_size=36).set_color(BLUE)
+        weight_label.next_to(big_rect, RIGHT, buff=0.2)
         highlighed_parameter_group = VGroup(small_rect, rect_lines, big_rect, big_dial)
 
+        # The label goes first, so that it never sits on top of the dials
+        self.play(FadeOut(llm_text), run_time=0.6)
         last_dials.set_stroke(width=1, opacity=1)
         self.play(
             MoveToTarget(last_dials),
-            FadeOut(llm_text),
             FadeIn(small_rect),
         )
 
@@ -58,6 +62,7 @@ class TrainingLevel1(BuildStills, ShowMachineWithDials):
                 ShowCreation(rect_lines, lag_ratio=0),
                 TransformFromCopy(small_rect, big_rect),
                 TransformFromCopy(last_dials[0], big_dial),
+                FadeIn(weight_label, 0.2 * LEFT),
                 FadeIn(in_text),
                 GrowArrow(in_arrow),
                 FadeIn(bar_groups),
@@ -110,7 +115,7 @@ class TrainingLevel1(BuildStills, ShowMachineWithDials):
         self.wait()
 
         # Mention randomness
-        random_words = Text("Initially random")
+        random_words = Text("Weights start random")
         random_words.next_to(blocks, UP)
         random_words.set_color(RED)
         out_dots = Tex(R"...", font_size=120)
@@ -118,6 +123,7 @@ class TrainingLevel1(BuildStills, ShowMachineWithDials):
 
         self.play(
             FadeOut(big_rect),
+            FadeOut(weight_label),
             Uncreate(rect_lines, lag_ratio=0),
             FadeOut(small_rect),
             Transform(big_dial, last_dials[0])

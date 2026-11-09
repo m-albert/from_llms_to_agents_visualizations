@@ -1,8 +1,7 @@
 from manim_imports_ext import *
-from manimlib.mobject.svg.svg_mobject import VMobjectFromSVGPath
 from manimlib.utils.svg_export import _get_path_data
-import svgelements as se
 from scenes.agentic_common import *
+from scenes.icons import get_icon
 
 
 STEP_FILL = "#EDF2FA"
@@ -10,9 +9,6 @@ STEP_STROKE = "#B9CBE6"
 TITLE_BAR_FILL = "#F1F2F5"
 CHAT_STROKE = "#D3D8E1"
 TOOL_FILL = "#DDF1EE"
-
-# One unit of the llm_to_agentic_ai.svg grid, whose icons are ported below
-UNIT = FRAME_WIDTH / 1980
 
 
 def export_svg(mobjects, filename, pixel_width=1920, pixel_height=1080, background=TRUE_WHITE):
@@ -53,116 +49,6 @@ def export_svg(mobjects, filename, pixel_width=1920, pixel_height=1080, backgrou
         lines.append(f'  <path {" ".join(attrs)}/>')
     lines.append('</svg>')
     Path(filename).write_text("\n".join(lines))
-
-
-# Icons, in the coordinates of llm_to_agentic_ai.svg (y pointing down)
-
-def rect_d(x, y, w, h, r=0):
-    if r == 0:
-        return f"M{x} {y}H{x + w}V{y + h}H{x}Z"
-    return (
-        f"M{x + r} {y}H{x + w - r}A{r} {r} 0 0 1 {x + w} {y + r}V{y + h - r}"
-        f"A{r} {r} 0 0 1 {x + w - r} {y + h}H{x + r}A{r} {r} 0 0 1 {x} {y + h - r}"
-        f"V{y + r}A{r} {r} 0 0 1 {x + r} {y}Z"
-    )
-
-
-def ellipse_d(cx, cy, rx, ry):
-    return f"M{cx - rx} {cy}A{rx} {ry} 0 1 1 {cx + rx} {cy}A{rx} {ry} 0 1 1 {cx - rx} {cy}Z"
-
-
-def circle_d(cx, cy, r):
-    return ellipse_d(cx, cy, r, r)
-
-
-def icon_part(d, fill=None, stroke=None, width=2.0):
-    """One path of an icon: filled and/or stroked; widths are in manim's units."""
-    part = VMobjectFromSVGPath(se.Path(d))
-    part.set_fill(fill or TRUE_WHITE, 1 if fill else 0)
-    part.set_stroke(stroke or TRUE_WHITE, width if stroke else 0)
-    part.flip(RIGHT, about_point=ORIGIN)
-    part.scale(UNIT, about_point=ORIGIN)
-    return part
-
-
-def icon_letter(string, x, y, font_size, color):
-    letter = text(string, font_size=font_size, color=color, weight=BOLD)
-    return letter.move_to([x * UNIT, -y * UNIT, 0])
-
-
-def get_icon(name, color=ACCENT, height=None, width=2.0):
-    """A line icon. Without a height, it has the size of the schematic's icons."""
-    def line(d, stroke_width=width):
-        return icon_part(d, stroke=color, width=stroke_width)
-
-    def outline(d):
-        return icon_part(d, fill=TRUE_WHITE, stroke=color, width=width)
-
-    def solid(d):
-        return icon_part(d, fill=color)
-
-    def knockout(d, stroke_width=width):
-        return icon_part(d, stroke=TRUE_WHITE, width=stroke_width)
-
-    if name == "books":
-        parts = [
-            outline(rect_d(-17, 5, 34, 10, 2)), outline(rect_d(-13, -6, 30, 10, 2)),
-            outline(rect_d(-16, -17, 31, 10, 2)),
-            line("M-10 5V15"), line("M10 -6V4"), line("M-9 -17V-7"),
-        ]
-    elif name == "web":
-        parts = [
-            outline(circle_d(0, 0, 17)), outline(ellipse_d(0, 0, 7.5, 17)),
-            line("M-17 0H17"), line("M-14.5 -8.5H14.5"), line("M-14.5 8.5H14.5"),
-        ]
-    elif name == "code":
-        parts = [
-            outline(rect_d(-19, -15, 38, 30, 4)),
-            line("M-6 -6L-12 0L-6 6"), line("M6 -6L12 0L6 6"), line("M2.5 -8L-2.5 8"),
-        ]
-    elif name == "papers":
-        parts = [
-            outline("M-13 -18H5L13 -10V18H-13Z"), line("M5 -18V-10H13"),
-            line("M-8 -10H0"), line("M-8 -4H8"),
-            line("M-6 13V8", 2.8), line("M0 13V3", 2.8), line("M6 13V6", 2.8),
-        ]
-    elif name == "examples":
-        parts = [
-            outline(rect_d(-21, -18, 28, 21, 5)), icon_letter("Q", -7, -7.5, 9, color),
-            solid(rect_d(-6, -1, 28, 21, 5)), icon_letter("A", 8, 9.5, 9, TRUE_WHITE),
-        ]
-    elif name == "feedback":
-        parts = [
-            outline(circle_d(-5, -9, 7.5)), line("M-19 16C-19 2 9 2 9 16"),
-            solid(circle_d(12, 8, 9.5)), knockout("M7.5 8.5L10.5 11.5L16 5"),
-        ]
-    elif name == "problems":
-        parts = [outline(rect_d(-19, -15, 38, 30, 4)), icon_letter("x=?", 0, 0, 9, color)]
-    elif name == "rewards":
-        parts = [solid(circle_d(0, 0, 17)), knockout("M-7 0.5L-2 5.5L8 -5", 2.6)]
-    elif name == "folder":
-        parts = [outline("M-17 -12H-5L-1 -7H17V14H-17Z"), line("M-17 -2H17")]
-    elif name == "person":
-        parts = [
-            solid(circle_d(0, 0, 13)),
-            icon_part(circle_d(0, -3.5, 4.2), fill=TRUE_WHITE),
-            icon_part("M-7.5 8.5C-7.5 2.5 7.5 2.5 7.5 8.5Z", fill=TRUE_WHITE),
-        ]
-    elif name == "robot":
-        parts = [
-            line("M0 -9.5V-13"), solid(circle_d(0, -14, 2.4)),
-            solid(rect_d(-13, -4, 3, 8, 1.5)), solid(rect_d(10, -4, 3, 8, 1.5)),
-            solid(rect_d(-10, -10, 20, 19, 5)),
-            icon_part(circle_d(-4, -2, 2.4), fill=TRUE_WHITE),
-            icon_part(circle_d(4, -2, 2.4), fill=TRUE_WHITE),
-            knockout("M-3.5 4H3.5", 1.8),
-        ]
-    else:
-        raise ValueError(name)
-    icon = VGroup(*parts)
-    if height is not None:
-        icon.set_height(height)
-    return icon
 
 
 def on_baseline(string, x, y, side=LEFT, **kwargs):
@@ -230,7 +116,9 @@ class AgenticOverview(AgenticScene):
 
     Horizontally this is the schematic's grid: columns of 340 units with
     gutters of 40. The step cards sit over the gutters, and the arrow on the
-    bottom edge of each card points from one stage to the next.
+    bottom edge of each card points from one stage to the next. Every stage
+    ends with a verdict on its answer: grey (no answer) or amber (may be
+    hallucinated, even with sources).
     """
     col_xs = [-5.46, -2.73, 0.0, 2.73, 5.46]
     col_width = 2.44
@@ -242,13 +130,12 @@ class AgenticOverview(AgenticScene):
     model_y = 0.79
     window_height = 1.66
     bar_height = 0.15
-    narrow_window_width = 1.08
-    # Left part of the wide windows, with the model; the panels are to its right
+    # Left part of the windows with panels, with the model; the panels are to its right
     wide_left_width = 0.88
     panel_buff = 0.06
     caption_y = -0.28
     chat_top, chat_bottom = -0.42, -3.27
-    warning_y = -3.59
+    verdict_y = -3.59
     chat_font_size = 12
     chat_line_height = 0.185
     panel_font_size = 10
@@ -261,14 +148,14 @@ class AgenticOverview(AgenticScene):
             title="Untrained model", subtitle="Random output: nothing learned yet",
             trained=False, software=["Generate", "10 words"], caption="Random weights",
             answer="orbit lamp the seven glass of whenever banana north quietly",
-            note="10 random words",
+            verdict=("none", ["No answer:", "just random words"]),
         ),
         dict(
             year="2018–2020", year_note="GPT-1 to GPT-3",
             title="Pre-trained base model", subtitle="Completes text, not yet an assistant",
             trained=True, software=["Generate", "10 words"], caption="Learned language patterns",
             answer="…and in seafood? What do recent papers say about PFAS",
-            note="Continues from input prompt",
+            verdict=("none", ["No answer: it continues", "the text with a new question"]),
         ),
         dict(
             year="2022", year_note="ChatGPT",
@@ -277,7 +164,7 @@ class AgenticOverview(AgenticScene):
             panel="assistant",
             answer="Studies suggest microplastics may be linked to inflammation.\nA landmark study proved direct harm in humans. STOP",
             claim="A landmark study proved direct harm in humans.",
-            warning=["Plausible, but from memory", "and potentially hallucinated"],
+            verdict=("warn", ["Plausible, but from memory", "and potentially hallucinated"]),
         ),
         dict(
             year="2024", year_note="o1, DeepSeek-R1",
@@ -286,7 +173,7 @@ class AgenticOverview(AgenticScene):
             panel="split",
             thought="Harm in humans proven? Not yet → don’t overclaim.",
             answer="ANSWER Microplastics are found in human tissue, but harm is still unclear. STOP",
-            warning=["More careful, but still", "answers from memory"],
+            verdict=("warn", ["More careful, but still", "answers from memory"]),
         ),
         dict(
             year="2024–today", year_note="tool use & agents",
@@ -301,11 +188,12 @@ class AgenticOverview(AgenticScene):
                 "ANSWER Microplastics are found in human blood and tissue (Paper\u00a01). "
                 "Whether they harm health is not yet proven\n(Paper\u00a02). STOP"
             ),
-            warning=["Less likely to hallucinate,", "but still possible"],
+            verdict=("warn", ["Can answer from sources,", "might still hallucinate"]),
         ),
     ]
-    assistant_prompt = "“What follows is a conver- sation between a human and a helpful, knowledgeable and kind assistant…”"
-    short_prompt = "“What follows is a conver- sation between a human…”"
+    # SYSTEM_PROMPT, hyphenated to fit the panel
+    assistant_prompt = "“What follows is a conver- sation between a user and a helpful and kind assistant.”"
+    short_prompt = "“What follows is a conver- sation between a user…”"
     tool_prompt = "“What follows is a conver…\nThe assistant can use these tools by writing\nTOOL + tool + <input>:"
     steps = [
         dict(title="Pre-training", subtitle="Learn by predicting the next word",
@@ -333,6 +221,7 @@ class AgenticOverview(AgenticScene):
         self.play(FadeIn(columns[0].model))
         self.play(FadeIn(columns[0].chat_window), FadeIn(columns[0].question))
         self.play(FadeIn(columns[0].answer, lag_ratio=0.05))
+        self.play(FadeIn(columns[0].verdict, 0.1 * UP))
         self.wait()
 
         # Each step leads to the next stage
@@ -349,8 +238,7 @@ class AgenticOverview(AgenticScene):
                 self.play(FadeIn(columns[n].panels, lag_ratio=0.1))
             self.play(FadeIn(columns[n].chat_window), FadeIn(columns[n].question))
             self.play(FadeIn(columns[n].answer, lag_ratio=0.05))
-            if columns[n].warning is not None:
-                self.play(FadeIn(columns[n].warning, 0.1 * UP))
+            self.play(FadeIn(columns[n].verdict, 0.1 * UP))
             self.wait()
         self.wait(2)
 
@@ -402,7 +290,7 @@ class AgenticOverview(AgenticScene):
         chat_window.move_to([x, (self.chat_top + self.chat_bottom) / 2, 0])
         column.chat_window = chat_window
         column.question = self.get_question(x)
-        column.answer, column.warning = self.get_answer_parts(stage, x, column.question)
+        column.answer, column.verdict = self.get_answer_parts(stage, x, column.question)
         return column
 
     def get_software_window(self, width):
@@ -453,8 +341,11 @@ class AgenticOverview(AgenticScene):
 
     def get_model_window(self, n, stage, x):
         panel = stage.get("panel")
-        width = self.col_width if panel else self.narrow_window_width
+        # As wide as the column in every stage; without panels, the model is centered
+        width = self.col_width
         window = self.get_software_window(width)
+        # The software around the model: the harness, as in the security figures
+        window.add(text("Harness", font_size=9, color=MUTED).move_to(window[1]))
         window.move_to([x, self.model_y, 0])
         content_top = self.model_y + self.window_height / 2 - self.bar_height
         content_y = self.model_y - self.bar_height / 2
@@ -678,16 +569,10 @@ class AgenticOverview(AgenticScene):
             bubble.remove(flow)
             bubble.add(highlights, underlines, flow)
 
-        if "note" in stage:
-            note = text(stage["note"], font_size=12, color=MUTED, slant=ITALIC)
-            note.next_to(bubble[0], DOWN, buff=0.11).align_to(flow, LEFT)
-            parts.add(note)
-
-        warning = None
-        if "warning" in stage:
-            warning = warning_label(stage["warning"], font_size=13)
-            warning.move_to([x, self.warning_y, 0])
-        return parts, warning
+        kind, lines = stage["verdict"]
+        verdict = verdict_label(kind, lines, font_size=13)
+        verdict.move_to([x, self.verdict_y, 0])
+        return parts, verdict
 
     def get_claim_marks(self, words):
         """One amber highlight per line of the claim, with a dotted line underneath."""

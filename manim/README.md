@@ -14,8 +14,8 @@ Described in [scenes.md](scenes.md); one file per scene in `scenes/`.
 | `NextWordPrediction` | `scenes/next_word_prediction.py` | `PredictTheNextWord` (opening) |
 | `ChatbotPrediction` | `scenes/chatbot_prediction.py` | `ChatBotPrompt` (generation.py) |
 | `TrainingLevel0` | `scenes/training_level_0.py` | `LotsOfTextIntoTheMachine` |
-| `TrainingLevel1` | `scenes/training_level_1.py` | `ShowMachineWithDials`, without the final zoom-out to many parameters |
-| `TrainingLevel2` | `scenes/training_level_2.py` | `ShowSingleTrainingExample` + reverse "backprop" flash + fast iterations over many snippets (real predictions, dials nudged each time) |
+| `TrainingLevel1` | `scenes/training_level_1.py` | `ShowMachineWithDials`, without the final zoom-out to many parameters; one dial is labelled "one weight" |
+| `TrainingLevel2` | `scenes/training_level_2.py` | `ShowSingleTrainingExample` + reverse "backprop" flash + fast iterations over many snippets (real predictions, dials nudged each time); the model turns from grey to blue |
 
 ### From next-word prediction to agentic AI
 
@@ -30,7 +30,7 @@ Shared pieces (windows, model, input card, bars, chips, chat, thought box) are i
 | `Stage2BaseModel` | `scenes/stage_2_base_model.py` | Pre-training: two texts in detail (the model guesses the hidden next word, the real word is shown, the weights are adjusted so it becomes more likely), then ≈ 10 trillion words more; the base model continues the input with another question ("…and in seafood? What do recent papers say about PFAS"), cut off after 10 words |
 | `Stage3Assistant` | `scenes/stage_3_assistant.py` | Post-training: two example conversations ending in STOP, then ≈ 10,000 to 1,000,000 more; two human-feedback comparisons, then ≈ 100,000 to 1,000,000 more; input = system prompt + conversation; STOP always among the options; a fluent answer that overclaims ("A landmark study proved direct harm in humans.") |
 | `Stage4Reasoning` | `scenes/stage_4_reasoning.py` | Reasoning training: two attempts in detail (the thoughts between THINK and ANSWER are not checked, a correct answer is rewarded, a wrong one is not), then ≈ 100,000 problems with many attempts each; same system prompt as stage 3; the software shows the thoughts in a dashed box and folds them away at ANSWER; the thoughts catch the stage 3 overclaim ("Harm in humans proven? Not yet → don't overclaim."), so the answer is careful, but still from memory |
-| `Stage5Agent` | `scenes/stage_5_agent.py` | Tool programs at the bottom; the system prompt says how to call them; while thinking, the model writes TOOL + tool + "input"; the software runs the search and joins its output (two papers) to the input and to the thoughts; the model answers from them and cites both |
+| `Stage5Agent` | `scenes/stage_5_agent.py` | The model's label changes to "+ Tool use"; tool programs at the bottom; the system prompt says how to call them; while thinking, the model writes TOOL + tool + "input"; the software runs the search and joins its output (two papers) to the input and to the thoughts; the model answers from them and cites both |
 
 `Stage2BaseModelInference`, `Stage3AssistantInference` and `Stage4ReasoningInference` (same files)
 are the same scenes without the training part: they start with the trained model and show
@@ -45,8 +45,9 @@ training on around a hundred thousand problems, each tried many times.
 All five share one layout. In the software window, the input is assembled on the left,
 goes through the model in the centre, and the next-word distribution appears on the
 right. The picked word goes to the chat, and the next input is built from the chat.
-For the first three passes the whole input is visibly rebuilt (system prompt + the
-conversation copied from the chat). After that, only the newest word is added, faster.
+On the first pass the conversation is copied from the chat into the input, after the
+system prompt. Each later pass only adds the newest word to the end of the input; the first
+three passes show every step, and the later ones go faster.
 The stop rule sits under the model ("max 10 words" or "until STOP"), with the rules for TOOL, THINK and ANSWER
 where the stage has them. Where there is a system prompt (stages 3–5), a border briefly
 highlights it once the software is set up.
@@ -140,14 +141,31 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
 - `helpers.py`: `DATA_DIR` points to the local `data/` folder.
 - `manim_imports_ext.py`: registers the bundled fonts and imports `light_theme`.
 
+## Visual conventions
+
+Shared by the animations and the stills (colors in `scenes/agentic_common.py`, icons in
+`scenes/icons.py`):
+
+- The model: grey while untrained, blue once trained, in every scene.
+- A pass through the model lights its layers up in teal, input to output. A weight update
+  during training lights them up in red, output to input.
+- Tools are teal, with the same line icons (globe, folder, `</>`, document) everywhere.
+- Each stage's answer gets a verdict: grey ✗ (no answer), amber ⚠ (may be hallucinated, even
+  when answering from sources). Teal ✓ is for a design choice that works, such as the
+  tutor's hidden solution.
+- Blue numbered circles are the five stages; the security setups use letters instead.
+- The same system prompt (`SYSTEM_PROMPT`) wherever the assistant appears.
+
 ## Scene notes
 
 - `NextWordPrediction`: starts with the model on screen (`show_machine_intro = True`
   adds 3b1b's 3D build-up). The single word shown first is the model's top prediction.
   Bars are stretched so the top one is readable (the predictions are spread thin);
   the percentages are the real ones.
-- `ChatbotPrediction`: always picks the most likely word (after the same "sampling"
-  flicker), so the answer is reproducible, and stops at the end of the first sentence.
+- `ChatbotPrediction`: same system prompt and answer as `Stage3Assistant`: its words and
+  bars are the first sentence of `STAGE3` in `scenes/stage_outputs.py`, not model output.
+  It always picks the most likely word (after the same "sampling" flicker) and stops at the
+  end of the first sentence.
 
 - Agentic scenes: the bars and texts of stages 2-4 are real outputs of small local models,
   computed by `tools/compute_distributions.py` into `data/agentic_distributions.json`
@@ -163,8 +181,9 @@ and `FlashAround` still default to bright yellow). Pass a colour explicitly wher
   papers (Leslie et al. 2022, Environment International; Marfella et al. 2024, NEJM), title
   plus a one-line finding each; the Input card shortens the titles with "…".
   Stage 1's uniform bars are schematic.
-- Displayed vs real system prompt: stages 3-4 show "What follows is a conversation between a
-  human and a helpful and kind assistant." (stage 4 plus the tool lines). The bars were
+- Displayed vs real system prompt: stages 3-5, `ChatbotPrediction` and the schematic show
+  `SYSTEM_PROMPT` from `scenes/agentic_common.py`, "What follows is a conversation between a
+  user and a helpful and kind assistant." (stage 5 plus the tool lines). The bars were
   computed with prompts that also ask for a short answer (stage 3: "Answer in one short
   sentence."; stage 4: "Answer in under 20 words and end with one source in parentheses");
   the exact prompts are in `tools/compute_distributions.py`.

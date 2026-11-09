@@ -1,5 +1,6 @@
 from manim_imports_ext import *
 from scenes.agentic_common import *
+from scenes.icons import get_icon
 from scenes.stage_outputs import STAGE5_ANSWER, STAGE5_CALL, STAGE5_PAPERS, words
 
 
@@ -20,16 +21,17 @@ class Stage5Agent(AgenticScene):
     stage_subtitle = "Can retrieve and act; needs oversight"
     roles = True
     system_prompt = [
-        ("What follows is a conversation between a human and a helpful and kind assistant. Tools:", INK),
+        (SYSTEM_PROMPT + " Tools:", INK),
         ("Search web, Read files, Execute code.", TOOL_COLOR),
         ("To use one, write TOOL + tool + “input”.", INK),
     ]
     stop_rule = "stop"
     special_rows = ("THINK", "ANSWER", "TOOL", "STOP")
-    input_font_size = 13
+    input_font_size = 14
     chat_font_size = 18
-    input_bottom = -2.2
     tool_names = ["Search web", "Read files", "Execute code"]
+    # tool name -> icon (scenes/icons.py); by default from the name
+    tool_glyphs = {}
     papers = STAGE5_PAPERS
     random_seed = 5
 
@@ -39,6 +41,8 @@ class Stage5Agent(AgenticScene):
         weights_label = self.get_weights_label("+ Thinking")
         tools = self.get_tools()
         self.add(self.title_group, self.software_window, machine[:2], weights_label)
+        # The same model, trained to also call tools
+        self.play(FadeTransform(weights_label, self.get_weights_label("+ Tool use")))
         self.play(self.build_software())
         self.highlight_system_prompt()
         self.play(LaggedStartMap(FadeIn, tools, shift=0.2 * UP, lag_ratio=0.2))
@@ -81,9 +85,9 @@ class Stage5Agent(AgenticScene):
             self.play(FadeIn(highlights), ShowCreation(underlines), ShowCreation(link), run_time=0.8)
             self.play(FadeOut(link), run_time=0.3)
 
-        warning = warning_label(["Less likely to hallucinate,", "but still possible"], font_size=18)
-        warning.next_to(self.chat[1].bg, DOWN, buff=0.2).align_to(self.chat[1].bg, LEFT)
-        self.play(FadeIn(warning, 0.2 * UP))
+        verdict = verdict_label("warn", ["Can answer from sources,", "might still hallucinate"], font_size=18)
+        verdict.next_to(self.chat[1].bg, DOWN, buff=0.2).align_to(self.chat[1].bg, LEFT)
+        self.play(FadeIn(verdict, 0.2 * UP))
         self.wait(3)
 
     def call_color(self, record):
@@ -92,44 +96,34 @@ class Stage5Agent(AgenticScene):
             self.in_call = True
         return TOOL_COLOR if self.in_call else MUTED
 
-    # Tools
+    # Tools: programs at the bottom of the software window, right of the input
+
+    def tools_y(self):
+        return (self.rule_badge.get_bottom()[1] + self.window_bottom) / 2 - 0.05
 
     def get_tools(self):
-        tiles = VGroup(self.get_tool_tile(name) for name in self.tool_names)
-        tiles.arrange(RIGHT, buff=0.15)
-        card = self.input_card.bg
-        tiles.move_to([card.get_x(), (card.get_bottom()[1] + self.window_bottom) / 2, 0])
-        tools = VGroup(*tiles)
+        tiles = VGroup(self.get_tool_tile(name, glyph=self.tool_glyphs.get(name)) for name in self.tool_names)
+        tiles.arrange(RIGHT, buff=0.2, aligned_edge=UP)
+        tiles.move_to([self.input_right + 0.25, self.tools_y() - 0.12, 0], LEFT)
+        title = text("PROGRAMS", font_size=15, color=TOOL_COLOR, weight=BOLD)
+        title.next_to(tiles, UP, buff=0.12).align_to(tiles, LEFT)
+        tools = VGroup(title, *tiles)
         tools.tiles = tiles
         return tools
 
-    def get_tool_tile(self, name, size=0.62, glyph=None):
+    def get_tool_tile(self, name, size=0.56, glyph=None):
         """
-        A small program: a dark app window with a glyph ("search", "files",
-        "code" or "terminal"; by default from the name), and its name.
+        A program, as in the schematics: a teal tile with a line icon
+        ("web", "folder", "code" or "papers"; by default from the name), and its name.
         """
         if glyph is None:
-            glyph = "search" if name.startswith("Search") else "files" if name.startswith("Read") else "terminal"
-        kind = glyph
-        body = RoundedRectangle(size, size, corner_radius=0.08)
-        body.set_fill(CHIP_FILL, 1).set_stroke(width=0)
-        dots = VGroup(Dot(radius=0.025) for _ in range(3)).arrange(RIGHT, buff=0.03)
-        dots.set_fill(FRAME_GREY, 1).move_to(body.get_corner(UL) + [0.12, -0.08, 0])
-        if kind == "search":
-            glyph = VGroup(
-                Circle(radius=0.11).set_stroke(TRUE_WHITE, 3),
-                Line(ORIGIN, 0.12 * (RIGHT + DOWN)).set_stroke(TRUE_WHITE, 4).shift(0.08 * (RIGHT + DOWN)),
-            )
-        elif kind == "files":
-            glyph = doc_icon(0.3, color=CHIP_FILL)
-        elif kind == "code":
-            glyph = Text("</>", font=MONO, font_size=16, weight=BOLD).set_color(TRUE_WHITE)
-        else:
-            glyph = Text(">_", font=MONO, font_size=18, weight=BOLD).set_color(TRUE_WHITE)
-        glyph.move_to(body).shift(0.04 * DOWN)
-        label = mono(name, font_size=12)
-        label.next_to(body, DOWN, buff=0.06)
-        tile = VGroup(body, dots, glyph, label)
+            glyph = "web" if name.startswith("Search") else "folder" if name.startswith("Read") else "code"
+        body = RoundedRectangle(size, size, corner_radius=0.1)
+        body.set_fill(TOOL_FILL, 1).set_stroke(TOOL_COLOR, 2)
+        icon = get_icon(glyph, color=TOOL_COLOR, height=0.62 * size, width=2.5).move_to(body)
+        label = text(name, font_size=15, color=TOOL_COLOR)
+        label.next_to(body, DOWN, buff=0.08)
+        tile = VGroup(body, icon, label)
         tile.body = body
         tile.label = label
         return tile
@@ -159,7 +153,7 @@ class Stage5Agent(AgenticScene):
 
         # Run it
         tile = tools.tiles[0]
-        link = Arrow(call_words.get_bottom(), tile.body.get_top(), buff=0.08, thickness=3).set_fill(TOOL_COLOR)
+        link = Arrow(call_words.get_right(), tile.body.get_top(), buff=0.08, thickness=3).set_fill(TOOL_COLOR)
         glow = SurroundingRectangle(tile.body, buff=0.05).round_corners(0.1).set_stroke(TOOL_COLOR, 4)
         spinner = Arc(start_angle=0, angle=1.5 * PI, radius=0.48).set_stroke(TOOL_COLOR, 3).move_to(tile.body)
         self.play(GrowArrow(link), ShowCreation(glow))
@@ -200,6 +194,7 @@ class Stage5Agent(AgenticScene):
         self.input_convo.add(label, *result_words, stop, assistant)
         self.turns.append(dict(role="Result:", items=[(w, TOOL_COLOR, None) for w in result_words], closed=True))
         self.open_turn()
+        self.mark_input_synced()
         self.wait()
         return sources
 

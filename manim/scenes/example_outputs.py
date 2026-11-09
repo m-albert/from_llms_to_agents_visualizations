@@ -127,12 +127,7 @@ pixel=86 | value=6 pixels=4 point=2 spot=1
 counts=41 | is=33 becomes=11 ends=7 looks=4
 as=93 | for=3 in=2 like=1 toward=0.5
 foreground.=58 | foreground,=16 nucleus.=12 signal.=8 object.=3 | STOP=3
-Plot=34 | Try=26 Look=13 What=11 Which=7 | STOP=4
-a=71 | the=19 your=6 img's=2 an=1
-histogram=88 | profile=4 graph=3 hist=2 plot=1
-of=91 | for=5 from=2 with=1 on=0.5
-img:=54 | img.=24 img,=11 the=6 your=2
-which=62 | what=24 where=8 is=3 can=1
+Which=34 | Try=26 Plot=13 What=11 Look=7 | STOP=4
 value=71 | threshold=16 level=7 number=3 intensity=2
 separates=67 | splits=14 divides=9 between=4 marks=3
 nuclei=79 | cells=11 objects=5 the=3 signal=1

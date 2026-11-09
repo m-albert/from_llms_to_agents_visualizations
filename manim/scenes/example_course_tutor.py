@@ -35,7 +35,7 @@ class CourseTutorBot(ExampleAgentScene):
         ("TOOL read_solution <exercise>.", TOOL_COLOR),
     ]
     tool_names = ["read_code", "read_solution"]
-    tool_glyphs = {"read_code": "code", "read_solution": "files"}
+    tool_glyphs = {"read_code": "code", "read_solution": "papers"}
     input_font_size = 11
     # A wider input (the system prompt is long), so shorter bars
     input_right = -3.35
@@ -91,9 +91,9 @@ class CourseTutorBot(ExampleAgentScene):
         sol_highlights, _ = self.highlight_words(solution_words, fill=WARN_FILL)
         answer_rect = SurroundingRectangle(self.chat[1].bg, buff=0.04).round_corners(0.15).set_stroke(ACCENT, 2)
         notes = VGroup(
-            self.end_note(["System prompt: hint,", "don't give the solution"], color=ACCENT),
-            self.end_note(["The model read the solution,", "the student only sees a hint"], color=WARN),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.35)
+            self.end_note(["System prompt: hint,", "don't give the solution"], color=ACCENT, font_size=14),
+            verdict_label("ok", ["The model reads the solution,", "the student only gets a hint"], font_size=14),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
         notes.move_to([self.window_right - 0.2, self.machine[0].get_y() + 0.5, 0], RIGHT)
         self.add(rule_highlights, self.system_block.flow)
         self.play(FadeIn(rule_highlights), FadeIn(notes[0], 0.1 * DOWN))

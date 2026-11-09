@@ -31,9 +31,13 @@ class Stage1Untrained(AgenticScene):
         self.play(FadeIn(answer_group[0]))
         self.open_turn()
         for n, word in enumerate(self.answer_words):
-            self.run_pass(n, self.uniform_distribution(word), (flow, bubble), fast_time=0.45)
+            # After the first three words in detail, the other seven in about 3 seconds
+            self.run_pass(n, self.uniform_distribution(word), (flow, bubble), fast_time=0.25)
         self.wait(0.5)
         self.flash_rule()
+        verdict = verdict_label("none", ["No answer:", "just random words"], font_size=18)
+        verdict.next_to(bubble.bg, DOWN, buff=0.3).align_to(bubble.bg, LEFT)
+        self.play(FadeIn(verdict, 0.2 * UP))
         self.wait(2)
 
     def uniform_distribution(self, chosen, n=6):

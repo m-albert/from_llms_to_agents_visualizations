@@ -56,6 +56,9 @@ class Stage2BaseModel(AgenticScene):
         cut_mark.next_to(flow[-1], RIGHT, buff=0.08, aligned_edge=DOWN)
         self.play(FadeIn(cut_mark))
         self.flash_rule()
+        verdict = verdict_label("none", ["No answer: it continues", "the text with a new question"], font_size=18)
+        verdict.next_to(bubble.bg, DOWN, buff=0.3).align_to(bubble.bg, LEFT)
+        self.play(FadeIn(verdict, 0.2 * UP))
         self.wait(2)
 
     # Pre-training
@@ -123,6 +126,7 @@ class Stage2BaseModel(AgenticScene):
         self.play(
             FadeIn(note, 0.1 * DOWN),
             self.randomize_dials(run_time=1.5 / speed, lag_factor=1),
+            self.adjust_flash(run_time=1.5 / speed),
             Transform(chart, new_chart),
             rect.animate.surround(new_chart.rows[words.index(target)], buff=0.04),
             run_time=1.5 / speed,

@@ -20,10 +20,10 @@ class Stage4Reasoning(AgenticScene):
     stage_title = "Reasoning model"
     stage_subtitle = "Thinks first, but still no sources"
     roles = True
-    system_prompt = [("What follows is a conversation between a human and a helpful and kind assistant.", INK)]
+    system_prompt = [(SYSTEM_PROMPT, INK)]
     stop_rule = "stop"
     special_rows = ("THINK", "ANSWER", "STOP")
-    input_font_size = 16
+    input_font_size = 19
     # (problem, thoughts, answer, correct)
     attempts = [
         ("What is 17 × 24?", "17 × 20 = 340 and 17 × 4 = 68, so 340 + 68 = 408", "408", True),
@@ -75,15 +75,18 @@ class Stage4Reasoning(AgenticScene):
         self.play(FadeIn(first, 0.2 * UP))
         # The thoughts are free; only the answer is checked
         _, thought_lines = self.highlight_words(first.thought[1:], color=MUTED)
-        thought_note = text("Thoughts: not checked", font_size=15, color=MUTED, slant=ITALIC)
-        thought_note.next_to(first.bg, DOWN, buff=0.15, aligned_edge=LEFT)
-        self.play(ShowCreation(thought_lines), FadeIn(thought_note))
+        thought_note = text("Thoughts: not checked", font_size=19, color=MUTED, slant=ITALIC)
+        thought_note.next_to(first.bg, DOWN, buff=0.2, aligned_edge=LEFT)
+        self.play(
+            ShowCreation(thought_lines), FadeIn(thought_note),
+            first.thought[1:].animate.set_opacity(0.4),
+        )
         answer_rect = SurroundingRectangle(first.answer, buff=0.04).set_stroke(TOOL_COLOR, 2)
         self.play(ShowCreation(answer_rect))
         self.play(FadeIn(mark, scale=1.5), FadeIn(reward, 0.1 * RIGHT))
         first.add(first.check)
         self.wait()
-        self.play(FadeOut(VGroup(thought_lines, thought_note, answer_rect)))
+        self.play(FadeOut(VGroup(thought_lines, thought_note, answer_rect)), first.thought[1:].animate.set_opacity(1))
         self.play(self.absorb(first), run_time=1.3)
 
         # The same problem, a careless attempt: no reward
@@ -115,11 +118,11 @@ class Stage4Reasoning(AgenticScene):
         attempt.add_word("STOP")
         lines = VGroup(question, attempt).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
         card = self.place_card(lines, "Problem and the model's attempt")
-        mark = Tex(R"\checkmark" if correct else R"\times", font_size=30)
+        mark = Tex(R"\checkmark" if correct else R"\times", font_size=48)
         mark.set_color(TOOL_COLOR if correct else RED_E)
-        reward = text("reward" if correct else "no reward", font_size=16, color=TOOL_COLOR if correct else RED_E, weight=BOLD)
-        check = VGroup(mark, reward).arrange(RIGHT, buff=0.1)
-        check.next_to(card[0], DOWN, buff=0.12, aligned_edge=RIGHT)
+        reward = text("Reward" if correct else "No reward", font_size=24, color=TOOL_COLOR if correct else RED_E, weight=BOLD)
+        check = VGroup(mark, reward).arrange(RIGHT, buff=0.12)
+        check.next_to(card[0], DOWN, buff=0.15, aligned_edge=RIGHT)
         card.add(check)
         card.bg = card[0]
         card.thought = thought

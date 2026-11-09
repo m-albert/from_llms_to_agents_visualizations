@@ -10,8 +10,6 @@ from manim_imports_ext import *
 from scenes.agentic_common import *
 from scenes.stage_5_agent import Stage5Agent
 
-TOOL_FILL = "#DDF1EE"
-
 
 def folder_icon(height=0.2, color=MUTED):
     body = RoundedRectangle(1.4, 1.0, corner_radius=0.12)
@@ -28,8 +26,6 @@ class ExampleAgentScene(Stage5Agent):
     input_bottom = -3.25
     input_font_size = 12
     chat_font_size = 16
-    # tool name -> glyph (see Stage5Agent.get_tool_tile)
-    tool_glyphs = {}
 
     def get_title(self):
         icon = robot_icon(0.48)
@@ -48,18 +44,7 @@ class ExampleAgentScene(Stage5Agent):
                 label.set_width(1.0, about_edge=RIGHT)
         return chart
 
-    # Tools and their data, at the bottom of the software window
-
-    def tools_y(self):
-        return (self.rule_badge.get_bottom()[1] + self.window_bottom) / 2 - 0.05
-
-    def get_tools(self):
-        tiles = VGroup(self.get_tool_tile(name, glyph=self.tool_glyphs.get(name)) for name in self.tool_names)
-        tiles.arrange(RIGHT, buff=0.2, aligned_edge=UP)
-        tiles.move_to([self.input_right + 0.2, self.tools_y(), 0], LEFT)
-        tools = VGroup(*tiles)
-        tools.tiles = tiles
-        return tools
+    # The data the tools can reach, at the bottom right of the software window
 
     def get_folder(self, name, note, files, n_cols=2):
         """A folder the tools can read: its name, a note, and its files."""
@@ -158,6 +143,7 @@ class ExampleAgentScene(Stage5Agent):
         self.input_convo.add(label, *result_mobs, stop, assistant)
         self.turns.append(dict(role="Result:", items=[], closed=True))
         self.open_turn()
+        self.mark_input_synced()
         self.in_call = False
         flow = bubble.add_flow(bubble.get_bottom_y() - 0.06, self.chat_font_size - 2)
         self.chat = (flow, bubble)

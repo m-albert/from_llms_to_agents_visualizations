@@ -2,6 +2,7 @@ from manim_imports_ext import *
 from _2024.transformers.helpers import DATA_DIR
 from _2024.transformers.chm import ShowSingleTrainingExample
 from scenes.stills import BuildStills
+from scenes.agentic_common import TRAINED_FILL
 
 
 class TrainingLevel2(BuildStills, ShowSingleTrainingExample):
@@ -10,7 +11,8 @@ class TrainingLevel2(BuildStills, ShowSingleTrainingExample):
     predict its last word, flag how the probabilities should change, then
     send that signal backwards through the layers (reverse flash) while every
     dial gets nudged. Ends with a few seconds of fast iterations over many
-    more snippets, each nudging the dials.
+    more snippets, each nudging the dials, while the model turns from grey
+    (untrained) to blue (trained), as in Stage2BaseModel.
     """
     def construct(self):
         # Add state from before
@@ -117,9 +119,12 @@ class TrainingLevel2(BuildStills, ShowSingleTrainingExample):
         top_example = VGroup(sentence, start_rect, end_rect, arrow)
         # Each iteration a bit slower, ending at a third of the starting rate
         run_times = np.geomspace(*self.fast_example_time_range, self.n_fast_examples)
-        for run_time in run_times:
-            out_span = (0, 0.4 * run_time)
-            in_span = (0.2 * run_time, 0.6 * run_time)
+        untrained_fill = blocks[0].get_fill_color()
+        for n, run_time in enumerate(run_times):
+            # The old example is gone before the new one appears: no overlapping text
+            out_span = (0, 0.3 * run_time)
+            in_span = (0.3 * run_time, 0.6 * run_time)
+            blocks.set_fill(interpolate_color(untrained_fill, TRAINED_FILL, (n + 1) / len(run_times)))
             new_top, new_in_text, new_bars = self.get_fast_example(top_example, in_arrow, out_arrow)
             self.play(
                 FadeOut(top_example, time_span=out_span),

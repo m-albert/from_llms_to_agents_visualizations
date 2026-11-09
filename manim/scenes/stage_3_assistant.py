@@ -20,10 +20,10 @@ class Stage3Assistant(AgenticScene):
     stage_title = "AI assistant"
     stage_subtitle = "Helpful answers, but may hallucinate"
     roles = True
-    system_prompt = [("What follows is a conversation between a human and a helpful and kind assistant.", INK)]
+    system_prompt = [(SYSTEM_PROMPT, INK)]
     stop_rule = "stop"
     special_rows = ("STOP",)
-    input_font_size = 17
+    input_font_size = 20
     example_conversations = [
         ("How far away is the Moon?", "About 384,000 km."),
         ("Translate 'Danke' into English.", "Thank you."),
@@ -116,7 +116,7 @@ class Stage3Assistant(AgenticScene):
         card.lines = lines
         return card
 
-    def get_comparison_card(self, question, answer1, answer2, first_better, width=2.9, font_size=16):
+    def get_comparison_card(self, question, answer1, answer2, first_better, width=3.0, font_size=19):
         prompt = FlowText(ORIGIN, width + 0.45, font_size=font_size)
         prompt.add_word("User:", color=MUTED)
         prompt.add_words(question.split(" "))
@@ -127,8 +127,12 @@ class Stage3Assistant(AgenticScene):
             flow.add_words(string.split(" "))
             if not string.endswith("."):
                 flow.add_word("...", color=MUTED)
-            answers.add(ChatBubble(flow, PANEL_FILL, buff=0.08))
-            mark = Tex(R"\checkmark" if good else R"\times", font_size=28)
+            bubble = ChatBubble(flow, PANEL_FILL, buff=0.08)
+            if good:
+                # The preferred answer: teal, like the reward of reasoning training
+                bubble.bg.set_fill(TOOL_FILL).set_stroke(TOOL_COLOR, 2)
+            answers.add(bubble)
+            mark = Tex(R"\checkmark" if good else R"\times", font_size=44)
             marks.add(mark.set_color(TOOL_COLOR if good else RED_E))
         answers.arrange(DOWN, aligned_edge=LEFT, buff=0.1)
         content = VGroup(prompt, answers).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
