@@ -21,15 +21,15 @@ The same model gets the same question five times. Four steps change what it can 
 
 ### Security overview
 
-An agent has two parts to secure: the model and the software around it. Who controls each?
+Two parts, two questions. The LLM sees your data: where does it go? The harness acts for you: what can it reach?
 
 ![Security overview](security_overview.png)
 
 [SVG](security_overview.svg)
 
-### Security: three combinations
+### Security: three setups
 
-Big tech or private, for the software and for the model.
+Who runs the harness, and who runs the LLM?
 
 ![Security combinations](security_combinations.png)
 
@@ -112,10 +112,6 @@ Stages 2–4 also come without the training part (`Stage2BaseModelInference` etc
 **Course tutor bot.** Reads the student's code and the hidden solution, then gives a hint.
 
 ![Course tutor bot](gifs/CourseTutorBot.gif)
-
-**Privacy.** What gets sent to the model provider, and how a local model keeps it in-house.
-
-![Privacy data flow](gifs/PrivacyDataFlow.gif)
 
 ## More
 

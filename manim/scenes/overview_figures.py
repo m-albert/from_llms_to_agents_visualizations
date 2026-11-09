@@ -195,22 +195,21 @@ class OverviewFigure(AgenticOverview):
 
 class SecurityOverview(OverviewFigure):
     """
-    The tool-using agent of the overview, without the system prompt: the two
-    parts to secure are the LLM (cyan border) and the software around it,
-    the harness (magenta border). The legend shows who can control each part,
-    from least to most control over your data.
+    The tool-using agent of the overview, without the system prompt, and its
+    two parts to secure: the LLM (cyan border), which sees all the data the
+    software sends it, and the software around it, the harness (magenta
+    border), which acts on your behalf. Next to it, one question per part.
     """
     view_width = 6.6
     export_name = "SecurityOverview.svg"
+    subtitle = "Two parts, two questions"
     tools = [("web", "Search web"), ("folder", "Read files"), ("code", "Execute code")]
-    legend_col_widths = [1.08, 1.12, 1.02]
-    legend_row_height = 0.33
-    # Where it runs, LLM, harness
-    legend_rows = [
-        ("Big tech company\nserver", "ChatGPT, Claude,\nGemini, etc.", "ChatGPT, Claude,\nGemini, etc."),
-        ("Public compute\ninfrastructure", "e.g. SwissAI Research\nPlatform, CSCS", "–"),
-        ("Local institute", "e.g. BSSE", "–"),
-        ("Local computer", "e.g. on an IPM", "e.g. OpenCode"),
+    # Where the LLM can run, from furthest to closest to you
+    llm_places = [
+        ("Big tech cloud", "GPT, Claude, Gemini"),
+        ("Research compute", "e.g. SwissAI, CSCS"),
+        ("Your institute", "e.g. BSSE"),
+        ("Your computer", "e.g. an IPM"),
     ]
 
     def get_figure(self):
@@ -229,56 +228,57 @@ class SecurityOverview(OverviewFigure):
         harness_tab = self.get_tab("Software / harness", MAGENTA)
         harness_tab.next_to(harness_border, UP, buff=0).align_to(harness_border, LEFT).shift(0.1 * RIGHT)
 
-        legend = self.get_legend(harness_border.get_right()[0] + 0.25, harness_tab.get_top()[1])
+        legend = self.get_legend(harness_border.get_right()[0] + 0.3, harness_tab.get_top()[1])
         legend.set_y(VGroup(harness_tab, harness_border).get_y())
 
-        header = self.get_header("Security overview", "Two parts to secure", left - 0.05, 1.0)
+        # Above whichever is higher, the window or the legend
+        header_y = max(harness_tab.get_top()[1], legend.get_top()[1]) + 0.25
+        header = self.get_header("Security overview", self.subtitle, left - 0.05, header_y)
         figure = VGroup(header, window, llm, programs, llm_border, llm_tab, harness_border, harness_tab, legend)
         return figure.center()
 
     def get_legend(self, left, top):
-        """Who controls the LLM and the harness: one row per place they can run."""
-        arrow_width = 0.26
-        table_left = left + arrow_width
-        widths = self.legend_col_widths
-        table_width = sum(widths)
-        col_lefts = [table_left + sum(widths[:n]) for n in range(len(widths))]
-
-        title = on_baseline("Who controls it?", left, top - 0.11, font_size=13, weight=BOLD)
-        head_y = top - 0.33
-        heads = VGroup(
-            text("Where it runs", font_size=10, color=MUTED, weight=BOLD).move_to([col_lefts[0], head_y, 0], LEFT),
-            self.get_tab("LLM", CYAN).move_to([col_lefts[1], head_y, 0], LEFT),
-            self.get_tab("Harness", MAGENTA).move_to([col_lefts[2], head_y, 0], LEFT),
+        """One question per part: where the data goes (LLM), what it can reach (harness)."""
+        llm_part = self.get_question_block(
+            "LLM", CYAN, "Where does my data go?",
+            "It sees everything the software sends it:\nquestions, files, tool results.",
+            left, top,
         )
+        places = self.get_places(left, llm_part.get_bottom()[1] - 0.1)
+        harness_part = self.get_question_block(
+            "Harness", MAGENTA, "What can it reach and do?",
+            "It reads files, runs code and goes online\nfor you. Give it only what it needs.",
+            left, places.get_bottom()[1] - 0.22,
+        )
+        return VGroup(llm_part, places, harness_part)
 
+    def get_question_block(self, tab, color, question, note, left, top):
+        tab = self.get_tab(tab, color).move_to([left, top, 0], UL)
+        question = on_baseline(question, tab.get_right()[0] + 0.1, tab.get_bottom()[1] + 0.035, font_size=13, weight=BOLD)
+        note = self.get_lines(note, left, tab.get_bottom()[1] - 0.15, color=MUTED)
+        return VGroup(tab, question, note)
+
+    def get_places(self, left, top):
+        """Where the LLM can run, with an arrow: the closer, the more your data stays with you."""
+        row_height = 0.17
+        arrow_x = left + 0.06
         rows = VGroup()
-        rows_top = head_y - 0.13
-        for n, row in enumerate(self.legend_rows):
-            y = rows_top - n * self.legend_row_height
-            rule = Line([table_left, y, 0], [table_left + table_width, y, 0]).set_stroke(CHAT_STROKE, 1)
-            cells = VGroup(
-                self.get_legend_cell(cell, m == 0, col_lefts[m], y - self.legend_row_height / 2)
-                for m, cell in enumerate(row)
+        for n, (place, example) in enumerate(self.llm_places):
+            y = top - 0.12 - n * row_height
+            rows.add(
+                on_baseline(place, left + 0.2, y, font_size=10),
+                on_baseline(example, left + 1.25, y, font_size=10, color=MUTED),
             )
-            rows.add(rule, cells)
+        bottom = top - 0.12 - (len(self.llm_places) - 1) * row_height
+        arrow = open_arrow([arrow_x, top - 0.03, 0], [arrow_x, bottom, 0], CYAN, width=1.5)
+        label = text("Data stays closer to you", font_size=9, color=MUTED, slant=ITALIC)
+        label.move_to([left + 0.2, bottom - 0.14, 0], LEFT)
+        return VGroup(rows, arrow, label)
 
-        # The rows go from least to most control over your data
-        rows_bottom = rows_top - len(self.legend_rows) * self.legend_row_height
-        arrow_x = table_left - 0.08
-        scale = open_arrow([arrow_x, rows_top - 0.03, 0], [arrow_x, rows_bottom + 0.03, 0], MUTED, width=1.5)
-        scale_label = text("More control", font_size=9, color=MUTED, slant=ITALIC).rotate(PI / 2)
-        scale_label.move_to([arrow_x - 0.09, (rows_top + rows_bottom) / 2, 0])
-        return VGroup(title, heads, rows, scale, scale_label)
-
-    def get_legend_cell(self, string, is_place, left, y):
-        """Lines on fixed baselines, vertically centered at y."""
-        lines = string.split("\n")
-        line_height = 0.125
-        first_baseline = y - 0.03 + (len(lines) - 1) * line_height / 2
+    def get_lines(self, string, left, first_baseline, font_size=10, color=INK, line_height=0.135):
         return VGroup(
-            on_baseline(line, left, first_baseline - n * line_height, font_size=10, color=INK if is_place else MUTED)
-            for n, line in enumerate(lines)
+            on_baseline(line, left, first_baseline - n * line_height, font_size=font_size, color=color)
+            for n, line in enumerate(string.split("\n"))
         )
 
     def get_border(self, mob, color, buff):
@@ -294,26 +294,26 @@ class SecurityOverview(OverviewFigure):
 
 class SecurityCombinations(SecurityOverview):
     """
-    SecurityOverview, with three combinations of where the harness and the
-    LLM run as its legend.
+    SecurityOverview, with three common setups as its legend: who runs the
+    harness and who runs the LLM, and what follows for your data.
     """
     export_name = "SecurityCombinations.svg"
-    legend_col_widths = [0.28, 0.82, 0.82, 1.3]
-    legend_row_height = 0.42
+    subtitle = "Who runs each part?"
+    col_widths = [0.28, 0.82, 0.82, 1.3]
+    row_height = 0.42
     # Harness, LLM, example
     combinations = [
-        ("Big tech", "Big tech", "ChatGPT, Claude,\nGemini, etc."),
-        ("Private", "Big tech", "OpenCode +\nbig tech LLM"),
-        ("Private", "Private", "OpenCode +\nLLM on an IPM"),
+        ("Big tech", "Big tech", "ChatGPT, Claude,\nGemini apps"),
+        ("You", "Big tech", "OpenCode +\nbig tech LLM"),
+        ("You", "You", "OpenCode +\nLLM on an IPM"),
     ]
 
     def get_legend(self, left, top):
-        widths = self.legend_col_widths
+        widths = self.col_widths
         table_width = sum(widths)
         col_lefts = [left + sum(widths[:n]) for n in range(len(widths))]
 
-        title = on_baseline("Three combinations", left, top - 0.11, font_size=13, weight=BOLD)
-        head_y = top - 0.33
+        head_y = top - 0.08
         heads = VGroup(
             self.get_tab("Harness", MAGENTA).move_to([col_lefts[1], head_y, 0], LEFT),
             self.get_tab("LLM", CYAN).move_to([col_lefts[2], head_y, 0], LEFT),
@@ -323,8 +323,8 @@ class SecurityCombinations(SecurityOverview):
         rows = VGroup()
         rows_top = head_y - 0.13
         for n, (harness, llm, example) in enumerate(self.combinations):
-            y = rows_top - n * self.legend_row_height
-            row_y = y - self.legend_row_height / 2
+            y = rows_top - n * self.row_height
+            row_y = y - self.row_height / 2
             rule = Line([left, y, 0], [left + table_width, y, 0]).set_stroke(CHAT_STROKE, 1)
             number = VGroup(
                 Circle(radius=0.09).set_fill(ACCENT, 1).set_stroke(width=0),
@@ -336,9 +336,25 @@ class SecurityCombinations(SecurityOverview):
                 rule, number,
                 self.get_place_pill(harness).move_to([col_lefts[1], row_y, 0], LEFT),
                 self.get_place_pill(llm).move_to([col_lefts[2], row_y, 0], LEFT),
-                self.get_legend_cell(example, False, col_lefts[3], row_y),
+                self.get_lines(example, col_lefts[3], row_y + 0.035, color=MUTED, line_height=0.125),
             )
-        return VGroup(title, heads, rows)
+
+        # What follows from the table, in two rules of thumb
+        rules_top = rows_top - len(self.combinations) * self.row_height - 0.2
+        tabs = VGroup(
+            self.get_tab("LLM", CYAN).move_to([left, rules_top, 0], UL),
+            self.get_tab("Harness", MAGENTA).move_to([left, rules_top - 0.22, 0], UL),
+        )
+        text_left = tabs.get_right()[0] + 0.1
+        lines = VGroup(
+            on_baseline(string, text_left, tab.get_bottom()[1] + 0.04, font_size=10)
+            for tab, string in zip(tabs, [
+                "Your data goes to whoever runs it.",
+                "Reaches what's on the computer it runs on.",
+            ])
+        )
+        rules = VGroup(tabs, lines)
+        return VGroup(heads, rows, rules)
 
     def get_place_pill(self, place):
         color, fill = (WARN, WARN_FILL) if place == "Big tech" else (ACCENT, STEP_FILL)
